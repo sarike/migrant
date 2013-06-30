@@ -1,18 +1,18 @@
 # -*- coding:utf-8 -*- 
 from tornado.web import RequestHandler
-from tornado.router import url
 
-from kpages import LogicContext, get_context
+from kpages import LogicContext, get_context,url,mongo_conv
+from utility import RestfulHandler
+
+from logic import account,category
 
 @url(r'/hello')
-class HelloHandler(RequestHandler):
+class HelloHandler(RestfulHandler):
     def get(self):
-        with LogicContext():
-            db = get_context().get_mongo()
-            print db['account']
-        self.write('hello migrant')
+        rs = account.page()
+        self.write(dict(status = True,data =rs))
 
 @url(r'/json')
 class JsonHandler(RequestHandler):
     def get(self):
-        self.write(dict(status = True, data = 'json test'))
+        self.write(dict(status = True, data = category.page()))
