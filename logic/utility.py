@@ -2,32 +2,19 @@
 """
     author comger@gmail.com
 """
+from bson.objectid import ObjectId
 from kpages import get_context,mongo_conv,not_empty 
 
-class BaseLogic(object):
-    name = None
-
-    @staticmethod
-    def get_db(cls):
-        return get_context().get_mongo()[name]
-
-    @staticmethod
-    def page(cls,index=0,size=10,**cond):
-        cond.update(status=0)
-        lst = list(tb().find(cond).skip(index*size).limit(size))
-        return mongo_conv(lst)
-
-
-get_tb = lambda name:get_context().get_mongo()[name]
+Tb = lambda table:get_context().get_mongo()[table]
 
 def m_update(table,_id,**kwargs):
     try:
         not_empty(table,_id)
-        get_tb(table).update(dict(_id = ObjectId_id,status = 0),kwargs)
+        Tb(table).update(dict(_id = ObjectId(_id),status = 0),{'$set':kwargs})
+        return True,None
     except Exception as e:
         return False,e.message
 
-    return True,None
 
 def m_del(table,_id,is_del=False):
     '''
@@ -39,9 +26,9 @@ def m_del(table,_id,is_del=False):
     try:
         not_empty(table,_id)
         if is_del:
-            get_tb(table).remove(dict(_id = ObjectId(_id)))
+            Tb(table).remove(dict(_id = ObjectId(_id)))
         else:
-            get_tb(table).update(dict(_id = ObjectId_id,status = 0),{'$set':{'status':1}})
+            Tb(table).update(dict(_id = ObjectId(_id),status = 0),{'$set':{'status':1}})
     except Exception as e:
         return False, e.message
 
@@ -50,7 +37,13 @@ def m_del(table,_id,is_del=False):
 def m_page(table,since=None,size=10,**kwargs):
     cond = dict(status = 0)
     if since:
-        cond.update(_id = {'$ln':ObjectId(since)})
+        cond.update(_id = {'$gt':ObjectId(since)})
     cond.update(kwargs)
-    lst = list(get_tb(table).find(cond).limit(size))
+    lst = list(Tb(table).find(cond).limit(size))
     return mongo_conv(lst)
+
+def m_exists(table,**cond):
+    cond.update(status = 0)
+    return Tb(table).find_one(cond)
+
+

@@ -11,13 +11,24 @@ class RestfulHandler(ContextHandler):
     uid = property(lambda self:self.get_argument('uid',None))
 
     def prepare(self):
+        '''
         if not all((self.token,self.uid)):
             self.write(dict(status = False,errormsg = 'not uid or token '))
             self.finish()
-
-@url('/m/(.*)/del/(.*)')
-class DelHandler(ContextHandler):
-    def get(self,table,_id=None):
-        m_del(table,_id)
+        '''
+        pass
 
 
+@url(r'/m/(.*)/del')
+class DelHandler(RestfulHandler):
+    def get(self,table):
+        r,v= m_del(table,self.get_argument('id'))
+        self.write(dict(status = r, data = v))
+
+@url(r'/m/(.*)/page')
+class PageHandler(RestfulHandler):
+    def get(self,table):
+        v= m_page(table,since = self.get_argument('since',None))
+        if table == 'account':
+            for item in v:del item['password']
+        self.write(dict(status = True, data = v))
