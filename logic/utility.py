@@ -2,7 +2,7 @@
 """
     author comger@gmail.com
 """
-from kpages import get_context,mongo_conv 
+from kpages import get_context,mongo_conv,not_empty 
 
 class BaseLogic(object):
     name = None
@@ -22,6 +22,7 @@ get_tb = lambda name:get_context().get_mongo()[name]
 
 def m_update(table,_id,**kwargs):
     try:
+        not_empty(table,_id)
         get_tb(table).update(dict(_id = ObjectId_id,status = 0),kwargs)
     except Exception as e:
         return False,e.message
@@ -36,6 +37,7 @@ def m_del(table,_id,is_del=False):
         is_del: 是否为硬删除
     '''
     try:
+        not_empty(table,_id)
         if is_del:
             get_tb(table).remove(dict(_id = ObjectId(_id)))
         else:
