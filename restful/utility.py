@@ -28,7 +28,7 @@ class DelHandler(RestfulHandler):
 @url(r'/m/(.*)/page')
 class PageHandler(RestfulHandler):
     def get(self,table):
-        v= m_page(table,since = self.get_argument('since',None))
+        v= m_page(table,since = self.get_argument('since',None),addon=self.get_argument('addon',None))
         if table == 'account':
             for item in v:del item['password']
         self.write(dict(status = True, data = v))

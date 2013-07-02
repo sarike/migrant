@@ -39,7 +39,18 @@ def m_page(table,since=None,size=10,**kwargs):
     if since:
         cond.update(_id = {'$gt':ObjectId(since)})
     cond.update(kwargs)
+
+    if cond.get('addon',None):
+        t = float(cond.pop('addon'))
+        t = hex(int(t/1000))
+        _id = '{0}{1}'.format(t,'0'*16)
+        cond.update({'_id':{'$gt':ObjectId(_id)}})
+    
+    print cond
     lst = list(Tb(table).find(cond).limit(size))
+    for item in lst:
+        pass
+
     return mongo_conv(lst)
 
 def m_exists(table,**cond):
