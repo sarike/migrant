@@ -35,26 +35,38 @@ def m_del(table,_id,is_del=False):
     return True,None
 
 def m_page(table,since=None,size=10,**kwargs):
-    cond = dict(status = 0)
-    if since:
-        cond.update(_id = {'$gt':ObjectId(since)})
-    cond.update(kwargs)
+    """
+        通用数据集查询方案,一次性获取size条大于since 及大于addon的数据记录
+    """
+    try:
+        cond = dict(status = 0)
+        cond_id = None
+        if since:
+            cond_id = ObjectId(since)
+            cond.update(_id = {'$gt':cond_id})
+        cond.update(kwargs)
 
-    if cond.get('addon',None):
-        t = float(cond.pop('addon'))
-        t = hex(int(t/1000))
-        _id = '{0}{1}'.format(t,'0'*16)
-        cond.update({'_id':{'$gt':ObjectId(_id)}})
-    
-    print cond
-    lst = list(Tb(table).find(cond).limit(size))
-    for item in lst:
-        pass
+        if cond.get('addon',None):
+            #查询addon 时间以后的记录 
+            t = float(cond.pop('addon'))
+            t = hex(int(t))[2:]
+            _id = '{0}{1}'.format(t,'0'*16)
+            if cond_id and cond_id <ObjectId(_id):
+                cond.update({'_id':{'$gt':ObjectId(_id)}})
+        
+        print cond
+        lst = list(Tb(table).find(cond).limit(size))
+        for item in lst:
+            item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d-%H:%M:%S')
 
-    return mongo_conv(lst)
+        return True, mongo_conv(lst)
+    except Exception as e:
+        return False,e.message
 
 def m_exists(table,**cond):
     cond.update(status = 0)
     return Tb(table).find_one(cond)
 
-
+def m_info(table,_id):
+    not_empty(_id)
+    return mongo_conv(Tb(table).find_one(dict(_id=ObjectId(_id),status=0)))

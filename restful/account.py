@@ -32,7 +32,9 @@ class AddHandler(RestfulHandler):
 @url(r'/m/account/update')
 class UpdateHandler(RestfulHandler):
     def get(self):
-        r,v = m_update(T_ACCOUNT,self.uid,city=self.get_argument('city',None), tel=self.get_argument('tel',None))
+        val = dict(city=self.get_argument('city',None), tel=self.get_argument('tel',None))
+        val.update(followcity=self.get_arguments('followcity'))
+        r,v = m_update(T_ACCOUNT,self.uid,**val)
         self.write(dict(status = r, data = v))
 
 
