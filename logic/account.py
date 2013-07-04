@@ -34,3 +34,20 @@ def login(username,password):
             return False,None
     except Exception as e:
         return False,e.message
+
+
+def auth_login(site,otherid,name,**kwargs):
+    try:
+        not_empty(site,otherid,name)
+        r = m_exists(TName,site=site,otherid=otherid,name=name)
+        if r:
+            r = mongo_conv(r)
+            return True,r
+        else:
+            val = dict(site=site,otherid=otherid,name=name,status=0)
+            _id = Tb().insert(val,saft=True)
+            val['_id'] = str(_id)
+            return True,val
+    except Exception as e:
+        return False,e.message
+
