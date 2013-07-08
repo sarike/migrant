@@ -45,7 +45,7 @@ def m_page(table,since=None,size=10,**kwargs):
             cond_id = ObjectId(since)
             cond.update(_id = {'$gt':cond_id})
         cond.update(kwargs)
-
+        
         if cond.get('addon',None):
             #查询addon 时间以后的记录 
             t = float(cond.pop('addon'))
@@ -53,12 +53,14 @@ def m_page(table,since=None,size=10,**kwargs):
             _id = '{0}{1}'.format(t,'0'*16)
             if cond_id and cond_id <ObjectId(_id):
                 cond.update({'_id':{'$gt':ObjectId(_id)}})
-        
+        elif 'addon' in cond:
+            cond.pop('addon')
+
         print cond
         lst = list(Tb(table).find(cond).limit(size))
         for item in lst:
             item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d-%H:%M:%S')
-
+        
         return True, mongo_conv(lst)
     except Exception as e:
         return False,e.message
