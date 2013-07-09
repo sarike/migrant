@@ -1,0 +1,15 @@
+<resources>
+    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="Theme">
+        
+    </style>
+    
+    <style name="Theme.NoTitleBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>
