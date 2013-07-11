@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Cookie;
@@ -22,11 +23,13 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.comger.migrant.AppContext;
 import com.comger.migrant.AppException;
@@ -128,6 +131,19 @@ public class ApiClient {
 		return url.toString().replace("?&", "?");
 	}
 	
+	private static void parseCookie(AppContext appContext,HttpClient httpClient){
+		Cookie[] cookies = httpClient.getState().getCookies();
+        String tmpcookies = "";
+        for (Cookie ck : cookies) {
+            tmpcookies += ck.toString()+";";
+        }
+        //保存cookie   
+		if(appContext != null && tmpcookies != ""){
+			appContext.setProperty("cookie", tmpcookies);
+			appCookie = tmpcookies;
+		}
+	}
+	
 	/**
 	 * get请求URL
 	 * @param url
@@ -135,6 +151,7 @@ public class ApiClient {
 	 */
 	private static InputStream http_get(AppContext appContext, String url) throws AppException {	
 		//System.out.println("get_url==> "+url);
+		Log.i("http_get", url);
 		String cookie = getCookie(appContext);
 		String userAgent = getUserAgent(appContext);
 		
@@ -152,6 +169,7 @@ public class ApiClient {
 				if (statusCode != HttpStatus.SC_OK) {
 					throw AppException.http(statusCode);
 				}
+				parseCookie(appContext,httpClient);
 				responseBody = httpGet.getResponseBodyAsString();
 				//System.out.println("XMLDATA=====>"+responseBody);
 				break;				
@@ -184,7 +202,7 @@ public class ApiClient {
 			}
 		}while(time < RETRY_TIME);
 		
-		
+		Log.i("http_get", "done:"+url);
 		return new ByteArrayInputStream(responseBody.getBytes());
 	}
 	
@@ -231,22 +249,12 @@ public class ApiClient {
 				httpPost = getHttpPost(url, cookie, userAgent);	        
 		        httpPost.setRequestEntity(new MultipartRequestEntity(parts,httpPost.getParams()));		        
 		        int statusCode = httpClient.executeMethod(httpPost);
-		        if(statusCode != HttpStatus.SC_OK) 
-		        {
+		        if(statusCode != HttpStatus.SC_OK) {
 		        	throw AppException.http(statusCode);
 		        }
-		        else if(statusCode == HttpStatus.SC_OK) 
-		        {
-		            Cookie[] cookies = httpClient.getState().getCookies();
-		            String tmpcookies = "";
-		            for (Cookie ck : cookies) {
-		                tmpcookies += ck.toString()+";";
-		            }
-		            //保存cookie   
-	        		if(appContext != null && tmpcookies != ""){
-	        			appContext.setProperty("cookie", tmpcookies);
-	        			appCookie = tmpcookies;
-	        		}
+		        
+		        else if(statusCode == HttpStatus.SC_OK) {
+		            parseCookie(appContext, httpClient);
 		        }
 		     	responseBody = httpPost.getResponseBodyAsString();
 		        //System.out.println("XMLDATA=====>"+responseBody);
@@ -341,8 +349,9 @@ public class ApiClient {
 		return bitmap;
 	}
 	
-	private JSONObject parseResult(InputStream is){
+	private static JSONObject parseResult(InputStream is){
 		StringBuilder document = new StringBuilder();
+		JSONObject json=null;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is), 5 * 1024);
 		try{
 			String line = null;
@@ -350,18 +359,28 @@ public class ApiClient {
 				document.append(line);
 
 			reader.close();
-			JSONObject json =  new JSONObject(document.toString());
+			json =  new JSONObject(document.toString());
 			if(!json.getBoolean("status")){
-				//Error
 			}
-			return json;
 		}catch (IOException e) {
 			// TODO: handle exception
 		}catch (JSONException e) {
 			// TODO: handle exception
-		}finally{
-			return null;
 		}
-
+		return json;
+	}
+	
+	public static JSONObject login(AppContext appContext) throws AppException{
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("username", "comger");
+		params.put("password", "comgerpwd");
+		InputStream is =_post(appContext, "http://172.16.20.3:8888/m/account/login", params, null);
+		return parseResult(is);
+	}
+	
+	public static JSONArray accountPage(AppContext appContext) throws JSONException, AppException{
+		InputStream is =http_get(appContext, "http://172.16.20.3:8888/m/account/page");
+		return parseResult(is).getJSONArray("data");
+		
 	}
 }

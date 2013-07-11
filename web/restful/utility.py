@@ -8,7 +8,7 @@ from logic.utility import m_update,m_del,m_page
 
 class RestfulHandler(ContextHandler):
     token = property(lambda self:self.get_argument('token',None)) 
-    uid = property(lambda self:self.get_argument('uid',None))
+    uid = property(lambda self:self.get_secure_cookie('uid'))
 
     def prepare(self):
         '''
@@ -28,10 +28,11 @@ class DelHandler(RestfulHandler):
 @url(r'/m/(.*)/page')
 class PageHandler(RestfulHandler):
     def get(self,table):
+        print self.uid
         r,v= m_page(table,since = self.get_argument('since',None),addon=self.get_argument('addon',None))
         if r:
             if table == 'account':
                 for item in v:del item['password']
-            self.write(dict(status = r, data = v))
+            self.write(dict(status = r, data = v,uid = self.uid))
         else:
             self.write(dict(status = r, data =v))

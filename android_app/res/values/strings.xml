@@ -7,4 +7,5 @@
     <string name="http_exception_error">网络异常，请求超时</string>
     <string name="socket_exception_error">网络异常，读取数据超时</string>
     <string name="app_run_code_error">应用程序运行时异常</string>
+    <string name="json_parser_failed">JSON数据解析异常</string>
 </resources>

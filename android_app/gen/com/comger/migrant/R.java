@@ -27,6 +27,7 @@ public final class R {
         public static final int http_exception_error=0x7f040005;
         public static final int http_status_code_error=0x7f040004;
         public static final int io_exception_error=0x7f040003;
+        public static final int json_parser_failed=0x7f040008;
         public static final int network_not_connected=0x7f040001;
         public static final int socket_exception_error=0x7f040006;
         public static final int xml_parser_failed=0x7f040002;
@@ -34,7 +35,6 @@ public final class R {
     public static final class style {
         public static final int AppTheme=0x7f050000;
         public static final int Theme=0x7f050001;
-        public static final int Theme_NoTitleBar=0x7f050002;
-        public static final int Theme_NoTitleBar_Fullscreen=0x7f050003;
+        public static final int Theme_Migrant=0x7f050002;
     }
 }
