@@ -3,15 +3,23 @@
     author comger@gmail.com
 """
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 from kpages import get_context,mongo_conv,not_empty 
 
 Tb = lambda table:get_context().get_mongo()[table]
 
+#查询非删除状态的数据
+StatusCond = {'status':{'$ne':-1}}
+
 def m_update(table,_id,**kwargs):
     try:
         not_empty(table,_id)
-        Tb(table).update(dict(_id = ObjectId(_id),status = 0),{'$set':kwargs})
+        cond = dict(_id = ObjectId(_id))
+        cond.update(StatusCond)
+        Tb(table).update(cond,{'$set':kwargs})
         return True,None
+    except InvalidId as e:
+        return False,"查询参数格式错误"
     except Exception as e:
         return False,e.message
 
@@ -28,7 +36,11 @@ def m_del(table,_id,is_del=False):
         if is_del:
             Tb(table).remove(dict(_id = ObjectId(_id)))
         else:
-            Tb(table).update(dict(_id = ObjectId(_id),status = 0),{'$set':{'status':1}})
+            cond = dict(_id = ObjectId(_id))
+            cond.update(StatusCond)
+            Tb(table).update(cond,{'$set':{'status':-1}})
+    except InvalidId as e:
+        return False,"查询参数格式错误"
     except Exception as e:
         return False, e.message
 
@@ -39,7 +51,7 @@ def m_page(table,since=None,size=10,**kwargs):
         通用数据集查询方案,一次性获取size条大于since 及大于addon的数据记录
     """
     try:
-        cond = dict(status = 0)
+        cond = StatusCond
         cond_id = None
         if since:
             cond_id = ObjectId(since)
@@ -57,8 +69,7 @@ def m_page(table,since=None,size=10,**kwargs):
             cond.pop('addon')
         
 
-        print cond
-        lst = list(Tb(table).find(cond).limit(size))
+        lst = list(Tb(table).find(cond,{'status':0,'password':0}).limit(size))
         for item in lst:
             item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d-%H:%M:%S')
         
@@ -67,9 +78,14 @@ def m_page(table,since=None,size=10,**kwargs):
         return False,e.message
 
 def m_exists(table,**cond):
-    cond.update(status = 0)
+    cond.update(StatusCond)
     return Tb(table).find_one(cond)
 
 def m_info(table,_id):
     not_empty(_id)
-    return mongo_conv(Tb(table).find_one(dict(_id=ObjectId(_id),status=0)))
+    try:
+        return True,mongo_conv(Tb(table).find_one(dict(_id=ObjectId(_id),status=0),{'status':0,'password':0}))
+    except InvalidId as e:
+        return False,"查询参数格式错误"
+    except Exception as e:
+        return False,e.message

@@ -9,6 +9,7 @@ from utility import RestfulHandler
 
 from logic.utility import *
 from logic.account import add,login,TName as T_ACCOUNT,auth_login
+from logic.city import TName as T_CITY
 
 @url(r'/m/account/login')
 class LoginHandler(ContextHandler):
@@ -29,8 +30,6 @@ class LoginHandler(ContextHandler):
             del v['status']
 
         self.write(dict(status = r, data = v))
-
-
 
 
 @url(r'/m/auth/login')
@@ -56,11 +55,11 @@ class AddHandler(RestfulHandler):
 class UpdateHandler(RestfulHandler):
     def get(self):
         val = dict()
-        tocity = self.get_arguments('tocity',None)
+        tocity = self.get_argument('tocity',None)
         if tocity:
             val.update(tocity=tocity)
 
-        city = self.get_arguments('city',None)
+        city = self.get_argument('city',None)
         if city:
             val.update(city=city)
 
@@ -68,3 +67,20 @@ class UpdateHandler(RestfulHandler):
         self.write(dict(status = r, data = v))
 
 
+@url(r'/m/account/info')
+@url(r'/m/account/info/(.*)')
+class InfoHandler(RestfulHandler):
+    def get(self,_id = None):
+        r,v = m_info(T_ACCOUNT,_id or self.uid)
+        if not r:
+            return self.write(dict(status=r,data =v))
+
+        if v and v.get('city',None):
+            info = m_info(T_CITY,v['city'])
+            v['cityname'] = info['name']
+
+        if v and v.get('tocity',None):
+            info = m_info(T_CITY,v['tocity'])
+            v['tocityname'] = info['name']
+
+        self.write(dict(status=True,data=v))

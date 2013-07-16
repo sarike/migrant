@@ -9,12 +9,13 @@ from utility import m_update,m_del,m_page,m_exists
 TName = 'post'
 Tb = lambda :get_context().get_mongo()[TName]
 
-def add(uid,body,category=None,city=None,**kwargs):
+def add(uid,body,city=None,**kwargs):
     try:
         not_empty(uid,body)
-        r = m_exists(TName,uid=uid,body=body,category=category)
+        r = m_exists(TName,uid=uid,body=body)
         if not r:
-            val = dict(uid=uid,body=body,category=category,city=city,status=0)
+            val = dict(uid=uid,body=body,city=city)
+            val.update(kwargs)
             _id = Tb().insert(val,saft=True)
             val['_id'] = str(_id)
             return True,val

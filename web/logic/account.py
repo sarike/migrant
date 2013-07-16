@@ -14,7 +14,7 @@ def add(username,password,city):
         not_empty(username,password)
         r = m_exists(TName,username=username,password=password)
         if not r:
-            val = dict(username=username,password=password,city=city,status=0)
+            val = dict(username=username,password=password,city=city)
             _id = Tb().insert(val,saft=True)
             val['_id'] = str(_id)
             return True,val
@@ -44,7 +44,7 @@ def auth_login(site,otherid,name,**kwargs):
             r = mongo_conv(r)
             return True,r
         else:
-            val = dict(site=site,otherid=otherid,name=name,status=0)
+            val = dict(site=site,otherid=otherid,name=name)
             _id = Tb().insert(val,saft=True)
             val['_id'] = str(_id)
             return True,val
