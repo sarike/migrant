@@ -5,12 +5,14 @@
 """
 import base64
 import json
-from exceptions import ValueError
+from exceptions import ValueError,KeyError
 from kpages import url
 from utility import RestfulHandler
 
 from logic.utility import *
-from logic.post import add
+from logic.post import add,TName as T_POST,home
+from logic.account import TName as T_ACCOUNT
+
 
 @url(r'/m/post/create')
 class CreaterHandler(RestfulHandler):
@@ -35,21 +37,25 @@ class CreaterHandler(RestfulHandler):
 @url(r'/m/post/home')
 class HomeHandler(RestfulHandler):
     def get(self):
-        uid = self.uid
-        self.write(dict(status=True,data = ()))
+        try:
+            ur,uv = m_info(T_ACCOUNT,self.uid)
+            citys = (uv['city'],uv['tocity'])
+            r,v = home(self.uid,citys,self.get_argument('since',None))
+            self.write(dict(status=r,data = v))
+        except KeyError as e:
+            self.write(dict(statis=False,data='用户未设置相关城市',errormsg=e.message))
+        except TypeError as e:
+            self.write(dict(statis=False,data='没有该用户',errormsg=e.message))
+
 
 
 @url(r'/m/post/my')
+@url(r'/m/post/my/(.*)')
 class MyHandler(RestfulHandler):
-    def get(self):
-        uid = self.uid
-        self.write(dict(status=True,data = ()))
+    def get(self,_id=None):
+        r,v = m_page(T_POST,self.get_argument('since',None),uid=_id or self.uid)
+        self.write(dict(status=r,data = v))
 
 
-@url(r'/m/post/person')
-class PersonHandler(RestfulHandler):
-    def get(self):
-        uid = self.uid
-        self.write(dict(status=True,data = ()))
 
 

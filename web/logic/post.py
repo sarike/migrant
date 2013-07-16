@@ -4,7 +4,7 @@
     author comger@gmail.com
 """
 from kpages import not_empty,get_context,mongo_conv
-from utility import m_update,m_del,m_page,m_exists
+from utility import m_update,m_del,m_page,m_exists,StatusCond
 
 TName = 'post'
 Tb = lambda :get_context().get_mongo()[TName]
@@ -25,8 +25,7 @@ def add(uid,body,city=None,**kwargs):
         return False,e.message
 
 
-def page(uid,since=0,size=10,**kwargs):
-    """
-        get user post
-    """
-    pass
+def home(uid,citys,since=0,size=10):
+    cond = {'$or':[{'uid':uid},{'city':{'$in':citys}}]}
+    return m_page(TName,since,size,**cond)
+
