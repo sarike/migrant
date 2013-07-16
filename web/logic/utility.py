@@ -55,6 +55,7 @@ def m_page(table,since=None,size=10,**kwargs):
                 cond.update({'_id':{'$gt':ObjectId(_id)}})
         elif 'addon' in cond:
             cond.pop('addon')
+        
 
         print cond
         lst = list(Tb(table).find(cond).limit(size))

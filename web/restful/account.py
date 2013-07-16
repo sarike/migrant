@@ -3,21 +3,27 @@
     account action 
     author comger@gmail.com
 """
-import base64
 import json
-from kpages import url
+from kpages import url,ContextHandler
 from utility import RestfulHandler
 
 from logic.utility import *
 from logic.account import add,login,TName as T_ACCOUNT,auth_login
 
 @url(r'/m/account/login')
-class LoginHandler(RestfulHandler):
+class LoginHandler(ContextHandler):
     def post(self):
         r,v = login(self.get_argument('username'),self.get_argument('password'))
         if r:
-            token = dict(uid = v['_id'],host = self.request.host)
-            v['token'] = base64.b64encode(json.dumps(token))
+            self.set_secure_cookie('uid',v['_id'])
+            del v['password']
+            del v['status']
+
+        self.write(dict(status = r, data = v))
+
+    def get(self):
+        r,v = login(self.get_argument('username'),self.get_argument('password'))
+        if r:
             self.set_secure_cookie('uid',v['_id'])
             del v['password']
             del v['status']
@@ -25,13 +31,14 @@ class LoginHandler(RestfulHandler):
         self.write(dict(status = r, data = v))
 
 
+
+
 @url(r'/m/auth/login')
-class AuthLoginHandler(RestfulHandler):
-    def get(self):
+class AuthLoginHandler(ContextHandler):
+    def post(self):
         r,v = auth_login(self.get_argument('site'),self.get_argument('otherid'),self.get_argument('name'))
         if r:
-            token = dict(uid = v['_id'],host = self.request.host)
-            v['token'] = base64.b64encode(json.dumps(token))
+            self.set_secure_cookie('uid',v['_id'])
             del v['password']
             del v['status']
 

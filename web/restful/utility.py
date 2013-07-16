@@ -7,16 +7,12 @@ from kpages import ContextHandler,url
 from logic.utility import m_update,m_del,m_page
 
 class RestfulHandler(ContextHandler):
-    token = property(lambda self:self.get_argument('token',None)) 
     uid = property(lambda self:self.get_secure_cookie('uid'))
 
     def prepare(self):
-        '''
-        if not all((self.token,self.uid)):
-            self.write(dict(status = False,errormsg = 'not uid or token '))
+        if not self.uid:
+            self.write(dict(status = False,errormsg = 'not login'))
             self.finish()
-        '''
-        pass
 
 
 @url(r'/m/(.*)/del')
@@ -24,6 +20,7 @@ class DelHandler(RestfulHandler):
     def get(self,table):
         r,v= m_del(table,self.get_argument('id'))
         self.write(dict(status = r, data = v))
+
 
 @url(r'/m/(.*)/page')
 class PageHandler(RestfulHandler):

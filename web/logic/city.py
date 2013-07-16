@@ -23,4 +23,8 @@ def add(name,parent=None,level=0):
     except Exception as e:
         return False,e.message
 
+def getList(parant=None):
+    cond = dict(status=0,parent=None)
+    lst = list(Tb().find(cond))
+    return mongo_conv(lst)
 
