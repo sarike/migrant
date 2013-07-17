@@ -12,7 +12,7 @@ from post import TName as T_POST
 TName = 'comment'
 Tb = lambda :get_context().get_mongo()[TName]
 
-def add(uid,pid,bodyi,**kwargs):
+def add(uid,pid,body,**kwargs):
     not_empty(uid,pid,body)
     try:
         val = dict(uid=uid,pid=pid,body=body)
@@ -30,8 +30,10 @@ def list_by_user(uid,since=None,size=10):
     arr = []
     for item in lst:
         try:
-            item['user'] = m_info(T_ACCOUNT,item['uid'])['username']
-            item['title'] = m_info(T_POST,item['pid'])['body']
+            r,v = m_info(T_ACCOUNT,item['uid'])
+            if r:item['user'] = v['username']
+            r,v = m_info(T_POST,item['pid'])
+            if r:item['title'] = v['body']
             arr.append(item)
         except Exception as e:
             pass
@@ -46,7 +48,8 @@ def list_by_post(pid,since=None,size=10):
     arr = []
     for item in lst:
         try:
-            item['user'] = m_info(T_ACCOUNT,item['uid'])['username']
+            r,v = m_info(T_ACCOUNT,item['uid'])
+            if r:item['user'] = v['username']
             arr.append(item)
         except Exception as e:
             pass
