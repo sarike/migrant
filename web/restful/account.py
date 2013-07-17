@@ -76,11 +76,11 @@ class InfoHandler(RestfulHandler):
             return self.write(dict(status=r,data =v))
 
         if v and v.get('city',None):
-            info = m_info(T_CITY,v['city'])
-            v['cityname'] = info['name']
+            cr,cv = m_info(T_CITY,v['city'])
+            v['cityname'] = cv['name']
 
         if v and v.get('tocity',None):
-            info = m_info(T_CITY,v['tocity'])
-            v['tocityname'] = info['name']
+            cr,cv = m_info(T_CITY,v['tocity'])
+            v['tocityname'] = cv['name']
 
         self.write(dict(status=True,data=v))
