@@ -6,13 +6,7 @@
  */
 package com.comger.migrant.ui;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.comger.migrant.AppContext;
-import com.comger.migrant.AppException;
 import com.comger.migrant.R;
-import com.comger.migrant.api.ApiClient;
-import com.comger.migrant.common.AsyncRunner;
-import com.comger.migrant.common.AsyncRunner.RequestListener;
 
 /**
  * @author comger

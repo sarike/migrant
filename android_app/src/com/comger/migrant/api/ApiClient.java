@@ -46,9 +46,9 @@ public class ApiClient {
 	public static final String DESC = "descend";
 	public static final String ASC = "ascend";
 	
-	private final static int TIMEOUT_CONNECTION = 20000;
-	private final static int TIMEOUT_SOCKET = 20000;
-	private final static int RETRY_TIME = 3;
+	public final static int TIMEOUT_CONNECTION = 20000;
+	public final static int TIMEOUT_SOCKET = 20000;
+	public final static int RETRY_TIME = 3;
 
 	private static String appCookie;
 	private static String appUserAgent;
@@ -57,14 +57,14 @@ public class ApiClient {
 		appCookie = "";
 	}
 	
-	private static String getCookie(AppContext appContext) {
+	static String getCookie(AppContext appContext) {
 		if(appCookie == null || appCookie == "") {
 			appCookie = appContext.getProperty("cookie");
 		}
 		return appCookie;
 	}
 	
-	private static String getUserAgent(AppContext appContext) {
+	static String getUserAgent(AppContext appContext) {
 		if(appUserAgent == null || appUserAgent == "") {
 			StringBuilder ua = new StringBuilder("OSChina.NET");
 			ua.append('/'+appContext.getPackageInfo().versionName+'_'+appContext.getPackageInfo().versionCode);//App版本
@@ -77,7 +77,7 @@ public class ApiClient {
 		return appUserAgent;
 	}
 	
-	private static HttpClient getHttpClient() {        
+	static HttpClient getHttpClient() {        
         HttpClient httpClient = new HttpClient();
 		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
@@ -92,7 +92,7 @@ public class ApiClient {
 		return httpClient;
 	}	
 	
-	private static GetMethod getHttpGet(String url, String cookie, String userAgent) {
+	static GetMethod getHttpGet(String url, String cookie, String userAgent) {
 		GetMethod httpGet = new GetMethod(url);
 		// 设置 请求超时时间
 		httpGet.getParams().setSoTimeout(TIMEOUT_SOCKET);
@@ -103,7 +103,7 @@ public class ApiClient {
 		return httpGet;
 	}
 	
-	private static PostMethod getHttpPost(String url, String cookie, String userAgent) {
+	static PostMethod getHttpPost(String url, String cookie, String userAgent) {
 		PostMethod httpPost = new PostMethod(url);
 		// 设置 请求超时时间
 		httpPost.getParams().setSoTimeout(TIMEOUT_SOCKET);
@@ -114,8 +114,14 @@ public class ApiClient {
 		return httpPost;
 	}
 	
-	private static String _MakeURL(String p_url, Map<String, Object> params) {
-		StringBuilder url = new StringBuilder(p_url);
+	static String _MakeURL(String p_url, Map<String, Object> params) {
+		
+		StringBuilder url = new StringBuilder();
+		if(!p_url.startsWith("http")){
+			url.append(ApiUrls.Host);
+		}
+		url.append(p_url);
+		
 		if(url.indexOf("?")<0)
 			url.append('?');
 
@@ -131,7 +137,7 @@ public class ApiClient {
 		return url.toString().replace("?&", "?");
 	}
 	
-	private static void parseCookie(AppContext appContext,HttpClient httpClient){
+	static void parseCookie(AppContext appContext,HttpClient httpClient){
 		Cookie[] cookies = httpClient.getState().getCookies();
         String tmpcookies = "";
         for (Cookie ck : cookies) {
@@ -149,7 +155,7 @@ public class ApiClient {
 	 * @param url
 	 * @throws AppException 
 	 */
-	private static InputStream http_get(AppContext appContext, String url) throws AppException {	
+	static InputStream http_get(AppContext appContext, String url) throws AppException {	
 		//System.out.println("get_url==> "+url);
 		Log.i("http_get", url);
 		String cookie = getCookie(appContext);
@@ -213,7 +219,7 @@ public class ApiClient {
 	 * @param files
 	 * @throws AppException
 	 */
-	private static InputStream _post(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException {
+	static InputStream _post(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException {
 		//System.out.println("post_url==> "+url);
 		String cookie = getCookie(appContext);
 		String userAgent = getUserAgent(appContext);
@@ -299,7 +305,7 @@ public class ApiClient {
 	 * @param url
 	 * @return
 	 */
-	public static Bitmap getNetBitmap(String url) throws AppException {
+	static Bitmap getNetBitmap(String url) throws AppException {
 		//System.out.println("image_url==> "+url);
 		HttpClient httpClient = null;
 		GetMethod httpGet = null;
@@ -349,7 +355,13 @@ public class ApiClient {
 		return bitmap;
 	}
 	
-	private static JSONObject parseResult(InputStream is){
+	/**
+	 * 转成Json格式
+	 * @param is
+	 * @return
+	 * @throws AppException
+	 */
+	static JSONObject parseResult(InputStream is) throws AppException{
 		StringBuilder document = new StringBuilder();
 		JSONObject json=null;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is), 5 * 1024);
@@ -361,6 +373,7 @@ public class ApiClient {
 			reader.close();
 			json =  new JSONObject(document.toString());
 			if(!json.getBoolean("status")){
+				throw AppException.http(500);
 			}
 		}catch (IOException e) {
 			// TODO: handle exception
@@ -370,17 +383,7 @@ public class ApiClient {
 		return json;
 	}
 	
-	public static JSONObject login(AppContext appContext) throws AppException{
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("username", "comger");
-		params.put("password", "comgerpwd");
-		InputStream is =_post(appContext, "http://172.16.20.3:8888/m/account/login", params, null);
-		return parseResult(is);
-	}
+
 	
-	public static JSONArray accountPage(AppContext appContext) throws JSONException, AppException{
-		InputStream is =http_get(appContext, "http://172.16.20.3:8888/m/account/page");
-		return parseResult(is).getJSONArray("data");
-		
-	}
+
 }

@@ -56,12 +56,13 @@ class UpdateHandler(RestfulHandler):
     def get(self):
         val = dict()
         tocity = self.get_argument('tocity',None)
-        if tocity:
-            val.update(tocity=tocity)
+        if tocity:val.update(tocity=tocity)
 
         city = self.get_argument('city',None)
-        if city:
-            val.update(city=city)
+        if city:val.update(city=city)
+        
+        icon = self.get_argument('icon',None)
+        if icon:val.update(icon=icon)
 
         r,v = m_update(T_ACCOUNT,self.uid,**val)
         self.write(dict(status = r, data = v))
