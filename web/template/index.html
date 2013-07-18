@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>Migrant</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<link rel="stylesheet" type="text/css" href="/static/icons.css" title="default" />
+<link rel="stylesheet" type="text/css" href="/static/jq.ui.css" title="default" />
+<link rel="stylesheet" type="text/css" href="/static/ui.css" />
+
+<script type="text/javascript" charset="utf-8" src="/static/jq.mobi.min.js"></script> 
+<script>
+    if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
+        var script=document.createElement("script");
+        script.src="static/jq.desktopBrowsers.js";
+        var tag=$("head").append(script);
+    }
+
+    $(document).ready(function(){
+
+    });
+
+</script>
+</head>
+<body>
+    <div id="jQUi">
+        <div id="header">
+            <h1>Migrant</h1>
+        </div>
+        <div id="content">
+            This is a basic skeleton jqUi sample
+        </div>
+
+        <!-- bottom navbar.  Add additional tabs here -->
+        <div id="navbar">
+            <a href="#main" id='navbar_home' class="icon home">信息</a>
+            <a href="#jqm" id='navbar_js' class="icon location" >我的位置</a>
+            <a href="#jqmui" id='navbar_ui'  class="icon message" >信息</a>
+	        <a href="#jqmweb" id='navbar_plugins'  class="icon wifi" >plugins</a>
+        </div>
+    </div>
+</body>
+</html>

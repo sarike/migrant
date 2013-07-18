@@ -1,0 +1,40 @@
+body{ background:#f1f1f1; color:#000000;}
+#jQUi > #header,#navbar { 
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0);
+    background:#cccccc;
+}
+
+#navbar .icon:before,#navbar a{
+    color:rgba(19, 29, 38, 1);
+    text-shadow: 0 0px 0px rgba(10, 12, 20, 0.9);
+}
+
+@media all and (max-width: 480px){
+    #jQUi > #header {
+        height: 38px;
+    }
+    
+    #header h1{
+        height: 38px;
+        line-height: 38px;
+        color:red;
+    }
+    
+    #navbar {
+        height: 48px;
+    }
+    
+    #navbar .icon:before {
+        font-size: 38px;
+        line-height: 48px;
+    }
+    
+    #navbar a {
+        height: 48px;
+        line-height: 80px;
+    }
+}
+
+
+
+
