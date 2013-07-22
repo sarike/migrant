@@ -2,27 +2,7 @@
 <html>
 <head>
 <title>Migrant</title>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes" />
-
-<link rel="stylesheet" type="text/css" href="/static/icons.css" title="default" />
-<link rel="stylesheet" type="text/css" href="/static/jq.ui.css" title="default" />
-<link rel="stylesheet" type="text/css" href="/static/ui.css" />
-
-<script type="text/javascript" charset="utf-8" src="/static/jq.mobi.min.js"></script> 
-<script>
-    if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
-        var script=document.createElement("script");
-        script.src="static/jq.desktopBrowsers.js";
-        var tag=$("head").append(script);
-    }
-
-    $(document).ready(function(){
-
-    });
-
-</script>
+{% include ress.html %}
 </head>
 <body>
     <div id="jQUi">
@@ -30,16 +10,31 @@
             <h1>Migrant</h1>
         </div>
         <div id="content">
-            This is a basic skeleton jqUi sample
+        <ul id='contentlst'>
+		     <li ><a href="#jqm" id="jqmlink" >jqMobi<span class="jq-badge " data-ignore-pressed="true">38</span></a></li>
+		     <li ><a href="#jqmui">jqUi</a></li>
+		     <li ><a href="#jqmweb">jqPlugins</a></li>
+		</ul>
         </div>
-
-        <!-- bottom navbar.  Add additional tabs here -->
-        <div id="navbar">
-            <a href="#main" id='navbar_home' class="icon home">信息</a>
-            <a href="#jqm" id='navbar_js' class="icon location" >我的位置</a>
-            <a href="#jqmui" id='navbar_ui'  class="icon message" >信息</a>
-	        <a href="#jqmweb" id='navbar_plugins'  class="icon wifi" >plugins</a>
-        </div>
+        {% include navbar.html %}
     </div>
 </body>
 </html>
+<script type="text/javascript">
+   $(function(){
+        $.ajax({
+           type: "GET",
+           url: "/m/post/my",
+           dataType: "json",
+           success:function(rs){
+                if(rs.status){
+                    $.each(rs.data,function(index,item){
+                        $("#contentlst").append($('<li ><a href="#">'+item.body+'</a></li>'));
+                    })
+                    
+                }
+           }
+         });
+   })
+
+</script>
