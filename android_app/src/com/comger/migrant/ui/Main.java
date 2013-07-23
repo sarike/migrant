@@ -6,62 +6,98 @@
  */
 package com.comger.migrant.ui;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.comger.migrant.AppContext;
+import com.comger.migrant.AppException;
 import com.comger.migrant.R;
+import com.comger.migrant.api.MigrantApi;
+import com.comger.migrant.common.AsyncRunner;
+import com.comger.migrant.common.BaseRequestListener;
 
 /**
  * @author comger
  * 
  */
-public class Main extends Activity implements  android.view.View.OnClickListener {
+public class Main extends Activity  {
+	LinearLayout citylist = null;
+	JSONArray array = null;
 	
-	TextView tv1 = null;
-	TextView tv2 = null;
-	LinearLayout ll1 = null;
-	EditText et1 = null;
-	
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.arg1 == 1) {
+				loadcity();
+			}else if(msg.arg1 ==2){
+				for(int i=0;i<array.length();i++){
+					try{
+						String name = array.getJSONObject(i).getString("name");
+						TextView tv = new TextView(AppContext.mContext);
+						tv.setText(name);
+						citylist.addView(tv);
+					}catch (Exception e) {
+						// TODO: handle exception
+					}
+
+				}
+			}
+			
+		}
+	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		tv1 = (TextView)findViewById(R.id.tv1);
-		tv1.setOnClickListener(this);
-		tv2 = (TextView)findViewById(R.id.tv2);
-		tv2.setOnClickListener(this);
+		citylist = (LinearLayout)findViewById(R.id.citylist);
 		
-		ll1 = (LinearLayout)findViewById(R.id.ll1);
-		ll1.setOnClickListener(this);
-		ll1.setVisibility(View.GONE);
-		
-		et1 = (EditText)findViewById(R.id.ed1);
-	}
-
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.tv1:
-			Log.i("tv1", "done");
-			break;
-		case R.id.tv2:
-			Log.i("tv2", "done");
-			break;
-		case R.id.ll1:
-			Log.i("ll1", "done");
-			break;
-		case R.id.ed1:
-			Log.i("et1", "done");
-			break;
+		AsyncRunner.run(new BaseRequestListener(){
+			@Override
+			public void onRequesting() throws AppException, JSONException {
+				super.onRequesting();
+				JSONObject jsonObject= MigrantApi.accountLogin("comger", "comgerpwd");
+				Message msg = handler.obtainMessage();
+				msg.arg1 = 1;
+				handler.sendMessage(msg);
+			}
 			
-		default:
-			break;
-		}
+			@Override
+			public void onAppError(AppException e) {
+				super.onAppError(e);
+			}
+		});
+		
+
+		
 	}
+
+	private void loadcity(){
+		AsyncRunner.run(new BaseRequestListener(){
+			@Override
+			public void onRequesting() throws AppException, JSONException {
+				super.onRequesting();
+				array = MigrantApi.getCityList(null);
+				Log.i("citys", array.toString());
+				Message msg = handler.obtainMessage();
+				msg.arg1 = 2;
+				handler.sendMessage(msg);
+			}
+			
+			@Override
+			public void onAppError(AppException e) {
+				super.onAppError(e);
+			}
+		});
+	}
+	
 }

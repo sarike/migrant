@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +25,11 @@ public class MigrantApi extends ApiClient {
 	
 	static JSONObject _post(String api,Map<String, Object> params) throws AppException{
 		InputStream is =_post(AppContext.mContext, ApiUrls.Host+api, params, null);
+		return parseResult(is);
+	}
+	
+	static JSONObject _get(String api,Map<String, Object> params) throws AppException{
+		InputStream is = http_get(AppContext.mContext,ApiUrls.Host+api);
 		return parseResult(is);
 	}
 	
@@ -50,5 +56,11 @@ public class MigrantApi extends ApiClient {
 		params.put("name", name);
 		
 		return _post(ApiUrls.authLogin, params).getJSONObject("data");
+	}
+	
+	public static JSONArray getCityList(String parent) throws AppException,JSONException{
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("parent", parent);
+		return _get(ApiUrls.cityList, params).getJSONArray("data");
 	}
 }
