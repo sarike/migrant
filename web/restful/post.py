@@ -6,7 +6,7 @@
 import base64
 import json
 from exceptions import ValueError,KeyError
-from kpages import url
+from kpages import url,ContextHandler
 from utility import RestfulHandler
 
 from logic.utility import *
@@ -58,4 +58,11 @@ class MyHandler(RestfulHandler):
 
 
 
+@url(r'/m/post/city')
+@url(r'/m/post/city/(.*)')
+class CityHandler(ContextHandler):
+    def get(self,_id=None):
+        r,v = m_page(T_POST,self.get_argument('since',None),city=_id)
+        self.write(dict(status=r,data = v))
+        
 

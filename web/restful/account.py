@@ -14,6 +14,7 @@ from logic.city import TName as T_CITY
 @url(r'/m/account/login')
 class LoginHandler(ContextHandler):
     def post(self):
+        print self.request
         r,v = login(self.get_argument('username'),self.get_argument('password'))
         if r:
             self.set_secure_cookie('uid',v['_id'])
