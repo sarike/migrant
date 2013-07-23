@@ -16,5 +16,6 @@ public class ApiUrls {
 	public static String Login = "/m/account/login";
 	public static String authLogin = "/m/auth/login";
 	public static String accountInfo = "/m/account/info";
+	public static String cityList = "/m/city/list";
 	
 }

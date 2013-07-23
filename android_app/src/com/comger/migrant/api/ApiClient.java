@@ -32,6 +32,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.comger.migrant.AppContext;
+import com.comger.migrant.AppError;
 import com.comger.migrant.AppException;
 
 /**
@@ -373,7 +374,7 @@ public class ApiClient {
 			reader.close();
 			json =  new JSONObject(document.toString());
 			if(!json.getBoolean("status")){
-				throw AppException.http(500);
+				throw AppException.server(new Exception(json.getString("errormsg")));
 			}
 		}catch (IOException e) {
 			// TODO: handle exception

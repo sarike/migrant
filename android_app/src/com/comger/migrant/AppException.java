@@ -39,6 +39,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	public final static byte TYPE_IO	 	= 0x06;
 	public final static byte TYPE_RUN	 	= 0x07;
 	public final static byte TYPE_JSON	 	= 0x08;
+	public final static byte TYPE_SERVER_ERROR	 	= 0x09;
 	
 	private byte type;
 	private int code;
@@ -96,6 +97,9 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 		case TYPE_JSON:
 			Toast.makeText(ctx, R.string.json_parser_failed, Toast.LENGTH_SHORT).show();
 			break;
+		case TYPE_SERVER_ERROR:
+			Toast.makeText(ctx, String.format("%s:%s", "接口异常",getMessage().split(":")[1]), Toast.LENGTH_SHORT).show();
+			break;
 		}
 
 	}
@@ -150,6 +154,10 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	
 	public static AppException http(Exception e) {
 		return new AppException(TYPE_HTTP_ERROR, 0 ,e);
+	}
+	
+	public static AppException server(Exception e) {
+		return new AppException(TYPE_SERVER_ERROR, 0 ,e);
 	}
 
 	public static AppException socket(Exception e) {
