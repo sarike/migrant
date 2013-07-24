@@ -1,0 +1,54 @@
+Migrant Restful 接口说明
+
+参数说明
+    1. 需要_id参数，但指定_id未传时，为当前登录用户相关ID(如：用户ID,用户城市ID等)
+
+返回数据说明
+    status      请求状态 true | false, 当false 时通信失败或交互失败，errormsg 输出异常信息
+    data        返回数据,按需求返回的数据有可能是jsonobject或jsonarray
+    errormsg    异常信息   
+
+
+a. 用户相关 
+   account {'username':用户账号,
+        'city':城市,
+        '_id':唯一标记}
+        
+   1. (status,account|msg)     ('/m/account/login', 'username,password') //用户登录;请求输出带Cookie 信息
+   2. (status,account|msg)     ('/m/auth/login', 'siteid,otherid,name') //用户登录
+   3. (status,account|msg)     ('/m/account/info(/_id)')                //用户信息,_id 用户ID
+   4. (status,msg)     ('/m/account/update', 'city,tocity,icon') //更新当前登录用户资料
+   
+b. 快捷方式相关
+    
+    city {'name':城市名称,
+        '_id':唯一标记,
+        'level':城市级别(0:省份或直辖,1:市或区,2:县)
+        'parent', 上级ID}
+        
+    1. (status,list(city))     ('/m/city/list(/_id)')                  //获取指定城市列表;_id 这上级ID,为空时获取level==0
+    
+        
+c. 资讯相关
+
+    post {_id':唯一标记,
+        'body':内容
+        'city':城市ID
+        'uid':作者ID}
+        
+    1. (status,post|msg)      ('/m/post/create','body,city')            //发表资讯
+    2. (status,list(post))    ('/m/post/my(/_id)')                      //获取指定用户的资讯,_id 用户ID
+    3. (status,list(post))    ('/m/post/city(/_id)')                      //获取指定用户所在城市的资讯,_id 用户ID
+    4. (status,list(post))    ('/m/post/home')                          //获取当前用户相关资讯
+    
+d. 评论相关
+
+    comment {_id':唯一标记,
+        'body':内容
+        'pid':资讯ID
+        'uid':作者ID}
+        
+    1. (status,comment|msg)    ('/m/comment/create','body,pid')         //发布资讯评论
+    2. (status,list(comment))  ('/m/comment/postlist/_id')            //获取资讯评论,_id 为资讯ID
+    3. (status,list(comment))  ('/m/comment/userlist(/_id)')            //获取用户所发出的评论，_id 用户ID
+    

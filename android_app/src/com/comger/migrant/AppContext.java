@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
@@ -35,11 +36,13 @@ public class AppContext extends Application {
 	
 	public static final int PAGE_SIZE = 20;//默认分页大小
 	public static AppContext mContext = null;
+	public static SharedPreferences mLoginUser;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		mContext = this;
+		mLoginUser = this.getSharedPreferences("userdata", Context.MODE_PRIVATE);
 	}
 	
 	/**
