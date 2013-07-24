@@ -8,6 +8,8 @@
 
 #import "PostViewController.h"
 #import "AFJSONRequestOperation.h"
+#import "LoginViewController.h"
+#import "LocalConfig.h"
 
 @interface PostViewController ()
 
@@ -17,6 +19,7 @@
 @synthesize dataList;
 @synthesize since;
 @synthesize url;
+@synthesize parent;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,7 +51,6 @@
 #pragma mark -
 #pragma mark UITableViewDataSource
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     return [self.dataList count]+1;
@@ -70,7 +72,7 @@
         //创建loadMoreCell
         cell.textLabel.text=@"More..";
     }else {
-        cell.textLabel.text=[[self.dataList objectAtIndex:indexPath.row] valueForKey:@"body"];    }
+        cell.textLabel.text=[[self.dataList objectAtIndex:indexPath.row] valueForKey:@"name"];    }
     return cell;
 }
 
@@ -91,10 +93,10 @@
         return;
     }else{
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        UIViewController* vc = [[PostViewController alloc] init];
+        PostViewController* vc = [[PostViewController alloc] init];
         //[vc getFinalRemViewController:self];
-        NSString *_since = [[self.dataList objectAtIndex:(indexPath.row)] objectForKey:@"_id"];
-        [vc setSince:_since];
+        NSString *_parent = [[self.dataList objectAtIndex:(indexPath.row)] objectForKey:@"_id"];
+        [vc setParent:_parent];
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
         
@@ -105,6 +107,10 @@
     self.since = _since;
 }
 
+-(void)setParent:(NSString *)_parent{
+    self.parent = _parent;
+}
+
 
 #pragma mark - View lifecycle
 
@@ -112,14 +118,27 @@
 {
     [super viewDidLoad];
     self.dataList = [[NSMutableArray alloc] init];
-    [self loaddata];
+    
+    if([[LocalConfig Instance]shareconfig:@"uid"]==nil){
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"请登录后查看信息" delegate:self cancelButtonTitle:@"返回" destructiveButtonTitle:nil otherButtonTitles:@"登录", nil];
+        [sheet showInView:[UIApplication sharedApplication].keyWindow];
+    }else{
+        [self loaddata];
+    }
+    
+
 }
 
 -(void)loaddata{
-    self.url =  @"http://192.168.1.166:8888/m/post/city";
+    self.url =  @"http://192.168.1.166:8888/m/city/list";
     if(self.since!=nil){
-        url = [NSString stringWithFormat: @"%@?since=%@",url,self.since];
+        //url = [NSString stringWithFormat: @"%@?since=%@",url,self.since];
     }
+    
+    if(self.parent!=nil){
+        url = [NSString stringWithFormat: @"%@/%@",url,self.parent];
+    }
+    
     NSLog(self.url);
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.url] ];
     
@@ -154,6 +173,16 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+    if ([buttonTitle isEqualToString:@"登录"]) {
+        LoginViewController *loginview = [[LoginViewController alloc]init];
+        [self.navigationController pushViewController:loginview animated:YES];
+        return;
+    }
 }
 
 @end
