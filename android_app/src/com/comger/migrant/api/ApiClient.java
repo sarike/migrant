@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Cookie;
@@ -23,7 +22,6 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +30,6 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.comger.migrant.AppContext;
-import com.comger.migrant.AppError;
 import com.comger.migrant.AppException;
 
 /**
@@ -221,7 +218,7 @@ public class ApiClient {
 	 * @throws AppException
 	 */
 	static InputStream _post(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException {
-		//System.out.println("post_url==> "+url);
+		Log.i("http_post", url);
 		String cookie = getCookie(appContext);
 		String userAgent = getUserAgent(appContext);
 		
@@ -235,7 +232,7 @@ public class ApiClient {
         if(params != null)
         for(String name : params.keySet()){
         	parts[i++] = new StringPart(name, String.valueOf(params.get(name)), UTF_8);
-        	//System.out.println("post_key==> "+name+"    value==>"+String.valueOf(params.get(name)));
+        	Log.i("http_post_params", String.format("%s==>%s", name,params.get(name)));
         }
         if(files != null)
         for(String file : files.keySet()){
@@ -295,7 +292,7 @@ public class ApiClient {
 			}
 		}while(time < RETRY_TIME);
         
-      
+		Log.i("http_post", "done:"+url);
         return new ByteArrayInputStream(responseBody.getBytes());
 	}
 	

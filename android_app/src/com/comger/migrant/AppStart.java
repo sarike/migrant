@@ -7,6 +7,7 @@
 package com.comger.migrant;
 
 
+import com.comger.migrant.ui.Login;
 import com.comger.migrant.ui.Main;
 
 import android.app.Activity;
@@ -52,7 +53,7 @@ public class AppStart extends Activity {
      * 跳转到...
      */
     private void redirectTo(){        
-        Intent intent = new Intent(this, Main.class);
+        Intent intent = new Intent(this, Login.class);
         startActivity(intent);
         finish();
     }

@@ -14,12 +14,13 @@ from logic.city import TName as T_CITY
 @url(r'/m/account/login')
 class LoginHandler(ContextHandler):
     def post(self):
-        print self.request
         r,v = login(self.get_argument('username'),self.get_argument('password'))
         if r:
             self.set_secure_cookie('uid',v['_id'])
-
-        self.write(dict(status = r, data = v))
+            del v['password']
+            self.write(dict(status = r, data = v))
+        else: 
+            self.write(dict(status = r, errormsg = "登录失败"))
 
     def get(self):
         r,v = login(self.get_argument('username'),self.get_argument('password'))
