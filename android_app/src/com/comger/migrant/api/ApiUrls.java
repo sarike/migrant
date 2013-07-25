@@ -12,7 +12,8 @@ package com.comger.migrant.api;
  */
 public class ApiUrls {
 	
-	public static String Host = "http://172.16.20.3:8888";
+	//public static String Host = "http://172.16.20.3:8888";
+	public static String Host = "http://192.168.1.166:8888";
 	public static String Login = "/m/account/login";
 	public static String authLogin = "/m/auth/login";
 	public static String accountInfo = "/m/account/info";

@@ -17,7 +17,6 @@ public final class R {
     }
     public static final class id {
         public static final int btn_login=0x7f06000a;
-        public static final int citylist=0x7f06000d;
         public static final int et_password=0x7f060009;
         public static final int et_username=0x7f060006;
         public static final int iv_logo=0x7f060002;
@@ -25,7 +24,6 @@ public final class R {
         public static final int ll_pwd=0x7f060007;
         public static final int ll_top=0x7f060001;
         public static final int ll_username=0x7f060004;
-        public static final int textView1=0x7f06000c;
         public static final int tv_copyright=0x7f06000b;
         public static final int tv_loginTitle=0x7f060003;
         public static final int tv_uname=0x7f060005;
