@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8"/>
-	<title>top10 - 后台管理系统</title>
+	<title>Migrant 分组管理</title>
 	{% include ress.html %}
 </head>
 
@@ -24,9 +24,14 @@
 	<section id="main" class="column">
 		<article class="module width_full">
 			<header><h3 class="tabs_involved">分组管理</h3>
+			<form action='/admin/group'>
 			<ul class="tabs">
+		    	<li style='margin-left:5px;'><input type='text' name='key' id='tvkeyword'></li>
+       			<li style='margin-right:10px;'><input type='submit' value='查询'/></li>
+       			<li>|</li>
 	   			<li><a href="javascript:void(0)" id='additembtn'>添加分组</a></li>
 			</ul>
+			</form>
 			</header>
 			<div class="tab_container">
 				<div class="tab_content">
