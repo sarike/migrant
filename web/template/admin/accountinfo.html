@@ -100,8 +100,10 @@
 
 			}
 	    });
+
+
 	    
-	    function append_select(select,parent){
+	    function append_select(select,parent,callback){
 	        var api = '/m/city/list';
 	        if(parent){
 	            api = api +'/'+parent;
@@ -115,12 +117,28 @@
 	                    select.append(opt);
 	                });
 	            }
+	            if(callback){
+					callback();
+	            }
+	            
 	            
 	        })
 	    }
 	    
 	    var rootcitys = $('#rootcitys');
-	    append_select(rootcitys);
+	    append_select(rootcitys,null,function(){
+	    	{% if info %}
+	    	$.get('/m/city/info?id={{info.get("city",None)}}',function(rs){
+	    		if(rs.status){
+	    			rootcitys.val(rs.data.parent);
+	    			append_select($('#childcitys'),rs.data.parent,function(){
+	    				$('#childcitys').val('{{info.get("city",None)}}');
+	    			});
+	    		}
+	    	})
+	    	{% end %}
+	    });
+
 	    
 	    rootcitys.change(function(){
 	        append_select($('#childcitys'),$(this).val());

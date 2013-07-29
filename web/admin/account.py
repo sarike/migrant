@@ -60,7 +60,7 @@ class AccountSaveHandler(ActionHandler):
         info = {}
         if _id:
             r,info = m_info(T_ACCOUNT,_id)
-       
+
         self.render('admin/accountinfo.html', info = info)
 
 @url(r"/admin/account/delete")
@@ -75,7 +75,7 @@ class AccountDeleteHandler(ActionHandler):
 @url(r"/admin/login")
 class LoginHandler(ActionHandler):
     def get(self):
-        self.render('admin/login.html',errormsg = '')
+        self.render('admin/login.html',errormsg = '',next = self.get_argument('next','/admin'))
 
     def post(self):
         username = self.get_argument("username", None)

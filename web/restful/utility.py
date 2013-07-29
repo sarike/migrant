@@ -4,7 +4,7 @@
     BaseHandler for reqest
 """
 from kpages import ContextHandler,url
-from logic.utility import m_update,m_del,m_page
+from logic.utility import m_update,m_del,m_page,m_info
 from logic import city
 
 class RestfulHandler(ContextHandler):
@@ -14,6 +14,13 @@ class RestfulHandler(ContextHandler):
         if not self.uid:
             self.write(dict(status = False,errormsg = 'not login'))
             self.finish()
+
+@url(r'/m/city/info')
+class InfoHandler(ContextHandler):
+    def get(self):
+        r,v= m_info(city.TName,self.get_argument('id'))
+        self.write(dict(status = r, data = v))
+
 
 @url(r'/m/(.*)/del')
 class DelHandler(RestfulHandler):
@@ -29,6 +36,7 @@ class PageHandler(RestfulHandler):
             self.write(dict(status = r, data = v,uid = self.uid))
         else:
             self.write(dict(status = r, data =v))
+
 
 @url(r'/m/city/list')
 @url(r'/m/city/list/(.*)')

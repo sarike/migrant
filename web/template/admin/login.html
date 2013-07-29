@@ -21,7 +21,7 @@
 		        <form id='loginfrm' action="/admin/login" method="post">
 			        <header><h3>管理员登录</h3></header>
 				        <div class="module_content">
-				        		<input type='hidden' name='next' value='/admin'> 
+				        		<input type='hidden' name='next' value='{{ next }}'> 
 						        <fieldset style="width:48%; float:left; margin-right: 3%;">
 							        <label>用户名</label>
 							        <input type="text" name='username'  datatype="s5-16" errormsg="用户名至少5个字符,最多16个字符！">
