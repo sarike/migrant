@@ -27,7 +27,11 @@ def add(username,password,city=None,**kwargs):
 def login(username,password,isadmin = None):
     try:
         not_empty(username,password)
-        r = m_exists(TName,username=username,password=password,isadmin=isadmin)
+        cond = dict(username=username,password=password)
+        if isadmin:
+            cond.update(isadmin = isadmin)
+
+        r = m_exists(TName,**cond)
         if r:
             r = mongo_conv(r)
             return True, r

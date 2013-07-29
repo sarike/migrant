@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8"/>
-	<title>top10 - 后台管理系统</title>
+	<title>Migrant 报告管理</title>
 	{% include ress.html %}
 </head>
 <body>
@@ -40,6 +40,8 @@
 		            <tr  id="{{ item.get('_id') }}">
 		            	<td><input type="checkbox" class='chkbtn' name='chk'></td>
 		                <td >{{ item.get("title","")}}</td>
+		                <td >{{ item.get("addon","")}}</td>
+		                <td ><a href='/admin/report/save?id={{ item.get("_id","")}}&isseo=1' target='_bland'>推广信息</a></td>
 		                <td><a href='/admin/report/save?id={{ item.get("_id","")}}'><input type="image" src="/static/admin/images/icn_edit.png" title="编辑"></a><input type="image" src="/static/admin/images/icn_trash.png" title="删除" class='delbtn'></td>
 		            </tr>
 		        {% end %}
@@ -49,13 +51,13 @@
 			</div><!-- end of .tab_container -->
 		</article><!-- end of content manager article -->
         
-        {% if count >1 %}
 		<article class="module width_full pager">
-			{% for i in range(count) %}
-				<a href='?pageindex={{i}}&pid={{ pid or ""}}'>{{ i}}</a>
-			{% end %}
+				{% if len(data) >=10 %}
+				<a href='?since={{ data[-1].get("_id")}}'>下一页</a>
+				{% else %}
+				<p>没有更多信息</p>
+				{% end %}
 		</article>
-		{% end %}
 	</section>
 
 </body>

@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 <head>
 	<meta charset="utf-8"/>
 	<title>top10 - 后台管理系统</title>
@@ -33,6 +32,14 @@
 							<label>用户名</label>
 							<input type="text" name='username' value='{{ info.get("username","")}}' datatype="s5-16" errormsg="用户名至少5个字符,最多16个字符！" {% if info%} readonly="true" {% end %}>
 						</td></tr>
+						<tr><td>
+							<label>城市</label>
+							<ul style='list-style:none;float:left;padding-left:2px;width:96%'>
+							    <li style='float:left'><select id='rootcitys'></select></li>
+							    <li style='float:left;'><select id='childcitys' name='city'></select></li>
+							</ul>
+						</td></tr>
+						
 						{% if not info %}
 						<tr><td>
 							<label>密码</label>
@@ -92,8 +99,33 @@
 				}
 
 			}
-
 	    });
+	    
+	    function append_select(select,parent){
+	        var api = '/m/city/list';
+	        if(parent){
+	            api = api +'/'+parent;
+	        }
+	        
+	        $.get(api,function(rs){
+	            if(rs.status){
+	                select.find('option').remove();
+	                $(rs.data).each(function(i,item){
+	                    var opt = $('<option>').val(item._id).html(item.name);
+	                    select.append(opt);
+	                });
+	            }
+	            
+	        })
+	    }
+	    
+	    var rootcitys = $('#rootcitys');
+	    append_select(rootcitys);
+	    
+	    rootcitys.change(function(){
+	        append_select($('#childcitys'),$(this).val());
+	        
+	    })
 	    
 	})
 </script>

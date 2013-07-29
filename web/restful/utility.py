@@ -32,7 +32,7 @@ class PageHandler(RestfulHandler):
 
 @url(r'/m/city/list')
 @url(r'/m/city/list/(.*)')
-class CityHandler(RestfulHandler):
+class CityHandler(ContextHandler):
     def get(self,parent = None):
         if not parent:parent = None
         lst = city.getList(parent)

@@ -28,7 +28,6 @@ class LoginHandler(ContextHandler):
         if r:
             self.set_secure_cookie('uid',v['_id'])
             del v['password']
-            del v['status']
 
         self.write(dict(status = r, data = v))
 

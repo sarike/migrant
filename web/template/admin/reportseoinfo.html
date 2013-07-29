@@ -4,21 +4,6 @@
 	<meta charset="utf-8"/>
 	<title>Migrant 报告管理</title>
 	{% include ress.html %}
-	<script charset="utf-8" src="/static/kindeditor-min.js"></script>
-	<script charset="utf-8" src="/static/zh_CN.js"></script>
-	<script type="text/javascript">
-	  var editor;
-	  
-	  KindEditor.ready(function(K){
-	      editor = K.create('textarea[name="body"]', {
-	          //allowFileManager : true,
-	          resizeType: 0,
-	          urlType : 'absolute',            
-	          items: ['fontsize', '|', 'forecolor', 'hilitecolor', 'underline', 'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 'link', 'source']
-	      });
-	      
-	  });
-	</script>
 </head>
 <body>
 	{% include header.html %}
@@ -39,7 +24,6 @@
             <header><h3>报告信息</h3>
             </header>
             <form class='validform' action='/admin/report/save' method='post'>
-            <input type="hidden" name='pid' value='{{ info.get("pid","")}}'>
             <input type="hidden" name='id' value='{{ info.get("_id","")}}'>
             <div class="module_content">
 					<!--seo start -->
@@ -62,22 +46,6 @@
 					</table>
 					</fieldset>
 					<!--seo end  -->
-					<fieldset>
-					<table width="100%">
-						<tr><td>
-							<label>标题</label>
-							<input type="text" name='rtitle' value='{{ info.get("title","")}}' datatype="s2-56" errormsg="标题名称至少2个字符,最多56个字符！">
-						</td></tr>
-						<tr><td>
-							<label>标签(使用|分割)</label>
-							<input type="text" name='tags' value='{{ '|'.join(info.get("tags",[]))}}' >
-						</td></tr>
-						<tr><td>
-							<label>内容</label>
-							<textarea rows="20" id="textarea" name='body' style="visibility:hidden;">{{ info.get("body","")}}</textarea>
-						</td></tr>
-					</table>
-					</fieldset>
                     <h4 class="alert_error">An Error Message</h4>
 
 			</div>
