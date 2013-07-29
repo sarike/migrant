@@ -1,0 +1,80 @@
+
+		<aside id="sidebar" class="column">
+		<form class="quick_search">
+			<input type="text" value="Quick Search" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
+		</form>
+		<hr/>
+		<h3>内容管理</h3>
+		<ul class="toggle">
+			<li class="icn_tags"><a href="/admin/group">分组管理</a></li>
+			<li class="icn_categories"><a href="/admin/category">分类管理</a></li>
+			<li class="icn_new_article"><a href="/admin/product/save">添加产品</a></li>
+			<li class="icn_settings"><a href="/admin/product">产品列表</a></li>
+			<li class="icn_edit_article"><a href="/admin/report">报告列表</a></li>
+			
+		</ul>
+		<h3>用户管理</h3>
+		<ul class="toggle">
+			<li class="icn_add_user"><a href="/admin/account/save">添加用户</a></li>
+			<li class="icn_view_users"><a href="/admin/account">用户列表</a></li>
+
+		</ul>
+		<h3>数据中心</h3>
+		<ul class="toggle">
+			<li class="icn_folder"><a href="/admin/resource">产品资源</a></li>
+			<li class="icn_photo"><a href="/admin/filemaster">文件管理</a></li>
+			<li class="icn_security"><a href="/admin/oauth">外联登录</a></li>
+		</ul>
+		<h3>系统管理</h3>
+		<ul class="toggle">
+			<li class="icn_jump_back"><a href="/admin/help">使用帮助</a></li>
+			<li class="icn_jump_back"><a href="/admin/logout">退出系统</a></li>
+		</ul>
+		
+		<footer>
+			<hr />
+			<p><strong>Copyright &copy; 2011 migrant Admin</strong></p>
+			<br>
+		</footer>
+	</aside><!-- end of sidebar -->
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	// choose text for the show/hide link - can contain HTML (e.g. an image)
+	var showText='显示';
+	var hideText='关闭';
+
+	// initialise the visibility check
+	var is_visible = false;
+
+	// append show/hide links to the element directly preceding the element with a class of "toggle"
+	$('.toggle').prev().append(' <a href="#" class="toggleLink">'+hideText+'</a>');
+
+	// hide all of the elements with a class of 'toggle'
+	$('.toggle').show();
+
+	// capture clicks on the toggle links
+	$('a.toggleLink').click(function() {
+
+	// switch visibility
+	is_visible = !is_visible;
+
+	// change the link text depending on whether the element is shown or hidden
+	if ($(this).text()==showText) {
+	$(this).text(hideText);
+	$(this).parent().next('.toggle').slideDown('slow');
+	}
+	else {
+	$(this).text(showText);
+	$(this).parent().next('.toggle').slideUp('slow');
+	}
+
+	// return false so any link destination is not followed
+	return false;
+
+	});
+
+	$('.column').equalHeight();
+});
+ </script>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>top10 - 后台管理系统</title>
+	{% include ress.html %}
+</head>
+<body>
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a>
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/comment?pid={{ info.get('pid','') }}">评论管理</a> <div class="breadcrumb_divider"></div> <a class="current">保存评论</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+
+		<article class="module width_full">
+            <header><h3>评论信息</h3>
+            </header>
+            <form class='validform' action='/admin/comment/save' method='post'>
+            <input type="hidden" name='pid' value='{{ info.get("pid","")}}'>
+            <input type="hidden" name='id' value='{{ info.get("_id","")}}'>
+            <div class="module_content">
+            		<fieldset>
+					<table width="100%">
+						<tr><td>
+							<label>作者</label>
+							<input type="text" name='author' value='{{ info.get("author","")}}'>
+						</td></tr>
+						<tr><td>
+							<label>内容</label>
+							<textarea rows="20" name='body'>{{ info.get("body","")}}</textarea>
+						</td></tr>
+					</table>
+					</fieldset>
+                    <h4 class="alert_error">An Error Message</h4>
+
+			</div>
+			<footer>
+				<div class="submit_link">
+					<input type="submit" value="保存" class="alt_btn">
+				</div>
+			</footer>
+		    </form>
+		</article><!-- end of content manager article -->
+
+		<div class="clear"></div>
+	</section>
+</body>
+</html>
+<script>
+	$(function(){
+	    //$("#slgroup").val("{{ info.get('_id','') }}");
+	    $('.alert_error').hide();
+	    
+	    $(".validform").Validform({
+			ajaxPost:true,
+			callback:function(data){
+			    if(data.status){
+			    	location.href = '/admin/product'
+			    }else{
+			        $('.alert_error').html(data.data).show();
+			    }
+			},
+	        tiptype:function(msg,o,cssctl){
+	        	var objtip=o.obj.next('.Validform_checktip');
+				if($(objtip).size()==0){
+						objtip = $('<label>').addClass('Validform_checktip');
+						o.obj.after(objtip)
+				}
+				if(!(o.type == 2)){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						objtip.text(msg).show();
+					}
+				}else{
+					o.obj.next('.Validform_checktip').hide();
+				}
+
+			}
+
+	    });
+	    
+	})
+</script>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>top10 - 后台管理系统</title>
+	{% include ress.html %}
+</head>
+
+<body>
+
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/account">内容管理</a> 
+			<div class="breadcrumb_divider"></div> <a class="current">分类管理</a></article>
+		</div>
+	</section>
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+		<article class="module width_full">
+			<header><h3 class="tabs_involved">分类管理</h3>
+			<ul class="tabs">
+	   			<li><a href="javascript:void(0)" id='additembtn'>添加分类</a></li>
+			</ul>
+			<ul class="tabs">
+			    <li><a href="javascript:void(0);">所属分组</a></li>
+			    <li>
+			        <select id='querygroup'>
+			        {% for group in groups %}
+			            <option value = "{{ group.get('_id')}}">{{ group.get('name')}}</option>
+			        {% end%}
+			        </select>
+			    </li>
+	   			
+			</ul>
+
+			</header>
+			<div class="tab_container">
+				<div class="tab_content">
+				<table class="tablesorter" cellspacing="0"> 
+				<tbody> 
+					{% for item in data %}
+					<tr id="{{ item.get('_id') }}">
+						<td width='50%'><a href='/admin/category/product/{{ item.get("_id")}}'>{{ item.get('name')}}</a></td>
+						<td class='right'><input type="image" src="/static/admin/images/icn_search.png" title="预览"><input type="image" src="/static/admin/images/icn_edit.png" class='edit_btn' title="编辑"><input type="image" src="/static/admin/images/icn_trash.png" title="删除" class='delbtn'></td>
+					</tr>
+					{% end %}
+				</tbody> 
+				</table>
+				</div>
+			</div>
+		</article>
+
+		<article class="module floatview" style='width:60%; display:none;'>
+			<header><h3 class="tabs_involved">分类管理</h3>
+				<a href='javascript:void(0)' class='close'>关闭</a>
+			</header>
+			<form action='/admin/category/save' class='validform' method='post'>
+			<div class="module_content">
+					<input type='hidden' id='tvid' name='id' >
+					<fieldset>
+					<table width="100%">
+						<tr><td>
+							<label>所属分组</label>
+			                <select id='slgroup' name='groupid'>
+			                {% for group in groups %}
+			                    <option value = "{{ group.get('_id')}}">{{ group.get('name')}}</option>
+			                {% end%}
+			                </select>
+						</td></tr>
+						<tr><td>
+							<label>分类名称</label>
+							<input type="text" id='tvname' name='name'>
+						</td></tr>
+						<tr><td>
+							<label>图标</label>
+							<input type="text" id='tvlogo' name='logo' datatype='s0-0|url' >
+						</td></tr>
+						<tr><td>
+							<label>域名</label>
+							<input type="text" id='tvlistname' name='listname' datatype="s0-0|s3-20" >
+						</td></tr>
+						<tr><td>
+							<label>标签(使用|分割)</label>
+							<input type="text" id='tvtags' name='tags'>
+						</td></tr>
+						<tr><td>
+							<label>简介</label>
+							<input type="text" id='tvintro' name='intro' >
+						</td></tr>
+					</table>
+					</fieldset>
+                    <h4 class="alert_error">An Error Message</h4>
+					<!--seo start -->
+					<fieldset>
+					<legend>seo 信息:</legend>
+					<table width="100%">
+						<tr><td>
+							<label>标题</label>
+							<input type="text" id='tvtitle' name='title'   >
+						</td></tr>
+						<tr><td>
+							<label>关键词</label>
+							<input type="text" id='tvkeyword' name='keyword'  >
+						</td></tr>
+						<tr><td>
+							<label>描述</label>
+							<input type="text" id='tvremark' name='remark'  >
+						</td></tr>
+
+					</table>
+					</fieldset>
+					<!--seo end  -->
+			</div>
+			<footer>
+				<div class="submit_link">
+					<input type="submit" value="保存" class="alt_btn">
+				</div>
+			</footer>
+			</form>
+		</article>
+	</section>
+
+</body>
+<script>
+	$(function(){
+		
+        $('#querygroup').val('{{ groupid }}');
+        
+		$('a.close').click(function(){
+			$(this).parents('.floatview').hide();
+		})
+		
+		$('#querygroup').change(function(){
+		    location.href = '/admin/category?groupid='+$(this).val();
+		});
+
+		$('#additembtn').click(function(){
+		    $(".validform input[type='text']").val('');
+		    $('.alert_error').hide();
+		    $('#slgroup').val($('#querygroup').val());
+			$('.floatview').show();
+		})
+
+		$('.edit_btn').click(function(){
+		    $('.alert_error').hide();
+		    $.get('/admin/category/info/'+$(this).parents('tr').attr('id'),function(r){
+		        if(r.status){
+		            $('#tvid').val(r.data._id);
+		            $('#tvname').val(r.data.name);
+		            $('#tvlogo').val(r.data.logo);
+		            $('#tvlistname').val(r.data.listname);
+		            $('#tvintro').val(r.data.intro);
+		            $('#slgroup').val(r.data.groupid);
+		            if(r.data.tags){
+		                $('#tvtags').val(r.data.tags.join('|'));
+		            }
+		            
+		            $('#tvtitle').val(r.data.seo.title);
+		            $('#tvkeyword').val(r.data.seo.keyword);
+		            $('#tvremark').val(r.data.seo.remark);
+		            
+		            $('.floatview').show();
+		            
+		        }
+		    })
+		})
+
+		$('.delbtn').click(function(){
+			var _tr = $(this).parents('tr');
+			$.post('/admin/category/delete?id='+_tr.attr('id'),function(data){
+				if(data.status){
+					_tr.remove();
+				}
+			})
+		})
+
+	    $(".validform").Validform({
+			ajaxPost:true,
+			callback:function(data){
+			    if(data.status){
+			    	location.href = '/admin/category';
+			    }else{
+			        $('.alert_error').html(data.data).show();
+			    }
+			},
+	        tiptype:function(msg,o,cssctl){
+	        	var objtip=o.obj.next('.Validform_checktip');
+				if($(objtip).size()==0){
+						objtip = $('<label>').addClass('Validform_checktip');
+						o.obj.after(objtip)
+				}
+				if(!(o.type == 2)){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						objtip.text(msg).show();
+					}
+				}else{
+					o.obj.next('.Validform_checktip').hide();
+				}
+			}
+
+	    });
+
+	})
+</script>
+</html>
+

@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>top10 - 后台管理系统</title>
+	{% include ress.html %}
+</head>
+<body>
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a>
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/account">用户管理</a> <div class="breadcrumb_divider"></div> <a class="current">保存用户</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+
+		<article class="module width_full">
+            <header><h3>用户信息</h3>
+            </header>
+            <form class='validform' action='/admin/account/save' method='post'>
+            <input type="hidden" name='id' value='{{ info.get("_id","")}}'>
+            <div class="module_content">
+					<fieldset>
+					<table width="100%">
+						<tr><td>
+							<label>用户名</label>
+							<input type="text" name='username' value='{{ info.get("username","")}}' datatype="s5-16" errormsg="用户名至少5个字符,最多16个字符！" {% if info%} readonly="true" {% end %}>
+						</td></tr>
+						{% if not info %}
+						<tr><td>
+							<label>密码</label>
+							<input type="password" name='password' value='{{ info.get("password","")}}' datatype="s5-16" errormsg="密码至少5个字符,最多16个字符！" >
+						</td></tr>
+						<tr><td>
+							<label>确定密码</label>
+							<input type="password" name='repassword' value='{{ info.get("password","")}}'  datatype="*" recheck="password" errormsg="您两次输入的账号密码不一致！">
+						</td></tr>
+						{% end %}
+						<tr><td>
+							<label>邮箱</label>
+							<input type="text" name='email' value='{{ info.get("email","")}}' datatype='e'>
+						</td></tr>
+						<tr><td>
+							<label>电话</label>
+							<input type="text" name='tel' datatype='s0-0|m'  value='{{ info.get("tel","")}}'>
+						</td></tr>
+					</table>
+					</fieldset>
+			</div>
+			<footer>
+				<div class="submit_link">
+					<input type="submit" value="保存" class="alt_btn">
+				</div>
+			</footer>
+		    </form>
+		</article><!-- end of content manager article -->
+
+		<div class="clear"></div>
+	</section>
+</body>
+</html>
+<script>
+	$(function(){
+	    if($('.alert_error').html()){
+	        $('.alert_error').show();
+	    }
+	    
+	    $(".validform").Validform({
+			ajaxPost:false,
+			callback:function(data){
+				//
+			},
+	        tiptype:function(msg,o,cssctl){
+	        	var objtip=o.obj.next('.Validform_checktip');
+				if($(objtip).size()==0){
+						objtip = $('<label>').addClass('Validform_checktip');
+						o.obj.after(objtip)
+				}
+				if(!(o.type == 2)){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						objtip.text(msg).show();
+					}
+				}else{
+					o.obj.next('.Validform_checktip').hide();
+				}
+
+			}
+
+	    });
+	    
+	})
+</script>

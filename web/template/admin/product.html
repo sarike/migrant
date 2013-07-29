@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>top10 - 后台管理系统</title>
+	{% include ress.html %}
+</head>
+
+<body>
+
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/product">产品管理</a> <div class="breadcrumb_divider"></div> <a class="current">产品列表</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+		<article class="module width_full">
+			<header><h3 class="tabs_involved">产品列表</h3>
+			<ul class="tabs">
+			    <li><a href="/admin/product/save?groupid={{ groupid or ''}}" >添加产品</a></li>
+			    <li>|</li>
+	   			<li><a href="javascript:void(0)" id='deleteallbtn'>删除所选</a></li>
+			    <li>|</li>
+	   			<li><a href="javascript:void(0)" id='buildallbtn'>生成所选</a></li>
+			</ul>
+			<ul class="tabs">
+			    <li><a href="javascript:void(0);">所属分组</a></li>
+			    <li>
+			        <select id='querygroup'>
+			        {% for group in groups %}
+			            <option value = "{{ group.get('_id')}}">{{ group.get('name')}}</option>
+			        {% end%}
+			        </select>
+			    </li>
+	   			
+			</ul>
+			</header>
+
+			<div class="tab_container">
+				<div class="tab_content">
+				<table class="tablesorter" cellspacing="0"> 
+				<thead> 
+					<tr> 
+	   					<th><input id='selectallbtn' type="checkbox"></th> 
+	    				<th>名称</th> 
+	    				<th>价格</th> 
+	    				<th>连接</th>
+	    				<th width='45px'>报告</th>
+	    				<th width='140px'>操作</th> 
+					</tr> 
+				</thead> 
+				<tbody> 
+
+		        {% for item in data %}
+		            <tr  id="{{ item.get('_id') }}" bid ="{{ item.get('id') }}" >
+		            	<td><input type="checkbox" class='chkbtn' name='chk'></td>
+		                <td ><a href='/admin/comment?pid={{ item.get("_id","")}}'>{{ item.get("name","")}}</a></td>
+		                <td >{{ item.get("price","")}}</td>
+		                <td ><a href='{{ item.get("url","")}}' target = '_bland'>打开</a></td>
+		                <td><a href='/admin/report?pid={{ item.get("_id","")}}'>{{ item.get('reportcount',0)}}个</a></td>
+		                <td><a href='/admin/product/weibo/{{ item.get("_id","")}}'><input type="image" src="/static/admin/images/icn_search.png" title="预览"></a><a href='/admin/report/save?pid={{ item.get("_id","")}}'><input type="image" src="/static/admin/images/add_cate.png" title="添加报告"></a><a href='/admin/product/save?id={{ item.get("_id","")}}'><input type="image" src="/static/admin/images/icn_edit.png" title="编辑"></a><input type="image" src="/static/admin/images/icn_trash.png" title="删除" class='delbtn'></td>
+		            </tr>
+		        {% end %}
+				</tbody> 
+				</table>
+				</div><!-- end of #tab1 -->
+			</div><!-- end of .tab_container -->
+		</article><!-- end of content manager article -->
+		
+        {% if count >1 %}
+		<article class="module width_full pager">
+			{% for i in range(count) %}
+				<a href='?pageindex={{i}}&groupid={{ groupid or ""}}'>{{ i+1 }}</a>
+			{% end %}
+		</article>
+		{% end %}
+	</section>
+
+</body>
+<script>
+	$(function(){
+	
+	    $('#querygroup').val('{{ groupid }}');
+		
+		$('#querygroup').change(function(){
+		    location.href = '/admin/product?groupid='+$(this).val();
+		});
+		
+		$('#selectallbtn').click(function(){
+			if($(this).attr("checked")){
+				$("input[name='chk']").attr("checked",$(this).attr("checked"));
+			}else{
+				$("input[name='chk']").removeAttr('checked');
+			}
+		})
+
+		$('#deleteallbtn').click(function(){
+			var arrChk =$("input[name='chk']:checked");
+			$(arrChk).each(function(){
+				var _tr = $(this).parents('tr');
+				$.post('/admin/product/delete?id='+_tr.attr('id'),function(data){
+					if(data.status){
+						_tr.remove();
+					}
+				})
+			})
+		})
+		
+		$('#buildallbtn').click(function(){
+			var arrChk =$("input[name='chk']:checked");
+			$(arrChk).each(function(){
+				var _tr = $(this).parents('tr');
+				$.post('/admin/product/build?id='+_tr.attr('bid'),function(data){
+					if(data.status){
+						_tr.find('.msg').html($('<span>').html(data.msg).css({'color':'red'}));
+					}
+				})
+			})
+		})
+
+		$('.delbtn').click(function(){
+			var _tr = $(this).parents('tr');
+			$.post('/admin/product/delete?id='+_tr.attr('id'),function(data){
+				if(data.status){
+					_tr.remove();
+				}
+			})
+		})
+
+	})
+</script>
+</html>
+

@@ -1,0 +1,81 @@
+	<!DOCTYPE html >
+	<html>
+	<head>
+	    <title> top10 - 后台管理系统</title>
+	    {% include ress.html %}
+	    <style>
+	    section#main{ width:98%;  margin:10% auto;}
+	    .Validform_title{ display:none; }
+	    .Validform_checktip {color:red;}
+	    </style>
+	</head>
+	<body>
+		<header id="header">
+			<hgroup>
+				<h1 class="site_title"><a href="/admin/login">top10管理后台</a></h1>
+				<h2 class="section_title">管理员登录</h2><div class="btn_view_site"><a href="/">浏览前台页面</a></div>
+			</hgroup>
+		</header>
+		<section id="main" class="column" >
+		    <article class="module width_full">
+		        <form id='loginfrm' action="/admin/login" method="post">
+			        <header><h3>管理员登录</h3></header>
+				        <div class="module_content">
+				        		<input type='hidden' name='next' value='/admin'> 
+						        <fieldset style="width:48%; float:left; margin-right: 3%;">
+							        <label>用户名</label>
+							        <input type="text" name='username'  datatype="s5-16" errormsg="用户名至少5个字符,最多16个字符！">
+							        <div class="Validform_checktip"></div>
+						        </fieldset>
+						        <fieldset style="width:48%; float:left;" >
+							        <label>密码</label>
+							        <input type="password" name='password' datatype="s5-16" errormsg="密码至少5个字符,最多16个字符！">
+							        <div class="Validform_checktip"></div>
+						        </fieldset>
+						        <div class="clear"></div>
+				        </div>
+				       
+			        <footer>
+				        <div class="submit_link">
+					        <input type="submit" value="登录" id='btn_ok' class="alt_btn">
+					        <input type="button" value="重置">
+				        </div>
+			        </footer>
+			        
+		        </article><!-- end of post new article -->
+		         <h4 class="alert_error" style='display:none'>{{errormsg}}</h4>
+		    </form>
+		</section>
+	</body>
+	</html>
+	<script>
+	$(function(){
+	    if($('.alert_error').html()){
+	        $('.alert_error').show();
+	    }
+	    
+	    $("#loginfrm").Validform({
+			ajaxPost:false,
+			callback:function(data){
+			    console.log(data);
+			},
+	        tiptype:function(msg,o,cssctl){
+				//msg：提示信息;
+				//o:{obj:*,type:*,curform:*}, obj指向的是当前验证的表单元素（或表单对象），type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, curform为当前form对象;
+				//cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
+				if(!(o.type == 2)){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						var objtip=o.obj.parent().find(".Validform_checktip");
+						cssctl(objtip,o.type);
+						objtip.text(msg);
+					}
+				}
+
+			}
+
+	    });
+	    
+	})
+	</script>
+
+

@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>top10 - 后台管理系统</title>
+	{% include ress.html %}
+</head>
+
+<body>
+
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/product">文件管理</a> <div class="breadcrumb_divider"></div> <a class="current">文件列表</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+		<article class="module width_full">
+			<header><h3 class="tabs_involved">文件列表</h3>
+			<ul class="tabs">
+			    <li><a href="/admin/filemaster/large" >大图</a></li>
+			    <li>|</li>
+			    <li><a href="/admin/filemaster/bmiddle" >中图</a></li>
+			    <li>|</li>
+			    <li><a href="/admin/filemaster/thumb50" >小图</a></li>
+			</ul>
+			</header>
+
+			<div class="tab_container">
+				<div class="tab_content">
+				<table class="tablesorter" cellspacing="0"> 
+				<thead> 
+					<tr> 
+	   					<th><input id='selectallbtn' type="checkbox"></th> 
+	   					<th>图片</th> 
+	    				<th>地址</th> 
+	    				<th width='100px'>操作</th> 
+					</tr> 
+				</thead> 
+				<tbody> 
+
+		        {% for f in files %}
+		            <tr  >
+		            	<td><input type="checkbox" class='chkbtn' name='chk'></td>
+		            	<td><img src='/static/upload/thumb50/{{f}}' width='50'></td>
+		                <td ><a href='/static/upload/{{path}}/{{f}}' target='_bland'>/static/upload/{{path}}/{{f}}</a></td>
+		                <td><input type="image" src="/static/admin/images/icn_trash.png" title="删除" class='delbtn'></td>
+		            </tr>
+		        {% end %}
+
+				</tbody> 
+
+				</table>
+				</div><!-- end of #tab1 -->
+			</div><!-- end of .tab_container -->
+			<header>
+			    <ul class="tabs">
+			    	<form action='/admin/filemaster/upload' method='post' enctype="multipart/form-data" >
+	       			<li><input type='file' name='top10file'></li>
+	       			<li><input type='submit' value='上传'></li>
+	       			</form>
+			    </ul>
+			</header>
+		</article><!-- end of content manager article -->
+
+		{% if count >1 %}
+		<article class="module width_full pager">
+			{% for i in range(count) %}
+				<a href='?pageindex={{i}}'>{{ i +1 }}</a>
+			{% end %}
+		</article>
+		{% end %}
+	</section>
+
+</body>
+<script>
+	$(function(){
+	
+
+
+	})
+</script>
+</html>
+
