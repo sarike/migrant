@@ -92,7 +92,7 @@ class LoginHandler(ActionHandler):
 
 
 @url(r"/admin/account/setpassword")
-class LoginHandler(ActionHandler):
+class SetPwdHandler(ActionHandler):
     def get(self):
         self.render('admin/setpassword.html',errormsg = '')
 
