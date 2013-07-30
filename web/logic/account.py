@@ -9,12 +9,13 @@ from utility import m_update,m_del,m_page,m_exists
 TName = 'account'
 Tb = lambda :get_context().get_mongo()[TName]
 
-def add(username,password,city):
+def add(username,password,city=None,**kwargs):
     try:
         not_empty(username,password)
         r = m_exists(TName,username=username,password=password)
         if not r:
             val = dict(username=username,password=password,city=city)
+            val.update(kwargs)
             _id = Tb().insert(val,saft=True)
             val['_id'] = str(_id)
             return True,val
@@ -23,10 +24,14 @@ def add(username,password,city):
     except Exception as e:
         return False,e.message
 
-def login(username,password):
+def login(username,password,isadmin = None):
     try:
         not_empty(username,password)
-        r = m_exists(TName,username=username,password=password)
+        cond = dict(username=username,password=password)
+        if isadmin:
+            cond.update(isadmin = isadmin)
+
+        r = m_exists(TName,**cond)
         if r:
             r = mongo_conv(r)
             return True, r
@@ -51,3 +56,6 @@ def auth_login(site,otherid,name,**kwargs):
     except Exception as e:
         return False,e.message
 
+
+def page(since,**kwargs):
+    return m_page(TName,since=since,**kwargs)

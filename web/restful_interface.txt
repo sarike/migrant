@@ -19,7 +19,7 @@ a. 用户相关
    3. (status,account|msg)     ('/m/account/info(/_id)')                //用户信息,_id 用户ID
    4. (status,msg)     ('/m/account/update', 'city,tocity,icon') //更新当前登录用户资料
    
-b. 快捷方式相关
+b. 城市相关
     
     city {'name':城市名称,
         '_id':唯一标记,
@@ -29,7 +29,7 @@ b. 快捷方式相关
     1. (status,list(city))     ('/m/city/list(/_id)')                  //获取指定城市列表;_id 这上级ID,为空时获取level==0
     
         
-c. 资讯相关
+c. 个人资讯相关
 
     post {_id':唯一标记,
         'body':内容

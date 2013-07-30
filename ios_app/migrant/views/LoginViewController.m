@@ -9,7 +9,8 @@
 #import "LoginViewController.h"
 #import "AFHTTPClient.h"
 #import "AFJSONRequestOperation.h"
-
+#import "PostViewController.h"
+#import "LocalConfig.h"
 
 @interface LoginViewController ()
 
@@ -73,17 +74,44 @@
     NSLog(@"%@", req);
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:req success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSLog(@"%@",JSON);
-        BOOL *status = [JSON objectForKey:@"status"];
+        BOOL *status = [[JSON objectForKey:@"status"] boolValue];
+        NSNumber *flag = [JSON valueForKey:@"status"];
+        
         if(status){
             //self.dataList = [JSON valueForKey:@"data"] ;
             NSDictionary *data = [JSON objectForKey:@"data"];
+            /**
             NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:data];
             NSArray *cookies = [NSArray arrayWithObjects: cookie, nil];
             NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
             [self loaddata:headers];
+             **/
             
+            [[LocalConfig Instance]setconfig:@"uid" :[data valueForKey:@"_id"]];
+            [[LocalConfig Instance]setconfig:@"name" :[data valueForKey:@"name"]];
+            
+            /**
+            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"localconfig" ofType:@"plist"];
+            NSMutableDictionary *config = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+            [config setDictionary:data];
+            
+            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+            NSString *plistPath1 = [paths objectAtIndex:0];
+            
+            //得到完整的文件名
+            NSString *filename=[plistPath1 stringByAppendingPathComponent:@"localconfig.plist"];
+            //输入写入
+            [config writeToFile:filename atomically:YES];
+            
+            NSMutableDictionary *data1 = [[NSMutableDictionary alloc] initWithContentsOfFile:filename];
+            NSLog(@"%@", data1);
+              **/
         }else{
             NSLog(@"server faild" );
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登录提示" message:@"登录失败" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            
+            [alert show];
+            [alert release];
         }
         
         
@@ -128,4 +156,6 @@
     [tbusername resignFirstResponder];
     [tvpassword resignFirstResponder];
 }
+
+
 @end

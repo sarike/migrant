@@ -36,7 +36,7 @@
 #import "PullDownExample.h"
 #import "SwipeableTableViewExample.h"
 #import "BrowserSampleViewController.h"
-#import "comger.h"
+
 
 @implementation RootViewController
 
@@ -93,9 +93,6 @@
             
         case 3:
             return @"Web Browser";
-            break;
-        case 4:
-            return @"Comger Test";
             break;
             
         default:
@@ -200,10 +197,7 @@
                 cell.textLabel.text = @"Web Browser integration";
                 cell.detailTextLabel.text = @"Open URLs from UITextViews, UIWebViews, UITableViews, and UIButtons";
                 break;
-            case 1:
-                cell.textLabel.text = @"Comger Demo";
-                cell.detailTextLabel.text = @"do test for comger";
-                break;
+
                 
             default:
                 break;
@@ -270,9 +264,6 @@
         switch (indexPath.row) {
             case 0:
                 vc = [[BrowserSampleViewController alloc] init];
-                break;
-            case 1:
-                vc = [[comger alloc] init];
                 break;
             default:
                 break;

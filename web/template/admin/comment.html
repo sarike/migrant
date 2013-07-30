@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>top10 - 后台管理系统</title>
+	{% include ress.html %}
+</head>
+<body>
+
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/comment">评论管理</a> <div class="breadcrumb_divider"></div> <a class="current">评论列表</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+		<article class="module width_full">
+			<header><h3 class="tabs_involved">评论列表</h3>
+			<ul class="tabs">
+			    <li><a href="/admin/comment/save?pid={{ pid or ''}}" >添加评论</a></li>
+			    <li>|</li>
+	   			<li><a href="javascript:void(0)" id='deleteallbtn'>删除所选</a></li>
+			</ul>
+			</header>
+
+			<div class="tab_container">
+				<div class="tab_content">
+				<table class="tablesorter" cellspacing="0"> 
+				<tbody> 
+
+		        {% for item in data %}
+		            <tr  id="{{ item.get('_id') }}">
+		            	<td><input type="checkbox" class='chkbtn' name='chk'></td>
+		                <td >{{ item.get("author","")}}:{{ item.get("body","")}}</td>
+		                <td><a href='/admin/comment/save?id={{ item.get("_id","")}}'><input type="image" src="/static/admin/images/icn_edit.png" title="编辑"></a><input type="image" src="/static/admin/images/icn_trash.png" title="删除" class='delbtn'></td>
+		            </tr>
+		        {% end %}
+				</tbody> 
+				</table>
+				</div><!-- end of #tab1 -->
+			</div><!-- end of .tab_container -->
+		</article><!-- end of content manager article -->
+		{% if count >1 %}
+		<article class="module width_full pager">
+			{% for i in range(count) %}
+				<a href='?pageindex={{i}}'>{{ i +1 }}</a>
+			{% end %}
+		</article>
+		{% end %}
+	</section>
+
+</body>
+<script>
+	$(function(){
+		$('#selectallbtn').click(function(){
+			if($(this).attr("checked")){
+				$("input[name='chk']").attr("checked",$(this).attr("checked"));
+			}else{
+				$("input[name='chk']").removeAttr('checked');
+			}
+		})
+
+		$('#deleteallbtn').click(function(){
+			var arrChk =$("input[name='chk']:checked");
+			$(arrChk).each(function(){
+				var _tr = $(this).parents('tr');
+				$.post('/admin/comment/delete?id='+_tr.attr('id'),function(data){
+					if(data.status){
+						_tr.remove();
+					}
+				})
+			})
+		})
+
+		$('.delbtn').click(function(){
+			var _tr = $(this).parents('tr');
+			$.post('/admin/comment/delete?id='+_tr.attr('id'),function(data){
+				if(data.status){
+					_tr.remove();
+				}
+			})
+		})
+
+	})
+</script>
+</html>
+

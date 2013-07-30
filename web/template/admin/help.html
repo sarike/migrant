@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Migrant - 使用帮助</title>
+	{% include ress.html %}
+</head>
+<body>
+
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"> <a class="current">使用帮助</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+		<article class="module width_full">
+			<header><h3>产品使用说明</h3></header>
+			<div class="module_content">
+				<h3>产品数据结构</h3>
+				<p></p>
+
+			</div>
+		</article><!-- end of content manager article -->
+
+	</section>
+
+</body>
+
+</html>
+

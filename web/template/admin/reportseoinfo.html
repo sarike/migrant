@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Migrant 报告管理</title>
+	{% include ress.html %}
+</head>
+<body>
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a>
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/report">报告管理</a> <div class="breadcrumb_divider"></div> <a class="current">保存报告</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+
+		<article class="module width_full">
+            <header><h3>报告信息</h3>
+            </header>
+            <form class='validform' action='/admin/report/save' method='post'>
+            <input type="hidden" name='id' value='{{ info.get("_id","")}}'>
+            <div class="module_content">
+					<!--seo start -->
+					<fieldset>
+					<legend>seo 信息:</legend>
+					<table width="100%">
+						<tr><td>
+							<label>标题</label>
+							<input type="text" id='tvtitle' name='title' value='{{ info.get("seo",{}).get("title","")}}'  >
+						</td></tr>
+						<tr><td>
+							<label>关键词</label>
+							<input type="text" id='tvkeyword' name='keyword' value='{{ info.get("seo",{}).get("keyword","")}}' >
+						</td></tr>
+						<tr><td>
+							<label>描述</label>
+							<input type="text" id='tvremark' name='remark' value='{{ info.get("seo",{}).get("remark","")}}' >
+						</td></tr>
+
+					</table>
+					</fieldset>
+					<!--seo end  -->
+                    <h4 class="alert_error">An Error Message</h4>
+
+			</div>
+			<footer>
+				<div class="submit_link">
+					<input type="submit" value="保存" class="alt_btn">
+				</div>
+			</footer>
+		    </form>
+		</article><!-- end of content manager article -->
+
+		<div class="clear"></div>
+	</section>
+</body>
+</html>
+<script>
+	$(function(){
+	    //$("#slgroup").val("{{ info.get('_id','') }}");
+	    $('.alert_error').hide();
+	    //$("#textarea").val(editor.html());
+	    
+	    $(".validform").Validform({
+			ajaxPost:true,
+            beforeSubmit:function(curform){
+	            $("#textarea").val(editor.html());
+	        },
+			callback:function(data){
+			    if(data.status){
+			    	location.href = '/admin/report'
+			    }else{
+			        $('.alert_error').html(data.data).show();
+			    }
+			},
+	        tiptype:function(msg,o,cssctl){
+	        	var objtip=o.obj.next('.Validform_checktip');
+				if($(objtip).size()==0){
+						objtip = $('<label>').addClass('Validform_checktip');
+						o.obj.after(objtip)
+				}
+				if(!(o.type == 2)){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						objtip.text(msg).show();
+					}
+				}else{
+					o.obj.next('.Validform_checktip').hide();
+				}
+
+			}
+
+	    });
+	    
+	})
+</script>

@@ -15,6 +15,7 @@ from logic.city import TName as T_CITY
 class LoginHandler(ContextHandler):
     def post(self):
         r,v = login(self.get_argument('username'),self.get_argument('password'))
+        print r,v
         if r:
             self.set_secure_cookie('uid',v['_id'])
             del v['password']
@@ -27,7 +28,6 @@ class LoginHandler(ContextHandler):
         if r:
             self.set_secure_cookie('uid',v['_id'])
             del v['password']
-            del v['status']
 
         self.write(dict(status = r, data = v))
 

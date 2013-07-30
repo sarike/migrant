@@ -43,9 +43,9 @@ class HomeHandler(RestfulHandler):
             r,v = home(self.uid,citys,self.get_argument('since',None))
             self.write(dict(status=r,data = v))
         except KeyError as e:
-            self.write(dict(statis=False,data='用户未设置相关城市',errormsg=e.message))
+            self.write(dict(status=False,data='用户未设置相关城市',errormsg=e.message))
         except TypeError as e:
-            self.write(dict(statis=False,data='没有该用户',errormsg=e.message))
+            self.write(dict(status=False,data='没有该用户',errormsg=e.message))
 
 
 

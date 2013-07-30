@@ -2,7 +2,7 @@
 *.css~
 *.html~
 *.js~
-
+*..DS_Store
 
 # C extensions
 *.so
