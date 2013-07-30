@@ -24,6 +24,14 @@
             android:theme="@style/Theme.Migrant" 
             android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
         
+        <activity android:name=".ui.InformationActivity" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
+        <activity android:name=".ui.NewInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
