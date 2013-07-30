@@ -66,14 +66,11 @@
 				</div><!-- end of #tab1 -->
 			</div><!-- end of .tab_container -->
 		</article><!-- end of content manager article -->
-
+		{% if len(data) >=10 %}
 		<article class="module width_full pager">
-				{% if len(data) >=10 %}
-				<a href='?since={{ data[-1].get("_id")}}'>下一页</a>
-				{% else %}
-				<p>没有更多信息</p>
-				{% end %}
+				<a href='?since={{ data[-1].get("_id")}}'>下一页</a>				
 		</article>
+		{% end %}
 	</section>
 
 </body>

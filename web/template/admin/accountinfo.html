@@ -130,6 +130,7 @@
 	    	{% if info %}
 	    	$.get('/m/city/info?id={{info.get("city",None)}}',function(rs){
 	    		if(rs.status){
+	    			if(!rs.data.parent) return;
 	    			rootcitys.val(rs.data.parent);
 	    			append_select($('#childcitys'),rs.data.parent,function(){
 	    				$('#childcitys').val('{{info.get("city",None)}}');
