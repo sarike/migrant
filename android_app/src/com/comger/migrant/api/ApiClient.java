@@ -75,7 +75,7 @@ public class ApiClient {
 		return appUserAgent;
 	}
 	
-	static HttpClient getHttpClient() {        
+	static HttpClient getHttpClient() {
         HttpClient httpClient = new HttpClient();
 		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
@@ -370,6 +370,7 @@ public class ApiClient {
 
 			reader.close();
 			json =  new JSONObject(document.toString());
+			Log.i("resaultjson", json.toString());
 			if(!json.getBoolean("status")){
 				throw AppException.server(new Exception(json.getString("errormsg")));
 			}
