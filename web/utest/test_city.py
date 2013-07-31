@@ -6,6 +6,8 @@ import json
 from pyquery import PyQuery as pyq
 from kpages import LogicContext,refresh_config
 from logic.city import add
+from logic.utility import m_page
+from unittest import TestCase
 
 class CityCate(object):
     _url = 'http://d.360buy.com/area/get?fid={0}'
@@ -33,6 +35,14 @@ class CityCate(object):
         except:
             print text
             return []
+
+
+class DemoCase(TestCase):
+    def setUp(self):
+        pass
+
+    def testprint(self):
+        print m_page('city')
 
 
 if __name__ == '__main__':

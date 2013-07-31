@@ -64,6 +64,9 @@ class UpdateHandler(RestfulHandler):
         icon = self.get_argument('icon',None)
         if icon:val.update(icon=icon)
 
+        intro = self.get_argument('intro',None)
+        if intro:val.update(intro=intro)
+
         r,v = m_update(T_ACCOUNT,self.uid,**val)
         self.write(dict(status = r, data = v))
 
