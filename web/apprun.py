@@ -3,10 +3,8 @@
 """
     author comger@gmail.com
 """
-
+import sys
 from kpages.app import run
 
-
-
 if __name__ == "__main__":
-    run()
+    run(*sys.argv)

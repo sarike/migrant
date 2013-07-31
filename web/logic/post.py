@@ -6,6 +6,8 @@
 from kpages import not_empty,get_context,mongo_conv
 from utility import m_update,m_del,m_page,m_exists,StatusCond
 
+import account
+
 TName = 'post'
 Tb = lambda :get_context().get_mongo()[TName]
 
@@ -13,6 +15,10 @@ def add(uid,body,city=None,**kwargs):
     try:
         not_empty(uid,body)
         r = m_exists(TName,uid=uid,body=body)
+        if not city:
+            r,v = m_info(account.TName,uid)
+            if r:city=v.get('city',None)
+
         if not r:
             val = dict(uid=uid,body=body,city=city)
             val.update(kwargs)
