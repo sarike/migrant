@@ -89,6 +89,41 @@ def valid(host,expre):
     return actual
 
 
+
+class ListNode(object):
+    @property
+    def name(self):
+        ''' get node's name '''
+        raise NotImplementedError()
+
+    def demo_url(self):
+        raise NotImplementedError()
+
+    def standard_structure(self):
+        raise NotImplementedError()
+
+    def page_count(self):
+        ''' get source's page count '''
+        raise NotImplementedError()
+
+    def page_size(self):
+        ''' get source's page size '''
+        raise NotImplementedError()
+
+    def page(self,callback=None,pageindex=0,**kwargs):
+        ''' get pageindex's data '''
+        raise NotImplementedError()
+
+    def is_ok(self):
+        ''' check node is ok '''
+        raise NotImplementedError()
+
+    def param_parse(self,**kwargs):
+        return kwargs
+
+    def fetch(self,url,callback=None,**kwargs):
+        httpclient.AsyncHTTPClient().fetch(url,callback=callback,**kwargs)
+
 class Loader(object):
     '''
         Spider 加载器, 自动选择或指定Spider 采集数据
@@ -106,20 +141,19 @@ class Loader(object):
                     member_filter = lambda o:isclass(o) and issubclass(o, BaseSpider))
 
         del spiders['spiders.BaseSpider']
+        self.spiders = []
         #[(re,__expre__,cls)...]
         for name,cls in spiders.items():
             self.spiders.append((re.compile(cls.__expre__),cls.__expre__,cls))
+    
+    def get_test_reports(self,tags):
+        pass
+    
+    def run_spider(self, spidertags=(),cron=None):
+       pass
 
-
-
-    def get_spider(self, url):
-        for p,expre,cls in self.spiders:
-            #p.search(url)
-            #p.match(url,len(cls.__host__))
-            if url.startswith(cls.__host__) and p.search(url):
-                return expre,cls
-
-        return None,None
+    def register(self,tag):
+        pass
 
 
 spiderloader = Loader()
