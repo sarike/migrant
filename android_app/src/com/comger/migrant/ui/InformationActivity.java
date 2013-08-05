@@ -26,12 +26,17 @@ public class InformationActivity extends BaseTabActivity {
 
 		View homeTabView = (View) LayoutInflater.from(this).inflate(R.layout.tabtopmini, null);
 		TextView homeTabTextView = (TextView) homeTabView.findViewById(R.id.tab_label);
-		homeTabTextView.setText("最新动态");
-		AddActivity(homeTabView, NewInformation.class);
+		homeTabTextView.setText("综合信息");
+		AddActivity(homeTabView, HomeInformation.class);
+		
+		View myTabView = (View) LayoutInflater.from(this).inflate(R.layout.tabtopmini, null);
+		TextView myTabTextView = (TextView) myTabView.findViewById(R.id.tab_label);
+		myTabTextView.setText("我的信息");
+		AddActivity(myTabView, NewMyInformation.class);
 
-		View homeTabView1 = (View) LayoutInflater.from(this).inflate(R.layout.tabtopmini, null);
-		TextView homeTabTextView1 = (TextView) homeTabView1.findViewById(R.id.tab_label);
-		homeTabTextView1.setText("最新动态");
-		AddActivity(homeTabView1, NewInformation.class);
+		View newTabView = (View) LayoutInflater.from(this).inflate(R.layout.tabtopmini, null);
+		TextView newTabTextView = (TextView) newTabView.findViewById(R.id.tab_label);
+		newTabTextView.setText("最新动态");
+		AddActivity(newTabView, CityInformation.class);
 	}
 }
