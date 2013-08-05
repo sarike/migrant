@@ -55,7 +55,7 @@
 		</article><!-- end of content manager article -->
 		{% if len(data) >=10 %}
 		<article class="module width_full pager">
-				<a href='?since={{ data[-1].get("_id")}}'>下一页</a>				
+				<a href='?since={{ data[-1].get("_id")}}&city={{city or ''}}&pid={{pid or ''}}'>下一页</a>				
 		</article>
 		{% end %}
 	</section>
@@ -117,13 +117,13 @@
 		
 	    var rootcitys = $('#rootcitys');
 	    append_select(rootcitys,null,function(){
-	    	{% if pid %}
-	    	$.get('/m/city/info?id={{ pid }}',function(rs){
+	    	{% if city %}
+	    	$.get('/m/city/info?id={{ city }}',function(rs){
 	    		if(rs.status){
 	    			if(!rs.data.parent) return;
 	    			rootcitys.val(rs.data.parent);
 	    			append_select($('#childcitys'),rs.data.parent,function(){
-	    				$('#childcitys').val('{{ pid }}');
+	    				$('#childcitys').val('{{ city }}');
 	    			});
 	    		}
 	    	})
@@ -137,7 +137,7 @@
 	    })
 	    
 	    $('#childcitys').change(function(){
-	        location.href = '?pid='+$(this).val()
+	        location.href = '?pid={{ pid or ""}}&city='+$(this).val();
 	    })
 
 	})

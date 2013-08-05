@@ -51,4 +51,19 @@ d. 评论相关
     1. (status,comment|msg)    ('/m/comment/create','body,pid')         //发布资讯评论
     2. (status,list(comment))  ('/m/comment/postlist/_id')            //获取资讯评论,_id 为资讯ID
     3. (status,list(comment))  ('/m/comment/userlist(/_id)')            //获取用户所发出的评论，_id 用户ID
+
+c. 报告相关
+
+    report {_id':唯一标记,
+        'body':内容
+        'pid':分类ID,
+        'city':城市ID
+        'title':'标题',
+        'source':'来源'}
+        
+
+
+    3. (status,list(report))    ('/m/report/city(/_id)')                      //获取指定用户所在城市的资讯,_id 用户ID
+    4. (status,list(report))    ('/m/report/home')                          //获取当前用户相关资讯
+
     

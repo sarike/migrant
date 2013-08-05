@@ -74,10 +74,11 @@
 		})
 
 		function importitem(tr){
-		    var value = {'pid':'{{city}}'};
+		    var value = {'city':'{{city}}'};
 		    //var tr = $(this).parents('tr');
 		    value['title'] = tr.attr('title');
 		    value['body'] = tr.attr('body');
+		    value['source'] = tr.attr('source');
 		    
 		    $.post('/admin/report/save',data=value,function(rs){
 		        if(rs.status){
