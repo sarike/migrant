@@ -28,7 +28,27 @@
             android:theme="@style/Theme.Migrant" 
             android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
         
-        <activity android:name=".ui.NewInformation" 
+        <activity android:name=".ui.ShowTabInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
+        <activity android:name=".ui.HomeInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
+        <activity android:name=".ui.NewMyInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
+        <activity android:name=".ui.CityInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
+        <activity android:name=".ui.ShowInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        
+         <activity android:name=".ui.ShowCommentAct" 
             android:theme="@style/Theme.Migrant" 
             android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
         

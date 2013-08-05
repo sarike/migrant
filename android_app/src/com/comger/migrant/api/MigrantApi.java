@@ -64,11 +64,23 @@ public class MigrantApi extends ApiClient {
 		return _get(ApiUrls.cityList, params).getJSONArray("data");
 	}
 
-	public static JSONArray getUserInformation() throws JSONException, AppException {
-		return _get(ApiUrls.userList, null).getJSONArray("data");
+	public static JSONArray getHomeInformation() throws JSONException, AppException {
+		return _get(ApiUrls.HomeList, null).getJSONArray("data");
 	}
 	
 	public static JSONArray getMyInformation() throws JSONException, AppException {
-		return _get(ApiUrls.myList, null).getJSONArray("data");
+		return _get(ApiUrls.MyList, null).getJSONArray("data");
+	}
+	
+	public static JSONArray getCityInformation() throws JSONException, AppException {
+		return _get(ApiUrls.CityList, null).getJSONArray("data");
+	}
+	
+	public static JSONArray getCommentList(String informationID) throws JSONException, AppException {
+		return _get(String.format("%s/%s", ApiUrls.CommentList,informationID), null).getJSONArray("data");
+	}
+	
+	public static JSONArray getMyCommentList() throws JSONException, AppException {
+		return _get(ApiUrls.MyCommentList, null).getJSONArray("data");
 	}
 }
