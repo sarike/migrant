@@ -37,6 +37,7 @@ public final class R {
     public static final class id {
         public static final int btn_login=0x7f070011;
         public static final int checkLayId=0x7f070004;
+        public static final int commentList=0x7f07001a;
         public static final int datetime=0x7f070003;
         public static final int downpulllist=0x7f070000;
         public static final int et_password=0x7f070010;
@@ -47,6 +48,7 @@ public final class R {
         public static final int head_progressBar=0x7f070016;
         public static final int head_rootLayout=0x7f070013;
         public static final int head_tipsTextView=0x7f070017;
+        public static final int imContent=0x7f070019;
         public static final int imageView1=0x7f070001;
         public static final int infocontent=0x7f070002;
         public static final int iv_logo=0x7f070009;
@@ -56,7 +58,7 @@ public final class R {
         public static final int ll_username=0x7f07000b;
         public static final int loadcheck_more=0x7f070005;
         public static final int pbmore=0x7f070006;
-        public static final int tab_label=0x7f070019;
+        public static final int tab_label=0x7f07001b;
         public static final int tv_copyright=0x7f070012;
         public static final int tv_loginTitle=0x7f07000a;
         public static final int tv_uname=0x7f07000c;
@@ -71,10 +73,11 @@ public final class R {
         public static final int login=0x7f030005;
         public static final int main=0x7f030006;
         public static final int pullheader=0x7f030007;
-        public static final int start=0x7f030008;
-        public static final int tabbottommini=0x7f030009;
-        public static final int tabtopmini=0x7f03000a;
-        public static final int toptabmain=0x7f03000b;
+        public static final int showinformation=0x7f030008;
+        public static final int start=0x7f030009;
+        public static final int tabbottommini=0x7f03000a;
+        public static final int tabtopmini=0x7f03000b;
+        public static final int toptabmain=0x7f03000c;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

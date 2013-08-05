@@ -25,7 +25,7 @@ import com.comger.migrant.common.BaseRequestListener;
 import com.comger.migrant.view.PullListView;
 import com.comger.migrant.view.PullListView.OnRefreshListener;
 
-public class NewInformation extends BaseActivity {
+public class CityInformation extends BaseActivity {
 
 	private PullListView mDownpulllist;
 	private JSONArray mJsonArray;
@@ -67,8 +67,8 @@ public class NewInformation extends BaseActivity {
 
 					@Override
 					public void onRequesting() throws AppException, JSONException {
-						mJsonArray = MigrantApi.getMyInformation();
-						informationAdapter = new InformationAdapter(NewInformation.this, mJsonArray);
+						mJsonArray = MigrantApi.getCityInformation();
+						informationAdapter = new InformationAdapter(CityInformation.this, mJsonArray);
 						Message msg = handler.obtainMessage();
 						handler.sendMessage(msg);
 					}

@@ -14,9 +14,13 @@ def add(title, pid, body, **kwargs):
     try:
         not_empty(title,body)
         val = dict(title = title, pid = pid, body = body)
-        val.update(kwargs)
-        _id = Tb().insert(val, saft = True)
-        val["_id"] = str(_id)
+        r = m_exists(TName,title=title,pid=pid)
+        if not r:
+            val.update(kwargs)
+            _id = Tb().insert(val, saft = True)
+            val["_id"] = str(_id)
+        else:
+            return False,'exists'
 
     except Exception as e:
         return False, e.message

@@ -56,10 +56,16 @@ public class Login extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		
+		if (!AppContext.mLoginUser.getString("name", "").equals("")&&!AppContext.mLoginUser.getString("pwd", "").equals("")) {
+			Intent intent = new Intent(Login.this, Main.class);
+			startActivity(intent);
+			finish();
+		}
+		
 		etusername = (EditText)findViewById(R.id.et_username);
-		etusername.setText(AppContext.mLoginUser.getString("name", "comger"));
 		etpassword = (EditText)findViewById(R.id.et_password);
-		etpassword.setText("comgerpwd");
+		etusername.setText(AppContext.mLoginUser.getString("name", "comger"));
+		etpassword.setText("111qqq");
 		
 		btnLogin = (Button)findViewById(R.id.btn_login);
 		
@@ -87,6 +93,7 @@ public class Login extends Activity {
 				Editor editor = AppContext.mLoginUser.edit();
 				editor.putString("uid", obj.getString("_id"));
 				editor.putString("name", obj.getString("username"));
+				editor.putString("pwd", String.format("%s", password));
 				editor.commit();
 				Message msg = handler.obtainMessage();
 				msg.arg1 = 1;
