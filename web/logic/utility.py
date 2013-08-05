@@ -70,9 +70,9 @@ def m_page(table,since=None,size=10,**kwargs):
             cond.pop('addon')
         
         print cond,StatusCond
-        lst = list(Tb(table).find(cond,{'status':0,'password':0}).limit(size))
+        lst = list(Tb(table).find(cond,{'status':0,'password':0}).limit(size).sort('_id',-1))
         for item in lst:
-            item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d-%H:%M:%S')
+            if 'addon' not in item:item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d %H:%M:%S')
         
         return True, mongo_conv(lst)
     except Exception as e:

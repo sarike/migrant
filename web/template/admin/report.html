@@ -25,6 +25,9 @@
 		<article class="module width_full">
 			<header><h3 class="tabs_involved">报告列表</h3>
 			<ul class="tabs">
+			    <li><select id='rootcitys'></select></li>
+			    <li><select id='childcitys' name='city'></select></li>
+			    <li>|</li>
 			    <li><a href="/admin/report/save?pid={{ pid or ''}}" >添加报告</a></li>
 			    <li>|</li>
 	   			<li><a href="javascript:void(0)" id='deleteallbtn'>删除所选</a></li>
@@ -88,6 +91,54 @@
 				}
 			})
 		})
+		
+	    function append_select(select,parent,callback){
+	        var api = '/m/city/list';
+	        if(parent){
+	            api = api +'/'+parent;
+	        }
+	        
+	        $.get(api,function(rs){
+	            if(rs.status){
+	                select.find('option').remove();
+	                $(rs.data).each(function(i,item){
+	                    var opt = $('<option>').val(item._id).html(item.name);
+	                    select.append(opt);
+	                });
+	            }
+	            if(callback){
+					callback();
+	            }
+	            
+	            
+	        })
+	    }
+		
+		
+	    var rootcitys = $('#rootcitys');
+	    append_select(rootcitys,null,function(){
+	    	{% if pid %}
+	    	$.get('/m/city/info?id={{ pid }}',function(rs){
+	    		if(rs.status){
+	    			if(!rs.data.parent) return;
+	    			rootcitys.val(rs.data.parent);
+	    			append_select($('#childcitys'),rs.data.parent,function(){
+	    				$('#childcitys').val('{{ pid }}');
+	    			});
+	    		}
+	    	})
+	    	{% end %}
+	    });
+
+	    
+	    rootcitys.change(function(){
+	        append_select($('#childcitys'),$(this).val());
+	        
+	    })
+	    
+	    $('#childcitys').change(function(){
+	        location.href = '?pid='+$(this).val()
+	    })
 
 	})
 </script>

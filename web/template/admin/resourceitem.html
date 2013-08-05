@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>Migrant 资源管理</title>
+	{% include ress.html %}
+</head>
+<body>
+
+	{% include header.html %}
+	<section id="secondary_bar">
+		<div class="user">
+			<p>欢迎 {{ current_request.username}} </p>
+			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="/admin/report">资源管理</a> <div class="breadcrumb_divider"></div> <a class="current">资料节点</a></article>
+		</div>
+	</section><!-- end of secondary bar -->
+	
+	{% include leftbar.html %}
+
+	<section id="main" class="column">
+		<article class="module width_full">
+			<header><h3 class="tabs_involved">节点列表</h3>
+			<ul class="tabs">
+			    <li><select id='rootcitys'></select></li>
+			    <li><select id='childcitys' name='city'></select></li>
+			</ul>
+			</header>
+
+			<div class="tab_container">
+				<div class="tab_content">
+                    <table class="tablesorter" cellspacing="0"> 
+				    <thead> 
+					    <tr> 
+	       					<th><input id='selectallbtn' type="checkbox"></th> 
+	        				<th>标题</th>  
+	        				<th>操作</th> 
+					    </tr> 
+				    </thead> 
+				    <tbody> 
+		            {% for item in data %}
+		                <tr {% for k,v in item.items() %} {{k}}="{{v}}" {%end%}>
+		                	<td><input type="checkbox" class='chkbtn' name='chk'></td>
+		                    <td ><a href="{{ item.get('url','#')}}" target='_bland' style='color:red'>{{ item.get("title","")}}</a>-{{ item.get("source","")}}--<span class='msg' style='color:red'></span><br><br>
+		                        {{item.get('body','')}}</br>
+		                        
+		                    </td>
+		                    <td><input type="button" value='导入' class='importbtn' /></td>
+		                </tr>
+		            {% end %}
+				    </tbody> 
+				    </table>
+				</div><!-- end of #tab1 -->
+			</div><!-- end of .tab_container -->
+		</article><!-- end of content manager article -->
+		
+		<article class="module width_full pager">
+		    {% for i in range(10)%}
+				<a href='?page={{i}}&city={{city}}'>{{ i+1 }}</a>
+			{% end %}				
+		</article>
+	</section>
+
+</body>
+</html>
+<script>
+	$(function(){
+		$('#selectallbtn').click(function(){
+			$("input[name='chk']").attr("checked",$(this).attr("checked"));
+		})
+		
+		
+		$('.importbtn').click(function(){
+		    var value = {'pid':'{{city}}'};
+		    var tr = $(this).parents('tr');
+		    value['title'] = tr.attr('title');
+		    value['body'] = tr.attr('body');
+		    
+		    $.post('/admin/report/save',data=value,function(rs){
+		        if(rs.status){
+		            tr.find('.msg').html('导入成功');
+		        }else{
+		            tr.find('.msg').html('导入失败:'+rs.data);
+		        }
+		        
+		    })
+		})
+		
+	    function append_select(select,parent,callback){
+	        var api = '/m/city/list';
+	        if(parent){
+	            api = api +'/'+parent;
+	        }
+	        
+	        $.get(api,function(rs){
+	            if(rs.status){
+	                select.find('option').remove();
+	                $(rs.data).each(function(i,item){
+	                    var opt = $('<option>').val(item._id).html(item.name);
+	                    select.append(opt);
+	                });
+	            }
+	            if(callback){
+					callback();
+	            }
+	            
+	            
+	        })
+	    }
+	    
+	    var rootcitys = $('#rootcitys');
+	    append_select(rootcitys,null,function(){
+	    	{% if city %}
+	    	$.get('/m/city/info?id={{ city }}',function(rs){
+	    		if(rs.status){
+	    			if(!rs.data.parent) return;
+	    			rootcitys.val(rs.data.parent);
+	    			append_select($('#childcitys'),rs.data.parent,function(){
+	    				$('#childcitys').val('{{ city }}');
+	    			});
+	    		}
+	    	})
+	    	{% end %}
+	    });
+
+	    
+	    rootcitys.change(function(){
+	        append_select($('#childcitys'),$(this).val());
+	        
+	    })
+	    
+	    $('#childcitys').change(function(){
+	        location.href = '?city='+$(this).val()
+	    })
+	    
+	})
+</script>
+

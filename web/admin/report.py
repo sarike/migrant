@@ -33,12 +33,12 @@ class ReportInfoHandler(ActionHandler):
 class ReportSaveHandler(ActionHandler):
     def post(self):
         _id = self.get_argument("id", None)
-        title = self.get_argument("rtitle", None)
+        title = self.get_argument("rtitle", None) or self.get_argument('title',None)
         pid = self.get_argument("pid", None)
         body = self.get_argument("body", None)
         tags = self.get_argument("tags", '').split('|')
         seo=self.get_seo_params()
-
+        print title,pid,body
         if not _id:
             r,v = add(title,pid, body, tags = tags, seo = seo)
             self.write(dict(status = r, data =v ))
