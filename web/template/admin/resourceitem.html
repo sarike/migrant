@@ -27,6 +27,7 @@
 			<ul class="tabs">
 			    <li><select id='rootcitys'></select></li>
 			    <li><select id='childcitys' name='city'></select></li>
+			    <li><input type="button" value='导入' id='importbtn' /></li>
 			</ul>
 			</header>
 
@@ -71,11 +72,10 @@
 		$('#selectallbtn').click(function(){
 			$("input[name='chk']").attr("checked",$(this).attr("checked"));
 		})
-		
-		
-		$('.importbtn').click(function(){
+
+		function importitem(tr){
 		    var value = {'pid':'{{city}}'};
-		    var tr = $(this).parents('tr');
+		    //var tr = $(this).parents('tr');
 		    value['title'] = tr.attr('title');
 		    value['body'] = tr.attr('body');
 		    
@@ -87,6 +87,19 @@
 		        }
 		        
 		    })
+		}
+		
+		$('#importbtn').click(function(){
+			var arrChk =$("input[name='chk']:checked");
+			$(arrChk).each(function(){
+				var _tr = $(this).parents('tr');
+				importitem(_tr);
+			})
+		})
+		
+		$('.importbtn').click(function(){
+		    var tr = $(this).parents('tr');
+		    importitem(tr);
 		})
 		
 	    function append_select(select,parent,callback){

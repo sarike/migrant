@@ -32,12 +32,6 @@ class BaiduNewsListNode(ListNode):
                 _news['source'] = _item('font nobr').html()
                 _news['body'] = _item('font[size="-1"]').text()
                 _news['url'] = pyq(_item('.text a')[0]).attr('href')
-                print _news['title']
-                print _news['body']
-                print _news['url']
-                print _news['source']
-                print '-'*20
-                print 
                 lst.append(_news)
 
             self._callback(lst)

@@ -38,7 +38,6 @@ class ReportSaveHandler(ActionHandler):
         body = self.get_argument("body", None)
         tags = self.get_argument("tags", '').split('|')
         seo=self.get_seo_params()
-        print title,pid,body
         if not _id:
             r,v = add(title,pid, body, tags = tags, seo = seo)
             self.write(dict(status = r, data =v ))
