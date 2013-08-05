@@ -4,7 +4,7 @@
     author comger@gmail.com
 """
 from kpages import not_empty,get_context,mongo_conv
-from utility import m_update,m_del,m_page,m_exists
+from utility import m_update,m_del,m_page,m_exists,m_info
 
 TName = 'account'
 Tb = lambda :get_context().get_mongo()[TName]
@@ -59,3 +59,19 @@ def auth_login(site,otherid,name,**kwargs):
 
 def page(since,**kwargs):
     return m_page(TName,since=since,**kwargs)
+
+def info(_id):
+    return m_info(TName,_id)
+
+
+def conv_user(obj):
+    if isinstance(obj, (list, tuple)):
+        for d in obj:
+            conv_user(d)
+
+    elif isinstance(obj,dict):
+        r,v = info(obj['uid'])
+        if r:
+            obj['username'] = v['username']
+        else:
+            obj['username'] = 'deleted user'
