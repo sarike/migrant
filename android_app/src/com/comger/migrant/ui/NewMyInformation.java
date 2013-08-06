@@ -44,7 +44,6 @@ public class NewMyInformation extends BaseActivity {
 
 		initView();
 		initLoadDate();
-
 	}
 
 	private void initView() {

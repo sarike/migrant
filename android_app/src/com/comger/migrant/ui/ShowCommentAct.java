@@ -44,7 +44,6 @@ public class ShowCommentAct extends BaseActivity{
 
 		initView();
 		initLoadDate();
-
 	}
 
 	private void initView() {
