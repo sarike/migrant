@@ -10,6 +10,7 @@
 #import "AFJSONRequestOperation.h"
 #import "LoginViewController.h"
 #import "LocalConfig.h"
+#import "PostCell.h"
 
 @interface PostViewController ()
 
@@ -57,7 +58,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+  
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -65,15 +66,19 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    //cell.textLabel.text = [NSString stringWithFormat:@"Cell #%d", indexPath.row];
-    //cell.textLabel.text = [[self.dataList objectAtIndex:indexPath.row] valueForKey:@"name"];
-    
     if([indexPath row] == ([self.dataList count])) {
         //创建loadMoreCell
         cell.textLabel.text=@"More..";
     }else {
         cell.textLabel.text=[[self.dataList objectAtIndex:indexPath.row] valueForKey:@"name"];    }
     return cell;
+  
+    
+
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60.0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -118,6 +123,8 @@
 {
     [super viewDidLoad];
     self.dataList = [[NSMutableArray alloc] init];
+    [self loaddata];
+    /**
     
     if([[LocalConfig Instance]shareconfig:@"uid"]==nil){
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"请登录后查看信息" delegate:self cancelButtonTitle:@"返回" destructiveButtonTitle:nil otherButtonTitles:@"登录", nil];
@@ -125,7 +132,7 @@
     }else{
         [self loaddata];
     }
-    
+    **/
 
 }
 

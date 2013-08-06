@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8"/>
-	<title>Migrant 报告管理</title>
+	<title>Migrant 资源管理</title>
 	{% include ress.html %}
 </head>
 <body>
@@ -15,7 +15,7 @@
 			<a class="logout_user" href="/admin/logout" title="Logout">退出</a> 
 		</div>
 		<div class="breadcrumbs_container">
-			<article class="breadcrumbs"><a href="/admin/report">报告管理</a> <div class="breadcrumb_divider"></div> <a class="current">报告列表</a></article>
+			<article class="breadcrumbs"><a href="/admin/report">资源管理</a> <div class="breadcrumb_divider"></div> <a class="current">资料节点</a></article>
 		</div>
 	</section><!-- end of secondary bar -->
 	
@@ -23,73 +23,84 @@
 
 	<section id="main" class="column">
 		<article class="module width_full">
-			<header><h3 class="tabs_involved">报告列表</h3>
+			<header><h3 class="tabs_involved">节点列表</h3>
 			<ul class="tabs">
 			    <li><select id='rootcitys'></select></li>
 			    <li><select id='childcitys' name='city'></select></li>
-			    <li>|</li>
-			    <li><a href="/admin/report/save?pid={{ pid or ''}}" >添加报告</a></li>
-			    <li>|</li>
-	   			<li><a href="javascript:void(0)" id='deleteallbtn'>删除所选</a></li>
+			    <li><input type="button" value='导入' id='importbtn' /></li>
 			</ul>
 			</header>
 
 			<div class="tab_container">
 				<div class="tab_content">
-				<table class="tablesorter" cellspacing="0"> 
-				<tbody> 
-
-		        {% for item in data %}
-		            <tr  id="{{ item.get('_id') }}">
-		            	<td><input type="checkbox" class='chkbtn' name='chk'></td>
-		                <td >{{ item.get("title","")}}</td>
-		                <td >{{ item.get("addon","")}}</td>
-		                <td ><a href='/admin/report/save?id={{ item.get("_id","")}}&isseo=1' target='_bland'>推广信息</a></td>
-		                <td><a href='/admin/report/save?id={{ item.get("_id","")}}'><input type="image" src="/static/admin/images/icn_edit.png" title="编辑"></a><input type="image" src="/static/admin/images/icn_trash.png" title="删除" class='delbtn'></td>
-		            </tr>
-		        {% end %}
-				</tbody> 
-				</table>
+                    <table class="tablesorter" cellspacing="0"> 
+				    <thead> 
+					    <tr> 
+	       					<th><input id='selectallbtn' type="checkbox"></th> 
+	        				<th>标题</th>  
+	        				<th>操作</th> 
+					    </tr> 
+				    </thead> 
+				    <tbody> 
+		            {% for item in data %}
+		                <tr {% for k,v in item.items() %} {{k}}="{{v}}" {%end%}>
+		                	<td><input type="checkbox" class='chkbtn' name='chk'></td>
+		                    <td ><a href="{{ item.get('url','#')}}" target='_bland' style='color:red'>{{ item.get("title","")}}</a>-{{ item.get("source","")}}--<span class='msg' style='color:red'></span><br><br>
+		                        {{item.get('body','')}}</br>
+		                        
+		                    </td>
+		                    <td><input type="button" value='导入' class='importbtn' /></td>
+		                </tr>
+		            {% end %}
+				    </tbody> 
+				    </table>
 				</div><!-- end of #tab1 -->
 			</div><!-- end of .tab_container -->
 		</article><!-- end of content manager article -->
-		{% if len(data) >=10 %}
+		
 		<article class="module width_full pager">
-				<a href='?since={{ data[-1].get("_id")}}&city={{city or ''}}&pid={{pid or ''}}'>下一页</a>				
+		    {% for i in range(10)%}
+				<a href='?page={{i}}&city={{city}}'>{{ i+1 }}</a>
+			{% end %}				
 		</article>
-		{% end %}
 	</section>
 
 </body>
+</html>
 <script>
 	$(function(){
 		$('#selectallbtn').click(function(){
-			if($(this).attr("checked")){
-				$("input[name='chk']").attr("checked",$(this).attr("checked"));
-			}else{
-				$("input[name='chk']").removeAttr('checked');
-			}
+			$("input[name='chk']").attr("checked",$(this).attr("checked"));
 		})
 
-		$('#deleteallbtn').click(function(){
+		function importitem(tr){
+		    var value = {'city':'{{city}}'};
+		    //var tr = $(this).parents('tr');
+		    value['title'] = tr.attr('title');
+		    value['body'] = tr.attr('body');
+		    value['source'] = tr.attr('source');
+		    
+		    $.post('/admin/report/save',data=value,function(rs){
+		        if(rs.status){
+		            tr.find('.msg').html('导入成功');
+		        }else{
+		            tr.find('.msg').html('导入失败:'+rs.data);
+		        }
+		        
+		    })
+		}
+		
+		$('#importbtn').click(function(){
 			var arrChk =$("input[name='chk']:checked");
 			$(arrChk).each(function(){
 				var _tr = $(this).parents('tr');
-				$.post('/admin/report/delete?id='+_tr.attr('id'),function(data){
-					if(data.status){
-						_tr.remove();
-					}
-				})
+				importitem(_tr);
 			})
 		})
-
-		$('.delbtn').click(function(){
-			var _tr = $(this).parents('tr');
-			$.post('/admin/report/delete?id='+_tr.attr('id'),function(data){
-				if(data.status){
-					_tr.remove();
-				}
-			})
+		
+		$('.importbtn').click(function(){
+		    var tr = $(this).parents('tr');
+		    importitem(tr);
 		})
 		
 	    function append_select(select,parent,callback){
@@ -113,8 +124,7 @@
 	            
 	        })
 	    }
-		
-		
+	    
 	    var rootcitys = $('#rootcitys');
 	    append_select(rootcitys,null,function(){
 	    	{% if city %}
@@ -137,10 +147,9 @@
 	    })
 	    
 	    $('#childcitys').change(function(){
-	        location.href = '?pid={{ pid or ""}}&city='+$(this).val();
+	        location.href = '?city='+$(this).val()
 	    })
-
+	    
 	})
 </script>
-</html>
 

@@ -15,11 +15,14 @@ class ReportHandler(ActionHandler):
     def get(self):
         since = self.get_argument("since", None)
         pid = self.get_argument('pid',None)
+        city = self.get_argument('city',None)
+
         cond = {}
-        if pid:
-            cond = dict(pid = pid)
+        if pid:cond.update(pid = pid)
+        if city:cond.update(city = city)
+
         r,v = m_page(T_REPORT,since,**cond)
-        self.render("admin/report.html", data = v,pid = pid)
+        self.render("admin/report.html", data = v,pid = pid,city=city)
 
 
 @url(r'/admin/report/info/(.*)')
@@ -33,14 +36,15 @@ class ReportInfoHandler(ActionHandler):
 class ReportSaveHandler(ActionHandler):
     def post(self):
         _id = self.get_argument("id", None)
-        title = self.get_argument("rtitle", None)
+        title = self.get_argument("rtitle", None) or self.get_argument('title',None)
         pid = self.get_argument("pid", None)
+        city = self.get_argument("city", None)
         body = self.get_argument("body", None)
+        source = self.get_argument("source", None)
         tags = self.get_argument("tags", '').split('|')
         seo=self.get_seo_params()
-
         if not _id:
-            r,v = add(title,pid, body, tags = tags, seo = seo)
+            r,v = add(title,pid,city,body,source, tags = tags, seo = seo)
             self.write(dict(status = r, data =v ))
         else:
             cond = {}

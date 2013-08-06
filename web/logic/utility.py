@@ -56,7 +56,7 @@ def m_page(table,since=None,size=10,**kwargs):
         cond_id = None
         if since:
             cond_id = ObjectId(since)
-            cond.update(_id = {'$gt':cond_id})
+            cond.update(_id = {'$lt':cond_id})
         cond.update(kwargs)
         
         if cond.get('addon',None):
@@ -64,15 +64,15 @@ def m_page(table,since=None,size=10,**kwargs):
             t = float(cond.pop('addon'))
             t = hex(int(t))[2:]
             _id = '{0}{1}'.format(t,'0'*16)
-            if cond_id and cond_id <ObjectId(_id):
-                cond.update({'_id':{'$gt':ObjectId(_id)}})
+            if cond_id and cond_id >ObjectId(_id):
+                cond.update({'_id':{'$lt':ObjectId(_id)}})
         elif 'addon' in cond:
             cond.pop('addon')
         
-        print cond,StatusCond
-        lst = list(Tb(table).find(cond,{'status':0,'password':0}).limit(size))
+        print cond
+        lst = list(Tb(table).find(cond,{'status':0,'password':0}).limit(size).sort('_id',-1))
         for item in lst:
-            item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d-%H:%M:%S')
+            if 'addon' not in item:item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d %H:%M:%S')
         
         return True, mongo_conv(lst)
     except Exception as e:

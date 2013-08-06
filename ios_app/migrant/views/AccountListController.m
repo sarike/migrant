@@ -8,7 +8,7 @@
 
 #import "AccountListController.h"
 #import "AFJSONRequestOperation.h"
-
+#import "PostCell.h"
 
 @interface AccountListController ()
 
@@ -79,20 +79,41 @@
    return  dataList.count;
 }
 
+//计算text field 的高度。
+-(CGFloat)cellHeight:(NSString*)contentText with:(CGFloat)with
+{
+    UIFont * font=[UIFont  systemFontOfSize:14];
+    CGSize size = [contentText sizeWithFont:font constrainedToSize:CGSizeMake(with - 10, 300000.0f) lineBreakMode:10];
+    CGFloat height = size.height;
+    return height;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    static NSString *CustomCellIdentifier = @"CustomCellIdentifier";
+    static BOOL nibsRegistered = NO;
+    if (!nibsRegistered) {
+        UINib *nib = [UINib nibWithNibName:@"PostCell" bundle:nil];
+        [tableView registerNib:nib forCellReuseIdentifier:CustomCellIdentifier];
+        nibsRegistered = YES;
     }
     
-    //cell.textLabel.text = [NSString stringWithFormat:@"Cell #%d", indexPath.row];
-    cell.textLabel.text = [[self.dataList objectAtIndex:indexPath.row] valueForKey:@"body"];
+    PostCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomCellIdentifier];
+    
+    NSUInteger row = [indexPath row];
+    NSLog(@"%@",self.dataList);
+    NSDictionary *info = [self.dataList objectAtIndex:row];
+    [cell setValue:info];
     return cell;
 
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger row = [indexPath row];
+    NSString *body = [[self.dataList objectAtIndex:row] valueForKey:@"body"];
+    NSLog(@"H:%f",[self cellHeight:body with:300]);
+    return 40 + [self cellHeight:body with:300];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

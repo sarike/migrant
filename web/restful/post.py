@@ -11,7 +11,7 @@ from utility import RestfulHandler
 
 from logic.utility import *
 from logic.post import add,TName as T_POST,home
-from logic.account import TName as T_ACCOUNT
+from logic.account import TName as T_ACCOUNT,conv_user
 
 
 @url(r'/m/post/create')
@@ -41,6 +41,7 @@ class HomeHandler(RestfulHandler):
             ur,uv = m_info(T_ACCOUNT,self.uid)
             citys = (uv['city'],uv['tocity'])
             r,v = home(self.uid,citys,self.get_argument('since',None))
+            conv_user(v)
             self.write(dict(status=r,data = v))
         except KeyError as e:
             self.write(dict(status=False,data='用户未设置相关城市',errormsg=e.message))
@@ -54,6 +55,7 @@ class HomeHandler(RestfulHandler):
 class MyHandler(RestfulHandler):
     def get(self,_id=None):
         r,v = m_page(T_POST,self.get_argument('since',None),uid=_id or self.uid)
+        conv_user(v)
         self.write(dict(status=r,data = v))
 
 
@@ -63,6 +65,7 @@ class MyHandler(RestfulHandler):
 class CityHandler(ContextHandler):
     def get(self,_id=None):
         r,v = m_page(T_POST,self.get_argument('since',None),city=_id)
+        conv_user(v)
         self.write(dict(status=r,data = v))
         
 

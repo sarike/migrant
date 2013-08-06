@@ -9,6 +9,10 @@ from utility import m_update,m_del,m_page,m_exists,StatusCond
 TName = 'city'
 Tb = lambda :get_context().get_mongo()[TName]
 
+CITY_VAL = {}
+CITY_NAME = {}
+citys = {}
+
 def add(name,parent=None,level=0):
     try:
         not_empty(name)
@@ -28,4 +32,11 @@ def getList(parent=None):
     cond.update(StatusCond)
     lst = list(Tb().find(cond,{'id':0,'status':0}))
     return mongo_conv(lst)
+
+
+def reflesh():
+    citys = Tb().find({'level':{'$in':[0,1]}})
+    for _city in citys:
+        CITY_VAL[_city['name']]=str(_city['_id'])
+        CITY_NAME[str(_city['_id'])] = _city['name']
 
