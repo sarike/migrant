@@ -60,7 +60,6 @@ public class ShowCommentAct extends BaseActivity{
 
 					@Override
 					public void onReading() {
-						// TODO Auto-generated method stub
 						super.onReading();
 					}
 

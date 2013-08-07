@@ -83,4 +83,12 @@ public class MigrantApi extends ApiClient {
 	public static JSONArray getMyCommentList() throws JSONException, AppException {
 		return _get(ApiUrls.MyCommentList, null).getJSONArray("data");
 	}
+	
+	public static JSONArray getCityReportList() throws JSONException, AppException {
+		return _get(ApiUrls.cityReport, null).getJSONArray("data");
+	}
+	
+	public static JSONArray getCityReporthomeList() throws JSONException, AppException {
+		return _get(ApiUrls.cityReporthome, null).getJSONArray("data");
+	}
 }

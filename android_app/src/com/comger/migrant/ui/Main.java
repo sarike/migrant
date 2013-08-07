@@ -38,6 +38,11 @@ public class Main extends BaseTabActivity {
 		TextView homeTabTextView = (TextView) homeTabView.findViewById(R.id.tab_label);
 		homeTabTextView.setBackgroundResource(R.drawable.tabhome);
 		AddActivity(homeTabView, InformationActivity.class);
+		
+		View reportTabView = (View) LayoutInflater.from(this).inflate(R.layout.tabbottommini, null);
+		TextView reportTabTextView = (TextView) reportTabView.findViewById(R.id.tab_label);
+		reportTabTextView.setBackgroundResource(R.drawable.tabhome);
+		AddActivity(reportTabView, ReportActivity.class);
 
 	}
 

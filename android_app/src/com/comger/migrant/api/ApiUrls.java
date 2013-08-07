@@ -13,7 +13,7 @@ package com.comger.migrant.api;
 public class ApiUrls {
 	
 	//public static String Host = "http://172.16.20.3:8888";
-	public static String Host = "http://172.16.20.3:8888";
+	public static String Host = "http://112.124.38.112:8888";
 
 	public static String Login = "/m/account/login";
 	public static String authLogin = "/m/auth/login";
@@ -26,6 +26,9 @@ public class ApiUrls {
 	
 	public static String CommentList="/m/comment/postlist";
 	public static String MyCommentList="/m/comment/userlist";
+	
+	public static String cityReport="/m/report/city";
+	public static String cityReporthome="/m/report/city";
 	
 	
 }

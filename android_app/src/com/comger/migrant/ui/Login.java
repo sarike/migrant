@@ -65,7 +65,7 @@ public class Login extends Activity {
 		etusername = (EditText)findViewById(R.id.et_username);
 		etpassword = (EditText)findViewById(R.id.et_password);
 		etusername.setText(AppContext.mLoginUser.getString("name", "comger"));
-		etpassword.setText("111qqq");
+		etpassword.setText("comgerpwd");
 		
 		btnLogin = (Button)findViewById(R.id.btn_login);
 		
