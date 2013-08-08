@@ -42,5 +42,11 @@ public class BaseTabActivity extends TabActivity {
 			}
 		}
 		tabHost.addTab(tabHost.newTabSpec(t.getName()).setIndicator(view).setContent(intent));
+		
+		getTabGetCurrent(tabHost.getCurrentTab());
+	}
+
+	public void getTabGetCurrent(int currentTab) {
+		
 	}
 }

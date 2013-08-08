@@ -27,6 +27,7 @@ public class Main extends BaseTabActivity {
 
 		}
 	};
+	private TextView titletext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +35,32 @@ public class Main extends BaseTabActivity {
 		setContentView(R.layout.main);
 		_create(savedInstanceState, this);
 
+		
+		titletext = (TextView) findViewById(R.id.titletext);
+		
 		View homeTabView = (View) LayoutInflater.from(this).inflate(R.layout.tabbottommini, null);
 		TextView homeTabTextView = (TextView) homeTabView.findViewById(R.id.tab_label);
 		homeTabTextView.setBackgroundResource(R.drawable.tabhome);
 		AddActivity(homeTabView, InformationActivity.class);
 		
+		
 		View reportTabView = (View) LayoutInflater.from(this).inflate(R.layout.tabbottommini, null);
 		TextView reportTabTextView = (TextView) reportTabView.findViewById(R.id.tab_label);
 		reportTabTextView.setBackgroundResource(R.drawable.tabhome);
 		AddActivity(reportTabView, ReportActivity.class);
+		
+		
 
+	}
+	
+	@Override
+	public void getTabGetCurrent(int currentTab) {
+		super.getTabGetCurrent(currentTab);
+		if (tabHost.getCurrentTab()==0) {
+			titletext.setText("资讯");
+		}else if (tabHost.getCurrentTab()==1) {
+			titletext.setText("新闻");
+		}
 	}
 
 }

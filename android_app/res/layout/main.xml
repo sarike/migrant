@@ -9,6 +9,8 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
+        <include layout="@layout/maintabheader" />
+
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
