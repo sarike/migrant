@@ -63,6 +63,10 @@
           <activity android:name=".ui.MyCityReportActivity" 
             android:theme="@style/Theme.Migrant" 
             android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+          
+          <activity android:name=".ui.EditInformation" 
+            android:theme="@style/Theme.Migrant" 
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
         
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>

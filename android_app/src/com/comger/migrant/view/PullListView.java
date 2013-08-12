@@ -1,10 +1,15 @@
+/**
+ * MyListView.java
+ * @user comger
+ * @mail comger@gmail.com
+ * 2012-5-18
+ */
 package com.comger.migrant.view;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
@@ -27,10 +32,11 @@ import com.comger.migrant.R;
 
 public class PullListView extends ListView implements OnScrollListener {
 
+
 	View btn_more; // 加载更的按钮
 	private int page_index = 1;
 	// private int page_size = 10;
-	private int page_size = 10;
+	public int page_size = 15;
 	private int lastPosition = 0;
 	private ProgressBar pb;
 
@@ -65,8 +71,6 @@ public class PullListView extends ListView implements OnScrollListener {
 
 	public OnRefreshListener refreshListener;
 	private TextView loadcheck_more;
-	Context mContext;
-	private View datanull;
 
 	// private final static String TAG = "ListView";
 
@@ -76,16 +80,12 @@ public class PullListView extends ListView implements OnScrollListener {
 	}
 
 	private void init(Context context) {
-		this.mContext = context;
-		inflater = LayoutInflater.from(mContext);
+		inflater = LayoutInflater.from(context);
 
 		if (this.btn_more == null) { // 如果没有指定分页按钮，将使用程序默认的　checkmore　Layout
 			this.btn_more = (LinearLayout) inflater.inflate(R.layout.loadmore, null);
 			this.loadcheck_more = (TextView) btn_more.findViewById(R.id.loadcheck_more);
 			this.pb = (ProgressBar) this.btn_more.findViewById(R.id.pbmore);
-		}
-		if (datanull == null) {
-			datanull = inflater.inflate(R.layout.datanull, null);
 		}
 		this.addFooterView(this.btn_more);
 		initBtnMore(this.btn_more);
@@ -127,16 +127,54 @@ public class PullListView extends ListView implements OnScrollListener {
 			@Override
 			public void onClick(View v) {
 				if (isPage) {
-					btn_more.setEnabled(false);
 					pb.setVisibility(View.VISIBLE);
 					bindData();
-					;
-
 				} else {
 					pb.setVisibility(View.GONE);
 				}
 			}
 		});
+	}
+
+	/**
+	 * 返回元数据被过滤不满一页时使用些方法
+	 * @param adapter
+	 * @param pagecount　元数据原记录条数
+	 */
+	public void setAdapter(BaseAdapter adapter, int pagecount) {
+		super.setAdapter(adapter);
+		onRefreshComplete();
+		if (page_index == 1) {
+			setSelection(0);
+		} else {
+			setSelection(lastPosition);
+		}
+
+		if (pagecount != 0) {
+			if (pagecount % page_size == 0 && pagecount >= page_size || page_index == 1 && pagecount >= page_size) {
+				// { // 刚好为分页码的倍数，有下一页
+				if (pagecount % page_size == 0 && pagecount < page_index * page_size) {
+					isPage = false;
+					removeFooterView(btn_more);
+				} else {
+					removeFooterView(btn_more);
+					addFooterView(btn_more);
+					btn_more.setVisibility(View.VISIBLE);
+					loadcheck_more.setText("更多");
+					page_index++;
+					isPage = true;
+				}
+
+			} else {
+				isPage = false;
+				loadcheck_more.setText("没有更多");
+			}
+			adapter.notifyDataSetChanged();
+			pb.setVisibility(View.GONE);
+		} else {
+			removeFooterView(btn_more);
+		}
+		btn_more.setEnabled(true);
 	}
 
 	public void setAdapter(BaseAdapter adapter) {
@@ -149,13 +187,6 @@ public class PullListView extends ListView implements OnScrollListener {
 			setSelection(lastPosition);
 		}
 		if (adapter.getCount() != 0) {
-
-			removeFooterView(btn_more);
-			for (int i = 0; i < 8; i++) {
-				removeFooterView(datanull);
-			}
-			this.setDivider(mContext.getResources().getDrawable(R.drawable.dashed_line));
-			this.setDividerHeight(1);
 			if (adapter.getCount() % page_size == 0 && adapter.getCount() >= page_size || page_index == 1 && adapter.getCount() >= page_size) {
 				// { // 刚好为分页码的倍数，有下一页
 				if (adapter.getCount() % page_size == 0 && adapter.getCount() < page_index * page_size) {
@@ -172,20 +203,12 @@ public class PullListView extends ListView implements OnScrollListener {
 
 			} else {
 				isPage = false;
-				removeFooterView(btn_more);
+				loadcheck_more.setText("没有更多");
 			}
 			adapter.notifyDataSetChanged();
 			pb.setVisibility(View.GONE);
 		} else {
-			this.setDivider(mContext.getResources().getDrawable(R.drawable.trdashed_line));
-			this.setDividerHeight(1);
 			removeFooterView(btn_more);
-			for (int i = 0; i < 8; i++) {
-				removeFooterView(datanull);
-			}
-			for (int i = 0; i < 8; i++) {
-				addFooterView(datanull);
-			}
 		}
 		btn_more.setEnabled(true);
 	}
@@ -384,30 +407,43 @@ public class PullListView extends ListView implements OnScrollListener {
 		// 当执行速度较快时，也会等待2s(刷新的过程)
 	}
 	**/
-	@SuppressLint("NewApi")
-	public void onRefreshComplete() {
 
-		new AsyncTask<Void, Void, Void>() {
+	public void onListTitleFooter() {
+		/*new AsyncTask<Void, Void, Void>() {
 
 			@Override
 			protected Void doInBackground(Void... params) {
+				
 				return null;
 			}
 
 			@Override
 			protected void onPostExecute(Void result) {
-				try {
-					state = DONE;
-					lastUpdatedTextView.setText("最近更新:" + getTimeString(getNowTime()));
-					changeHeaderViewByState();
-				} catch (Exception e) {
-					// TODO: handle exception
+				if (page_index != 1) {
+					onMoerProess();
+					onRefreshComplete();
 				}
 				super.onPostExecute(result);
 			}
 
-		}.execute();
+		}.execute(null);*/
 
+	}
+
+	public void onMoerProess() {
+		pb.setVisibility(View.GONE);
+		isPage = true;
+		initBtnMore(this.btn_more);
+	}
+
+	public void onRefreshComplete() {
+		try {
+			state = DONE;
+			lastUpdatedTextView.setText("最近更新:" + getTimeString(getNowTime()));
+			changeHeaderViewByState();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	// 设置起始的分页数及数据
@@ -446,11 +482,10 @@ public class PullListView extends ListView implements OnScrollListener {
 		}
 		child.measure(childWidthSpec, childHeightSpec);
 	}
-
+	
 	/**
-	 * 转化时间格式(update)
+	 * 转化时间格式
 	 * */
-	@SuppressLint("SimpleDateFormat")
 	public static String getTimeString(long timelnMillis) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(timelnMillis);
@@ -459,12 +494,11 @@ public class PullListView extends ListView implements OnScrollListener {
 		String newTypeDate = f.format(date);
 		return newTypeDate;
 	}
-
+	
 	/**
 	 * 获取所需当前时间
 	 */
 	public static long getNowTime() {
 		return Calendar.getInstance().getTime().getTime();
 	}
-
 }

@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 
 public class BaseTabActivity extends TabActivity {
 
@@ -42,11 +43,7 @@ public class BaseTabActivity extends TabActivity {
 			}
 		}
 		tabHost.addTab(tabHost.newTabSpec(t.getName()).setIndicator(view).setContent(intent));
-		
-		getTabGetCurrent(tabHost.getCurrentTab());
 	}
 
-	public void getTabGetCurrent(int currentTab) {
-		
-	}
+
 }

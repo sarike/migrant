@@ -20,10 +20,12 @@ public class ApiUrls {
 	public static String accountInfo = "/m/account/info";
 	public static String cityList = "/m/city/list";
 	
+	public static String SendInformation="/m/post/create";//发送资讯
 	public static String HomeList = "/m/post/home";//综合信息
 	public static String MyList = "/m/post/my";//我的信息
 	public static String CityList = "/m/post/city";//城市信息
 	
+	public static String SendComment="/m/comment/create";
 	public static String CommentList="/m/comment/postlist";
 	public static String MyCommentList="/m/comment/userlist";
 	

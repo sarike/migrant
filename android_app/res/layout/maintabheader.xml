@@ -2,21 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:background="@drawable/widget_head_bg"
+    android:orientation="horizontal" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingLeft="5dip"
-        android:paddingRight="5dip"
-        android:background="@drawable/widget_head_bg"
-        android:gravity="center_vertical"
-        android:orientation="vertical" >
+        android:paddingRight="5dip" >
 
         <TextView
             android:id="@+id/titletext"
             android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/imformation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_bar_news_over"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
 </LinearLayout>

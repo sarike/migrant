@@ -17,6 +17,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,7 +31,7 @@ import com.comger.migrant.api.MigrantApi;
 import com.comger.migrant.common.AsyncRunner;
 import com.comger.migrant.common.BaseRequestListener;
 
-public class ShowInformation extends BaseActivity {
+public class ShowInformation extends BaseActivity implements OnClickListener {
 
 	private TextView mImContent;
 	private TextView mDateTime;
@@ -43,6 +47,8 @@ public class ShowInformation extends BaseActivity {
 			commentList.setAdapter(informationAdapter);
 		};
 	};
+	private EditText commedit;
+	private String body;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,10 @@ public class ShowInformation extends BaseActivity {
 		mImContent = (TextView) findViewById(R.id.imContent);
 		mDateTime = (TextView) findViewById(R.id.datetime);
 		commentList = (ListView) findViewById(R.id.commentList);
+		Button sendcomm = (Button) findViewById(R.id.sendcomm);
+		sendcomm.setOnClickListener(this);
+		
+		commedit = (EditText) findViewById(R.id.commedit);
 
 		try {
 			mImContent.setText(jsonObject.getString("body"));
@@ -100,6 +110,44 @@ public class ShowInformation extends BaseActivity {
 				super.onAppError(e);
 			}
 		});
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.sendcomm:
+			sendComment();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void sendComment() {
+		body = commedit.getText().toString().trim();
+		
+		AsyncRunner.run(new BaseRequestListener() {
+
+			@Override
+			public void onReading() {
+				super.onReading();
+			}
+
+			@Override
+			public void onRequesting() throws AppException, JSONException {
+				//mJsonArray = MigrantApi.setCommentEdit(body, pid);
+
+				super.onRequesting();
+			}
+			
+			@Override
+			public void onAppError(AppException e) {
+				super.onAppError(e);
+			}
+		});
+	
+		
 	}
 
 }

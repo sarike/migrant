@@ -64,30 +64,45 @@ public class MigrantApi extends ApiClient {
 		return _get(ApiUrls.cityList, params).getJSONArray("data");
 	}
 
+	public static JSONArray setInformation(String content, String city) throws JSONException, AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("body", content);
+		params.put("city", city);
+		return _post(ApiUrls.SendInformation, params).getJSONArray("data");
+	}
+
 	public static JSONArray getHomeInformation() throws JSONException, AppException {
 		return _get(ApiUrls.HomeList, null).getJSONArray("data");
 	}
-	
+
 	public static JSONArray getMyInformation() throws JSONException, AppException {
 		return _get(ApiUrls.MyList, null).getJSONArray("data");
 	}
-	
+
 	public static JSONArray getCityInformation() throws JSONException, AppException {
 		return _get(ApiUrls.CityList, null).getJSONArray("data");
 	}
+
 	
-	public static JSONArray getCommentList(String informationID) throws JSONException, AppException {
-		return _get(String.format("%s/%s", ApiUrls.CommentList,informationID), null).getJSONArray("data");
+	public static JSONArray setCommentEdit(String body,String pid) throws JSONException, AppException{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("body", body);
+		params.put("pid", pid);
+		return  _post(ApiUrls.SendComment, params).getJSONArray("data");
 	}
 	
+	public static JSONArray getCommentList(String informationID) throws JSONException, AppException {
+		return _get(String.format("%s/%s", ApiUrls.CommentList, informationID), null).getJSONArray("data");
+	}
+
 	public static JSONArray getMyCommentList() throws JSONException, AppException {
 		return _get(ApiUrls.MyCommentList, null).getJSONArray("data");
 	}
-	
+
 	public static JSONArray getCityReportList() throws JSONException, AppException {
 		return _get(ApiUrls.cityReport, null).getJSONArray("data");
 	}
-	
+
 	public static JSONArray getCityReporthomeList() throws JSONException, AppException {
 		return _get(ApiUrls.cityReporthome, null).getJSONArray("data");
 	}
