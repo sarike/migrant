@@ -21,11 +21,15 @@ import com.comger.migrant.common.BaseRequestListener;
 import com.comger.migrant.view.PullListView;
 import com.comger.migrant.view.PullListView.OnRefreshListener;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class CityReportActivity extends BaseActivity{
+public class CityReportActivity extends BaseActivity implements OnItemClickListener{
 
 
 	private PullListView mDownpulllist;
@@ -49,7 +53,7 @@ public class CityReportActivity extends BaseActivity{
 
 	private void initView() {
 		mDownpulllist = (PullListView) findViewById(R.id.downpulllist);
-
+		mDownpulllist.setOnItemClickListener(this);
 	}
 
 	private void initLoadDate() {
@@ -82,6 +86,17 @@ public class CityReportActivity extends BaseActivity{
 			}
 		});
 		mDownpulllist.onRefresh();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		try {
+			Intent intent = new Intent(this, ShowTabInformation.class);
+			intent.putExtra("jsonDate", String.format("%s", mJsonArray.getJSONObject(arg2-1)));
+			startActivity(intent);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}		
 	}
 
 }

@@ -51,6 +51,7 @@ public class Main extends BaseTabActivity implements OnTabChangeListener, OnClic
 		TextView reportTabTextView = (TextView) reportTabView.findViewById(R.id.tab_label);
 		reportTabTextView.setBackgroundResource(R.drawable.tabhome);
 		AddActivity(reportTabView, ReportActivity.class);
+		
 		if (tabHost.getCurrentTab() == 0) {
 			titletext.setText("资讯");
 		}

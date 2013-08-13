@@ -12,9 +12,13 @@ package com.comger.migrant.ui;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.comger.migrant.AppException;
 import com.comger.migrant.R;
@@ -25,7 +29,7 @@ import com.comger.migrant.common.BaseRequestListener;
 import com.comger.migrant.view.PullListView;
 import com.comger.migrant.view.PullListView.OnRefreshListener;
 
-public class NewMyInformation extends BaseActivity {
+public class NewMyInformation extends BaseActivity implements OnItemClickListener {
 
 	private PullListView mDownpulllist;
 	private JSONArray mJsonArray;
@@ -48,6 +52,7 @@ public class NewMyInformation extends BaseActivity {
 
 	private void initView() {
 		mDownpulllist = (PullListView) findViewById(R.id.downpulllist);
+		mDownpulllist.setOnItemClickListener(this);
 
 	}
 
@@ -82,4 +87,17 @@ public class NewMyInformation extends BaseActivity {
 		});
 		mDownpulllist.onRefresh();
 	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		try {
+			Intent intent = new Intent(this, ShowTabInformation.class);
+			intent.putExtra("jsonDate", String.format("%s", mJsonArray.getJSONObject(arg2-1)));
+			startActivity(intent);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	
 }

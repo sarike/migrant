@@ -40,8 +40,8 @@ public class ShowInformation extends BaseActivity implements OnClickListener {
 	private JSONArray mJsonArray;
 	private String informationID;
 	private InformationAdapter informationAdapter;
-	
-	
+	private JSONArray jsonArray;
+
 	Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			commentList.setAdapter(informationAdapter);
@@ -49,7 +49,7 @@ public class ShowInformation extends BaseActivity implements OnClickListener {
 	};
 	private EditText commedit;
 	private String body;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class ShowInformation extends BaseActivity implements OnClickListener {
 		commentList = (ListView) findViewById(R.id.commentList);
 		Button sendcomm = (Button) findViewById(R.id.sendcomm);
 		sendcomm.setOnClickListener(this);
-		
+
 		commedit = (EditText) findViewById(R.id.commedit);
 
 		try {
@@ -104,7 +104,7 @@ public class ShowInformation extends BaseActivity implements OnClickListener {
 				handler.sendMessage(msg);
 				super.onRequesting();
 			}
-			
+
 			@Override
 			public void onAppError(AppException e) {
 				super.onAppError(e);
@@ -126,7 +126,7 @@ public class ShowInformation extends BaseActivity implements OnClickListener {
 
 	private void sendComment() {
 		body = commedit.getText().toString().trim();
-		
+
 		AsyncRunner.run(new BaseRequestListener() {
 
 			@Override
@@ -136,18 +136,16 @@ public class ShowInformation extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onRequesting() throws AppException, JSONException {
-				//mJsonArray = MigrantApi.setCommentEdit(body, pid);
-
+				jsonArray = MigrantApi.setCommentEdit(body, "");
 				super.onRequesting();
 			}
-			
+
 			@Override
 			public void onAppError(AppException e) {
 				super.onAppError(e);
 			}
 		});
-	
-		
+
 	}
 
 }
