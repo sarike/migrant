@@ -73,8 +73,6 @@
 		09E442D9141F9DD400AD2DAE /* SwipeableTableViewExample.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E442D7141F9DD400AD2DAE /* SwipeableTableViewExample.m */; };
 		09E442DA141F9DD400AD2DAE /* SwipeableTableViewExample.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09E442D8141F9DD400AD2DAE /* SwipeableTableViewExample.xib */; };
 		09E442DD141F9E3600AD2DAE /* SwipeableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E442DC141F9E3600AD2DAE /* SwipeableCell.m */; };
-		921C202D179CAD6400CD2F0B /* AccountListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 921C2027179CAD6400CD2F0B /* AccountListController.m */; };
-		921C202E179CAD6400CD2F0B /* AccountListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921C2028179CAD6400CD2F0B /* AccountListController.xib */; };
 		921C2030179CAD6400CD2F0B /* MyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 921C202C179CAD6400CD2F0B /* MyViewController.m */; };
 		921C203C179CB33100CD2F0B /* PostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 921C203A179CB33000CD2F0B /* PostViewController.m */; };
 		921C203D179CB33100CD2F0B /* PostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921C203B179CB33000CD2F0B /* PostViewController.xib */; };
@@ -82,9 +80,33 @@
 		921C2042179D568700CD2F0B /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921C2040179D568700CD2F0B /* LoginViewController.xib */; };
 		921C2048179F42F500CD2F0B /* localconfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 921C2047179F42F500CD2F0B /* localconfig.plist */; };
 		921C204F179F4C2000CD2F0B /* LocalConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 921C204E179F4C2000CD2F0B /* LocalConfig.m */; };
+		924D4AB317B5BFB5000E58D9 /* NewsInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 924D4AB117B5BFB5000E58D9 /* NewsInfo.m */; };
+		924D4AB417B5BFB5000E58D9 /* NewsInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AB217B5BFB5000E58D9 /* NewsInfo.xib */; };
+		924D4AB717B5C1F7000E58D9 /* detail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AB617B5C1F7000E58D9 /* detail@2x.png */; };
+		924D4ABB17B5C53A000E58D9 /* CommentList.m in Sources */ = {isa = PBXBuildFile; fileRef = 924D4AB917B5C53A000E58D9 /* CommentList.m */; };
+		924D4ABC17B5C53A000E58D9 /* CommentList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924D4ABA17B5C53A000E58D9 /* CommentList.xib */; };
+		924D4AC017B62ECB000E58D9 /* MsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 924D4ABE17B62ECB000E58D9 /* MsgCell.m */; };
+		924D4AC117B62ECB000E58D9 /* MsgCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924D4ABF17B62ECB000E58D9 /* MsgCell.xib */; };
+		924D4AC317B62F11000E58D9 /* avatar_loading.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AC217B62F11000E58D9 /* avatar_loading.jpg */; };
+		924D4AC617B637B4000E58D9 /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AC417B637B4000E58D9 /* comment.png */; };
+		924D4AC717B637B4000E58D9 /* commentlist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AC517B637B4000E58D9 /* commentlist@2x.png */; };
+		924D4ACB17B64F3E000E58D9 /* MessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 924D4AC917B64F3E000E58D9 /* MessageBase.m */; };
+		924D4ACC17B64F3E000E58D9 /* MessageBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924D4ACA17B64F3E000E58D9 /* MessageBase.xib */; };
+		924D4AD017B64FCF000E58D9 /* PostBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 924D4ACE17B64FCE000E58D9 /* PostBase.m */; };
+		924D4AD117B64FCF000E58D9 /* PostBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924D4ACF17B64FCF000E58D9 /* PostBase.xib */; };
+		924D4AD317B6515C000E58D9 /* answer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AD217B6515C000E58D9 /* answer@2x.png */; };
+		924D4AD717B6531D000E58D9 /* PostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 924D4AD517B6531D000E58D9 /* PostCell.m */; };
+		924D4AD817B6531D000E58D9 /* PostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924D4AD617B6531D000E58D9 /* PostCell.xib */; };
 		9294ED311550D4F1008E0C2F /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9294ED2F1550D4F1008E0C2F /* CustomCell.xib */; };
-		92CAE70217A73C9D00AEB985 /* PostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAE70117A73C9D00AEB985 /* PostCell.m */; };
-		92CAE70417A73CC000AEB985 /* PostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CAE70317A73CC000AEB985 /* PostCell.xib */; };
+		92A2E9BD17B4A9B700058142 /* NewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A2E9BB17B4A9B700058142 /* NewsCell.m */; };
+		92A2E9BE17B4A9B700058142 /* NewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92A2E9BC17B4A9B700058142 /* NewsCell.xib */; };
+		92A2E9C617B4AA2D00058142 /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A2E9C417B4AA2D00058142 /* NewsViewController.m */; };
+		92A2E9C717B4AA2D00058142 /* NewsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92A2E9C517B4AA2D00058142 /* NewsViewController.xib */; };
+		92A2E9CB17B4AC0700058142 /* NewsBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A2E9C917B4AC0700058142 /* NewsBase.m */; };
+		92A2E9CC17B4AC0700058142 /* NewsBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92A2E9CA17B4AC0700058142 /* NewsBase.xib */; };
+		92A2E9CE17B4AD5C00058142 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A2E9CD17B4AD5C00058142 /* info@2x.png */; };
+		92A2E9D117B4B1E900058142 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A2E9CF17B4B1E900058142 /* search@2x.png */; };
+		92A2E9D217B4B1E900058142 /* searchWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A2E9D017B4B1E900058142 /* searchWhite@2x.png */; };
 		D8EA24C4145BA49100EB08B3 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA24C0145BA49100EB08B3 /* BrowserViewController.m */; };
 		D8EA24C5145BA49100EB08B3 /* BrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8EA24C1145BA49100EB08B3 /* BrowserViewController.xib */; };
 		D8EA24C6145BA49100EB08B3 /* MyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA24C3145BA49100EB08B3 /* MyApplication.m */; };
@@ -212,9 +234,6 @@
 		09E442D8141F9DD400AD2DAE /* SwipeableTableViewExample.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SwipeableTableViewExample.xib; sourceTree = "<group>"; };
 		09E442DB141F9E3600AD2DAE /* SwipeableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeableCell.h; sourceTree = "<group>"; };
 		09E442DC141F9E3600AD2DAE /* SwipeableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeableCell.m; sourceTree = "<group>"; };
-		921C2026179CAD6400CD2F0B /* AccountListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountListController.h; sourceTree = "<group>"; };
-		921C2027179CAD6400CD2F0B /* AccountListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountListController.m; sourceTree = "<group>"; };
-		921C2028179CAD6400CD2F0B /* AccountListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountListController.xib; sourceTree = "<group>"; };
 		921C202B179CAD6400CD2F0B /* MyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyViewController.h; sourceTree = "<group>"; };
 		921C202C179CAD6400CD2F0B /* MyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyViewController.m; sourceTree = "<group>"; };
 		921C2039179CB33000CD2F0B /* PostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostViewController.h; sourceTree = "<group>"; };
@@ -226,10 +245,42 @@
 		921C2047179F42F500CD2F0B /* localconfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = localconfig.plist; path = migrant/localconfig.plist; sourceTree = SOURCE_ROOT; };
 		921C204D179F4C2000CD2F0B /* LocalConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalConfig.h; path = migrant/LocalConfig.h; sourceTree = "<group>"; };
 		921C204E179F4C2000CD2F0B /* LocalConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocalConfig.m; path = migrant/LocalConfig.m; sourceTree = "<group>"; };
+		924D4AB017B5BFB5000E58D9 /* NewsInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsInfo.h; sourceTree = "<group>"; };
+		924D4AB117B5BFB5000E58D9 /* NewsInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsInfo.m; sourceTree = "<group>"; };
+		924D4AB217B5BFB5000E58D9 /* NewsInfo.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsInfo.xib; sourceTree = "<group>"; };
+		924D4AB617B5C1F7000E58D9 /* detail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "detail@2x.png"; path = "migrant/res/detail@2x.png"; sourceTree = SOURCE_ROOT; };
+		924D4AB817B5C53A000E58D9 /* CommentList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentList.h; sourceTree = "<group>"; };
+		924D4AB917B5C53A000E58D9 /* CommentList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentList.m; sourceTree = "<group>"; };
+		924D4ABA17B5C53A000E58D9 /* CommentList.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentList.xib; sourceTree = "<group>"; };
+		924D4ABD17B62ECB000E58D9 /* MsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgCell.h; path = migrant/MsgCell.h; sourceTree = "<group>"; };
+		924D4ABE17B62ECB000E58D9 /* MsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MsgCell.m; path = migrant/MsgCell.m; sourceTree = "<group>"; };
+		924D4ABF17B62ECB000E58D9 /* MsgCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MsgCell.xib; path = migrant/MsgCell.xib; sourceTree = "<group>"; };
+		924D4AC217B62F11000E58D9 /* avatar_loading.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = avatar_loading.jpg; path = migrant/res/avatar_loading.jpg; sourceTree = SOURCE_ROOT; };
+		924D4AC417B637B4000E58D9 /* comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment.png; path = migrant/res/comment.png; sourceTree = SOURCE_ROOT; };
+		924D4AC517B637B4000E58D9 /* commentlist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "commentlist@2x.png"; path = "migrant/res/commentlist@2x.png"; sourceTree = SOURCE_ROOT; };
+		924D4AC817B64F3E000E58D9 /* MessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageBase.h; sourceTree = "<group>"; };
+		924D4AC917B64F3E000E58D9 /* MessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageBase.m; sourceTree = "<group>"; };
+		924D4ACA17B64F3E000E58D9 /* MessageBase.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageBase.xib; sourceTree = "<group>"; };
+		924D4ACD17B64FCE000E58D9 /* PostBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostBase.h; path = migrant/PostBase.h; sourceTree = SOURCE_ROOT; };
+		924D4ACE17B64FCE000E58D9 /* PostBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostBase.m; path = migrant/PostBase.m; sourceTree = SOURCE_ROOT; };
+		924D4ACF17B64FCF000E58D9 /* PostBase.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostBase.xib; path = migrant/PostBase.xib; sourceTree = SOURCE_ROOT; };
+		924D4AD217B6515C000E58D9 /* answer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "answer@2x.png"; path = "migrant/res/answer@2x.png"; sourceTree = SOURCE_ROOT; };
+		924D4AD417B6531D000E58D9 /* PostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostCell.h; path = migrant/PostCell.h; sourceTree = "<group>"; };
+		924D4AD517B6531D000E58D9 /* PostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostCell.m; path = migrant/PostCell.m; sourceTree = "<group>"; };
+		924D4AD617B6531D000E58D9 /* PostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostCell.xib; path = migrant/PostCell.xib; sourceTree = "<group>"; };
 		9294ED2F1550D4F1008E0C2F /* CustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CustomCell.xib; path = ../CustomCell.xib; sourceTree = "<group>"; };
-		92CAE70017A73C9D00AEB985 /* PostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostCell.h; path = migrant/PostCell.h; sourceTree = "<group>"; };
-		92CAE70117A73C9D00AEB985 /* PostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostCell.m; path = migrant/PostCell.m; sourceTree = "<group>"; };
-		92CAE70317A73CC000AEB985 /* PostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostCell.xib; path = migrant/PostCell.xib; sourceTree = "<group>"; };
+		92A2E9BA17B4A9B700058142 /* NewsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewsCell.h; path = migrant/NewsCell.h; sourceTree = "<group>"; };
+		92A2E9BB17B4A9B700058142 /* NewsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsCell.m; path = migrant/NewsCell.m; sourceTree = "<group>"; };
+		92A2E9BC17B4A9B700058142 /* NewsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NewsCell.xib; path = migrant/NewsCell.xib; sourceTree = "<group>"; };
+		92A2E9C317B4AA2D00058142 /* NewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsViewController.h; sourceTree = "<group>"; };
+		92A2E9C417B4AA2D00058142 /* NewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsViewController.m; sourceTree = "<group>"; };
+		92A2E9C517B4AA2D00058142 /* NewsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsViewController.xib; sourceTree = "<group>"; };
+		92A2E9C817B4AC0600058142 /* NewsBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewsBase.h; path = migrant/NewsBase.h; sourceTree = SOURCE_ROOT; };
+		92A2E9C917B4AC0700058142 /* NewsBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsBase.m; path = migrant/NewsBase.m; sourceTree = SOURCE_ROOT; };
+		92A2E9CA17B4AC0700058142 /* NewsBase.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NewsBase.xib; path = migrant/NewsBase.xib; sourceTree = SOURCE_ROOT; };
+		92A2E9CD17B4AD5C00058142 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "info@2x.png"; path = "migrant/res/info@2x.png"; sourceTree = SOURCE_ROOT; };
+		92A2E9CF17B4B1E900058142 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search@2x.png"; path = "migrant/res/search@2x.png"; sourceTree = SOURCE_ROOT; };
+		92A2E9D017B4B1E900058142 /* searchWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "searchWhite@2x.png"; path = "migrant/res/searchWhite@2x.png"; sourceTree = SOURCE_ROOT; };
 		C37BC8E3144C340600423D44 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D8EA24BF145BA49100EB08B3 /* BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserViewController.h; sourceTree = "<group>"; };
 		D8EA24C0145BA49100EB08B3 /* BrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserViewController.m; sourceTree = "<group>"; };
@@ -496,6 +547,14 @@
 		09E442BC141F96E400AD2DAE /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				924D4AD217B6515C000E58D9 /* answer@2x.png */,
+				924D4AC417B637B4000E58D9 /* comment.png */,
+				924D4AC517B637B4000E58D9 /* commentlist@2x.png */,
+				924D4AC217B62F11000E58D9 /* avatar_loading.jpg */,
+				924D4AB617B5C1F7000E58D9 /* detail@2x.png */,
+				92A2E9CF17B4B1E900058142 /* search@2x.png */,
+				92A2E9D017B4B1E900058142 /* searchWhite@2x.png */,
+				92A2E9CD17B4AD5C00058142 /* info@2x.png */,
 				09E442BE141F970400AD2DAE /* blackArrow.png */,
 				09E442BF141F970400AD2DAE /* blackArrow@2x.png */,
 				09E442C0141F970400AD2DAE /* blueArrow.png */,
@@ -521,9 +580,12 @@
 		921C2025179CAD6400CD2F0B /* views */ = {
 			isa = PBXGroup;
 			children = (
-				921C2026179CAD6400CD2F0B /* AccountListController.h */,
-				921C2027179CAD6400CD2F0B /* AccountListController.m */,
-				921C2028179CAD6400CD2F0B /* AccountListController.xib */,
+				924D4ACD17B64FCE000E58D9 /* PostBase.h */,
+				924D4ACE17B64FCE000E58D9 /* PostBase.m */,
+				924D4ACF17B64FCF000E58D9 /* PostBase.xib */,
+				92A2E9C817B4AC0600058142 /* NewsBase.h */,
+				92A2E9C917B4AC0700058142 /* NewsBase.m */,
+				92A2E9CA17B4AC0700058142 /* NewsBase.xib */,
 				921C202B179CAD6400CD2F0B /* MyViewController.h */,
 				921C202C179CAD6400CD2F0B /* MyViewController.m */,
 				921C2039179CB33000CD2F0B /* PostViewController.h */,
@@ -532,6 +594,18 @@
 				921C203E179D568600CD2F0B /* LoginViewController.h */,
 				921C203F179D568600CD2F0B /* LoginViewController.m */,
 				921C2040179D568700CD2F0B /* LoginViewController.xib */,
+				92A2E9C317B4AA2D00058142 /* NewsViewController.h */,
+				92A2E9C417B4AA2D00058142 /* NewsViewController.m */,
+				92A2E9C517B4AA2D00058142 /* NewsViewController.xib */,
+				924D4AB017B5BFB5000E58D9 /* NewsInfo.h */,
+				924D4AB117B5BFB5000E58D9 /* NewsInfo.m */,
+				924D4AB217B5BFB5000E58D9 /* NewsInfo.xib */,
+				924D4AB817B5C53A000E58D9 /* CommentList.h */,
+				924D4AB917B5C53A000E58D9 /* CommentList.m */,
+				924D4ABA17B5C53A000E58D9 /* CommentList.xib */,
+				924D4AC817B64F3E000E58D9 /* MessageBase.h */,
+				924D4AC917B64F3E000E58D9 /* MessageBase.m */,
+				924D4ACA17B64F3E000E58D9 /* MessageBase.xib */,
 			);
 			name = views;
 			path = migrant/views;
@@ -549,9 +623,15 @@
 		92CAE6FE17A73C0E00AEB985 /* widget */ = {
 			isa = PBXGroup;
 			children = (
-				92CAE70017A73C9D00AEB985 /* PostCell.h */,
-				92CAE70117A73C9D00AEB985 /* PostCell.m */,
-				92CAE70317A73CC000AEB985 /* PostCell.xib */,
+				924D4AD417B6531D000E58D9 /* PostCell.h */,
+				924D4AD517B6531D000E58D9 /* PostCell.m */,
+				924D4AD617B6531D000E58D9 /* PostCell.xib */,
+				924D4ABD17B62ECB000E58D9 /* MsgCell.h */,
+				924D4ABE17B62ECB000E58D9 /* MsgCell.m */,
+				924D4ABF17B62ECB000E58D9 /* MsgCell.xib */,
+				92A2E9BA17B4A9B700058142 /* NewsCell.h */,
+				92A2E9BB17B4A9B700058142 /* NewsCell.m */,
+				92A2E9BC17B4A9B700058142 /* NewsCell.xib */,
 			);
 			name = widget;
 			sourceTree = "<group>";
@@ -674,11 +754,26 @@
 				D8EA24CF145BA4AC00EB08B3 /* right@2x.png in Resources */,
 				D8EA24D4145BA4BC00EB08B3 /* BrowserSampleViewController.xib in Resources */,
 				9294ED311550D4F1008E0C2F /* CustomCell.xib in Resources */,
-				921C202E179CAD6400CD2F0B /* AccountListController.xib in Resources */,
 				921C203D179CB33100CD2F0B /* PostViewController.xib in Resources */,
 				921C2042179D568700CD2F0B /* LoginViewController.xib in Resources */,
 				921C2048179F42F500CD2F0B /* localconfig.plist in Resources */,
-				92CAE70417A73CC000AEB985 /* PostCell.xib in Resources */,
+				92A2E9BE17B4A9B700058142 /* NewsCell.xib in Resources */,
+				92A2E9C717B4AA2D00058142 /* NewsViewController.xib in Resources */,
+				92A2E9CC17B4AC0700058142 /* NewsBase.xib in Resources */,
+				92A2E9CE17B4AD5C00058142 /* info@2x.png in Resources */,
+				92A2E9D117B4B1E900058142 /* search@2x.png in Resources */,
+				92A2E9D217B4B1E900058142 /* searchWhite@2x.png in Resources */,
+				924D4AB417B5BFB5000E58D9 /* NewsInfo.xib in Resources */,
+				924D4AB717B5C1F7000E58D9 /* detail@2x.png in Resources */,
+				924D4ABC17B5C53A000E58D9 /* CommentList.xib in Resources */,
+				924D4AC117B62ECB000E58D9 /* MsgCell.xib in Resources */,
+				924D4AC317B62F11000E58D9 /* avatar_loading.jpg in Resources */,
+				924D4AC617B637B4000E58D9 /* comment.png in Resources */,
+				924D4AC717B637B4000E58D9 /* commentlist@2x.png in Resources */,
+				924D4ACC17B64F3E000E58D9 /* MessageBase.xib in Resources */,
+				924D4AD117B64FCF000E58D9 /* PostBase.xib in Resources */,
+				924D4AD317B6515C000E58D9 /* answer@2x.png in Resources */,
+				924D4AD817B6531D000E58D9 /* PostCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -751,12 +846,19 @@
 				D8EA24C6145BA49100EB08B3 /* MyApplication.m in Sources */,
 				D8EA24D3145BA4BC00EB08B3 /* BrowserSampleViewController.m in Sources */,
 				F87266BC145EF4E200B775D3 /* TwitterSearchClient.m in Sources */,
-				921C202D179CAD6400CD2F0B /* AccountListController.m in Sources */,
 				921C2030179CAD6400CD2F0B /* MyViewController.m in Sources */,
 				921C203C179CB33100CD2F0B /* PostViewController.m in Sources */,
 				921C2041179D568700CD2F0B /* LoginViewController.m in Sources */,
 				921C204F179F4C2000CD2F0B /* LocalConfig.m in Sources */,
-				92CAE70217A73C9D00AEB985 /* PostCell.m in Sources */,
+				92A2E9BD17B4A9B700058142 /* NewsCell.m in Sources */,
+				92A2E9C617B4AA2D00058142 /* NewsViewController.m in Sources */,
+				92A2E9CB17B4AC0700058142 /* NewsBase.m in Sources */,
+				924D4AB317B5BFB5000E58D9 /* NewsInfo.m in Sources */,
+				924D4ABB17B5C53A000E58D9 /* CommentList.m in Sources */,
+				924D4AC017B62ECB000E58D9 /* MsgCell.m in Sources */,
+				924D4ACB17B64F3E000E58D9 /* MessageBase.m in Sources */,
+				924D4AD017B64FCF000E58D9 /* PostBase.m in Sources */,
+				924D4AD717B6531D000E58D9 /* PostCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

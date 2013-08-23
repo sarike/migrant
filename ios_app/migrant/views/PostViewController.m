@@ -20,7 +20,7 @@
 @synthesize dataList;
 @synthesize since;
 @synthesize url;
-@synthesize parent;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -58,32 +58,47 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-    
-    if([indexPath row] == ([self.dataList count])) {
-        //创建loadMoreCell
-        cell.textLabel.text=@"More..";
-    }else {
-        cell.textLabel.text=[[self.dataList objectAtIndex:indexPath.row] valueForKey:@"name"];    }
-    return cell;
-  
-    
 
+    if([indexPath row] == ([self.dataList count])) {
+        static NSString *CellIdentifier = @"Cell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        }
+        cell.textLabel.text=@"More..";
+        return cell;
+    }else {
+        PostCell *cell = (PostCell *)[tableView dequeueReusableCellWithIdentifier:@"PostCellIdentifier"];
+        if (!cell)
+        {
+            NSArray *objects = [[NSBundle mainBundle] loadNibNamed:@"PostCell" owner:self options:nil];
+            for (NSObject *o in objects) {
+                if([o isKindOfClass:[PostCell class]]){
+                    cell = (PostCell *)o;
+                    break;
+                }
+            }
+
+        }
+        cell.img.image = [UIImage imageNamed:@"avatar_loading.jpg"];
+        NSDictionary *p = [self.dataList objectAtIndex:indexPath.row];
+
+        cell.lbl_answer_chinese.text = @"回答" ;
+        cell.txt_Title.text = [p valueForKey:@"body"];
+        cell.txt_Title.font = [UIFont boldSystemFontOfSize:14.0];
+        cell.lbl_AnswerCount.text = [NSString stringWithFormat:@"%d", 5];
+        cell.lblAuthor.text = [NSString stringWithFormat:@"%@", [p valueForKey:@"admin"]];
+        return cell;
+    }
+
+  
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.0;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	return [NSString stringWithFormat:@"Section %i", section];
-}
 
 #pragma mark -
 #pragma mark UITableViewDelegate
@@ -96,15 +111,6 @@
         [self performSelectorInBackground:@selector(loaddata) withObject:nil];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         return;
-    }else{
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        PostViewController* vc = [[PostViewController alloc] init];
-        //[vc getFinalRemViewController:self];
-        NSString *_parent = [[self.dataList objectAtIndex:(indexPath.row)] objectForKey:@"_id"];
-        [vc setParent:_parent];
-        [self.navigationController pushViewController:vc animated:YES];
-        [vc release];
-        
     }
 }
 
@@ -112,9 +118,6 @@
     self.since = _since;
 }
 
--(void)setParent:(NSString *)_parent{
-    self.parent = _parent;
-}
 
 
 #pragma mark - View lifecycle
@@ -123,29 +126,24 @@
 {
     [super viewDidLoad];
     self.dataList = [[NSMutableArray alloc] init];
-    [self loaddata];
-    /**
-    
+
     if([[LocalConfig Instance]shareconfig:@"uid"]==nil){
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"请登录后查看信息" delegate:self cancelButtonTitle:@"返回" destructiveButtonTitle:nil otherButtonTitles:@"登录", nil];
         [sheet showInView:[UIApplication sharedApplication].keyWindow];
     }else{
         [self loaddata];
     }
-    **/
+    
 
 }
 
 -(void)loaddata{
-    self.url =  @"http://192.168.1.166:8888/m/city/list";
+    self.url =  @"http://192.168.1.166:8888/m/post/home";
     if(self.since!=nil){
-        //url = [NSString stringWithFormat: @"%@?since=%@",url,self.since];
+        url = [NSString stringWithFormat: @"%@?since=%@",url,self.since];
     }
     
-    if(self.parent!=nil){
-        url = [NSString stringWithFormat: @"%@/%@",url,self.parent];
-    }
-    
+
     NSLog(self.url);
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.url] ];
     

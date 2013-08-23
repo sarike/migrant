@@ -16,7 +16,6 @@
 @property (retain, nonatomic)  NSString *url;
 
 -(void)setsince:(NSString *)_since;
-@property (retain, nonatomic)  NSString *parent;
--(void)setParent:(NSString *)_parent;
+
 
 @end

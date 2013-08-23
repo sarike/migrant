@@ -29,10 +29,11 @@
 #import "IOSBoilerplateAppDelegate.h"
 #import "AFURLCache.h"
 #import "BrowserViewController.h"
-#import "AccountListController.h"
 #import "PostViewController.h"
 #import "MyViewController.h"
 #import "LoginViewController.h"
+#import "NewsBase.h"
+#import "PostBase.h"
 
 @implementation IOSBoilerplateAppDelegate
 
@@ -63,11 +64,13 @@
 	[NSURLCache setSharedURLCache:URLCache];
     
     
+
     
-    AccountListController *acccountview = [[AccountListController alloc]init];
-    UINavigationController *navCtrl0=[[UINavigationController alloc]initWithRootViewController:acccountview];
     
-    PostViewController *homeview = [[PostViewController alloc]init];
+    NewsBase *newsbase = [[NewsBase alloc] init];
+    UINavigationController *navCtrl0=[[UINavigationController alloc]initWithRootViewController:newsbase];
+    
+    PostBase *homeview = [[PostBase alloc]init];
     
     UINavigationController *navCtrl1=[[UINavigationController alloc]initWithRootViewController:homeview];
     

@@ -1,26 +1,19 @@
 //
 //  PostCell.h
-//  iosmigrant
+//  oschina
 //
-//  Created by comger on 13-7-30.
-//
+//  Created by wangjun on 12-3-8.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface PostCell : UITableViewCell{
-    NSString *headimg;
-    NSString *nickname;
-    NSString *addon;
-    NSString *body;
-    
-}
-@property (retain, nonatomic) IBOutlet UIImageView *imghead;
-@property (retain, nonatomic) IBOutlet UILabel *lbnickname;
-@property (retain, nonatomic) IBOutlet UILabel *lbaddon;
+@interface PostCell : UITableViewCell
 
-@property (retain, nonatomic) IBOutlet UITextView *lbbody;
-
--(void)setValue:(NSDictionary *)info;
+@property (retain, nonatomic) IBOutlet UILabel *lbl_AnswerCount;
+@property (retain, nonatomic) IBOutlet UIImageView *img;
+@property (retain, nonatomic) IBOutlet UILabel *lblAuthor;
+@property (retain, nonatomic) IBOutlet UITextView *txt_Title;
+@property (retain, nonatomic) IBOutlet UILabel *lbl_answer_chinese;
 
 @end
