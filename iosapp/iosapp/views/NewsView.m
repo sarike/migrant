@@ -119,7 +119,6 @@
             NSDictionary *n = [self.datalist objectAtIndex:indexPath.row];
             cell.lblTitle.text = [n valueForKey:@"title"];
             cell.lblAuthor.text = [n valueForKey:@"source"];
-            NSLog(cell.lblTitle.text);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             return cell;
         }
