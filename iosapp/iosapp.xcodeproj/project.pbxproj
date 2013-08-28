@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9225A84117C8A0210077A844 /* Statics.m in Sources */ = {isa = PBXBuildFile; fileRef = 9225A84017C8A0200077A844 /* Statics.m */; };
+		9225A84217C8A0E90077A844 /* Statics.m in Sources */ = {isa = PBXBuildFile; fileRef = 9225A84017C8A0200077A844 /* Statics.m */; };
 		924DE99A17C737A9008EA392 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924DE99917C737A9008EA392 /* UIKit.framework */; };
 		924DE99C17C737A9008EA392 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924DE99B17C737A9008EA392 /* Foundation.framework */; };
 		924DE99E17C737A9008EA392 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924DE99D17C737A9008EA392 /* CoreGraphics.framework */; };
@@ -440,6 +442,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9225A83917C87E150077A844 /* ChatDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDelegate.h; sourceTree = "<group>"; };
+		9225A83E17C89F070077A844 /* MessageDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageDelegate.h; sourceTree = "<group>"; };
+		9225A83F17C8A0200077A844 /* Statics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Statics.h; sourceTree = "<group>"; };
+		9225A84017C8A0200077A844 /* Statics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Statics.m; sourceTree = "<group>"; };
 		924DE99617C737A9008EA392 /* iosapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		924DE99917C737A9008EA392 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		924DE99B17C737A9008EA392 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -878,6 +884,8 @@
 		924DE99F17C737A9008EA392 /* iosapp */ = {
 			isa = PBXGroup;
 			children = (
+				9225A83F17C8A0200077A844 /* Statics.h */,
+				9225A84017C8A0200077A844 /* Statics.m */,
 				924DEB0A17C7456D008EA392 /* LocalConfig.h */,
 				924DEB0B17C7456D008EA392 /* LocalConfig.m */,
 				924DEB0C17C7456D008EA392 /* localconfig.plist */,
@@ -1161,6 +1169,8 @@
 				924DEB3517C76023008EA392 /* XMPPBase.h */,
 				924DEB3617C76023008EA392 /* XMPPBase.m */,
 				924DEB3717C76023008EA392 /* XMPPBase.xib */,
+				9225A83917C87E150077A844 /* ChatDelegate.h */,
+				9225A83E17C89F070077A844 /* MessageDelegate.h */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -1936,6 +1946,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9225A84217C8A0E90077A844 /* Statics.m in Sources */,
 				924DED0517C76BD1008EA392 /* DDList.h in Sources */,
 				924DED0617C76BD1008EA392 /* GCDMulticastDelegate.h in Sources */,
 				924DED0717C76BD1008EA392 /* RFImageToDataTransformer.h in Sources */,
@@ -2319,6 +2330,7 @@
 				924DEC6917C7679E008EA392 /* XMPPMessage+XEP_0224.m in Sources */,
 				924DEC6A17C7679E008EA392 /* NSXMLElement+XEP_0297.m in Sources */,
 				924DEC6B17C7679E008EA392 /* XMPPMessage+XEP_0308.m in Sources */,
+				9225A84117C8A0210077A844 /* Statics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2416,6 +2428,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iosapp/iosapp-Prefix.pch";
 				INFOPLIST_FILE = "iosapp/iosapp-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Vendor/libidn\"",
@@ -2432,6 +2445,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iosapp/iosapp-Prefix.pch";
 				INFOPLIST_FILE = "iosapp/iosapp-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Vendor/libidn\"",
@@ -2495,6 +2509,7 @@
 				924DE9CA17C737AA008EA392 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		924DE9CB17C737AA008EA392 /* Build configuration list for PBXNativeTarget "iosappTests" */ = {
 			isa = XCConfigurationList;
@@ -2503,6 +2518,7 @@
 				924DE9CD17C737AA008EA392 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

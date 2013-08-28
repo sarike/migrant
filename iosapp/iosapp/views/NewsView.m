@@ -34,9 +34,8 @@
 
 -(void)loadData{
     [SVProgressHUD showInView:self.view];
-    NSLog(self.url);
     if(self.since){
-        self.url = [NSString stringWithFormat:@"%@?=since=%@",self.url,self.since ];
+        self.url = [NSString stringWithFormat:@"%@?since=%@",self.url,self.since ];
     }
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.url]];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -92,7 +91,7 @@
 #pragma mark UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(self.datalist.count==10){
+    if(self.datalist.count>0){
         return self.datalist.count+1;
     }else{
         return self.datalist.count;

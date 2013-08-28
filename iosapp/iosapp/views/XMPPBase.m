@@ -26,6 +26,7 @@
     }
     return self;
 }
+
 - (AppDelegate *)appDelegate
 {
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -34,14 +35,38 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[self appDelegate] connect];
-    // Do any additional setup after loading the view from its nib.
+    AppDelegate *del = [self appDelegate];
+    del.chatDelegate = self;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+
+////////////////// 好友上下线接口 //////////////////////
+//取得当前的XMPPStream
+-(XMPPStream *)xmppStream{
+    return [[self appDelegate] xmppStream];
+}
+
+
+-(void)buddyWentOffline:(NSString *)buddyName{
+    NSLog(@"%@:offline",buddyName);
+}
+
+-(void)disDisconnect{
+
+}
+
+-(void)newBuddyOnline:(NSString *)buddyName{
+    NSLog(@"%@:online",buddyName);
 }
 
 @end
