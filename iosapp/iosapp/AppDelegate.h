@@ -13,26 +13,15 @@
 
 
 
-@interface AppDelegate :UIResponder <UIApplicationDelegate>{
+@interface AppDelegate :UIResponder <UIApplicationDelegate,XMPPRosterDelegate>{
     XMPPStream *xmppStream;
-    NSString *password;
-	BOOL isXmppConnected;
 }
 
-@property(nonatomic, retain)id chatDelegate;
-@property(nonatomic, retain)id messageDelegate;
-
-@property (nonatomic, readonly) XMPPStream *xmppStream;
+@property (nonatomic, strong, readonly) XMPPStream *xmppStream;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabBarController;
 
 
--(BOOL)connect;
--(void)disconnect;
-
--(void)setupStream;
--(void)getOnline;
--(void)getOffline;
-
-
+- (BOOL)connect;
+- (void)disconnect;
 @end

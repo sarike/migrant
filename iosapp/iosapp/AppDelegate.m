@@ -7,20 +7,17 @@
 //
 
 #import "AppDelegate.h"
-#import "Statics.h"
-#import "ChatDelegate.h"
-#import "MessageDelegate.h"
+#import "XMPPFramework.h"
+
 
 @implementation AppDelegate
 
-@dynamic xmppStream;
-@synthesize chatDelegate;
-@synthesize messageDelegate;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
+    
     
     NewsBase *newsbase = [[NewsBase alloc] initWithNibName:@"NewsBase" bundle:nil];
     UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsbase];
@@ -30,7 +27,7 @@
     
     
     self.tabBarController = [[UITabBarController alloc] init];
-    //self.tabBarController.delegate = self;
+    self.tabBarController.delegate = self;
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                              xmppNav,
                                              newsNav,
@@ -54,12 +51,12 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self disconnect];
+
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [self connect];
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -67,125 +64,69 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
--(void)setupStream{
-    //初始化XMPPStream
-    xmppStream = [[XMPPStream alloc] init];
-    [xmppStream addDelegate:self delegateQueue:dispatch_get_current_queue()];
-    
-}
-
--(void)goOnline{
-    //发送在线状态
-    XMPPPresence *presence = [XMPPPresence presence];
-    [[self xmppStream] sendElement:presence];
-    
-}
-
--(void)goOffline{
-    //发送下线状态
-    XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
-    [[self xmppStream] sendElement:presence];
-    
-}
 
 -(BOOL)connect{
-    [self setupStream];
-    
-    NSString *userId = @"test1";
-    NSString *pass = @"111qqq";
-    NSString *server = @"sos360.com";
-    
-    if (![xmppStream isDisconnected]) {
-        return YES;
-    }
-    
-    if (userId == nil || pass == nil) {
-        return NO;
-    }
-    
-    //设置用户
-    [xmppStream setMyJID:[XMPPJID jidWithString:userId]];
-    //设置服务器
-    [xmppStream setHostName:server];
-    //密码
-    password = pass;
-    
-    //连接服务器
+    xmppStream = [[XMPPStream alloc]init];
+    [xmppStream setMyJID:[XMPPJID jidWithString:@"test1@sos360.com"]];
     NSError *error = nil;
-    if (![xmppStream connect:&error]) {
-        NSLog(@"cant connect %@", server);
+    
+    if(![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]){
+        NSLog(@"connect faild");
         return NO;
     }
     return YES;
 }
 
 -(void)disconnect{
-    [self goOffline];
     [xmppStream disconnect];
-    
 }
 
-//连接服务器
-- (void)xmppStreamDidConnect:(XMPPStream *)sender{
-    isXmppConnected = YES;
-    NSError *error = nil;
-    //验证密码
-    [[self xmppStream] authenticateWithPassword:password error:&error];
-    
+/**
+ * Sent when a presence subscription request is received.
+ * That is, another user has added you to their roster,
+ * and is requesting permission to receive presence broadcasts that you send.
+ *
+ * The entire presence packet is provided for proper extensibility.
+ * You can use [presence from] to get the JID of the user who sent the request.
+ *
+ * The methods acceptPresenceSubscriptionRequestFrom: and rejectPresenceSubscriptionRequestFrom: can
+ * be used to respond to the request.
+ **/
+- (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence{
+
 }
 
-//验证通过
-- (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
-    [self goOnline];
+/**
+ * Sent when a Roster Push is received as specified in Section 2.1.6 of RFC 6121.
+ **/
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveRosterPush:(XMPPIQ *)iq{
+
 }
 
-//收到消息
-- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message{
-    
-    //    NSLog(@"message = %@", message);
-    
-    NSString *msg = [[message elementForName:@"body"] stringValue];
-    NSString *from = [[message attributeForName:@"from"] stringValue];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:msg forKey:@"msg"];
-    [dict setObject:from forKey:@"sender"];
-    //消息接收到的时间
-    [dict setObject:[Statics getCurrentTime] forKey:@"time"];
-    
-    //消息委托(这个后面讲)
-    [messageDelegate newMessageReceived:dict];
-    
+/**
+ * Sent when the initial roster is received.
+ **/
+- (void)xmppRosterDidBeginPopulating:(XMPPRoster *)sender{
 }
 
-//收到好友状态
-- (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
-    
-    //    NSLog(@"presence = %@", presence);
-    
-    //取得好友状态
-    NSString *presenceType = [presence type]; //online/offline
-    //当前用户
-    NSString *userId = [[sender myJID] user];
-    //在线用户
-    NSString *presenceFromUser = [[presence from] user];
-    
-    if (![presenceFromUser isEqualToString:userId]) {
-        
-        //在线状态
-        if ([presenceType isEqualToString:@"available"]) {
-            
-            //用户列表委托(后面讲)
-            [chatDelegate newBuddyOnline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, @"nqc1338a"]];
-            
-        }else if ([presenceType isEqualToString:@"unavailable"]) {
-            //用户列表委托(后面讲)
-            [chatDelegate buddyWentOffline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, @"nqc1338a"]];
-        }
-        
-    }
-    
+/**
+ * Sent when the initial roster has been populated into storage.
+ **/
+- (void)xmppRosterDidEndPopulating:(XMPPRoster *)sender{
+
 }
 
+/**
+ * Sent when the roster recieves a roster item.
+ *
+ * Example:
+ *
+ * <item jid='romeo@example.net' name='Romeo' subscription='both'>
+ *   <group>Friends</group>
+ * </item>
+ **/
+- (void)xmppRoster:(XMPPRoster *)sender didRecieveRosterItem:(NSXMLElement *)item{
+
+}
 
 @end

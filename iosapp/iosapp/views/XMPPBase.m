@@ -9,6 +9,7 @@
 #import "XMPPBase.h"
 #import "AppDelegate.h"
 
+
 @interface XMPPBase ()
 
 @end
@@ -35,38 +36,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    AppDelegate *del = [self appDelegate];
-    del.chatDelegate = self;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if([[self appDelegate] connect]){
+        NSLog(@"connect ok");
+    }
 
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-}
-
-
-////////////////// 好友上下线接口 //////////////////////
-//取得当前的XMPPStream
--(XMPPStream *)xmppStream{
-    return [[self appDelegate] xmppStream];
-}
-
-
--(void)buddyWentOffline:(NSString *)buddyName{
-    NSLog(@"%@:offline",buddyName);
-}
-
--(void)disDisconnect{
-
-}
-
--(void)newBuddyOnline:(NSString *)buddyName{
-    NSLog(@"%@:online",buddyName);
 }
 
 @end
