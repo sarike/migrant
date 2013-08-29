@@ -14,6 +14,7 @@
 @end
 
 @implementation NewsView
+
 @synthesize datalist;
 @synthesize catalog;
 @synthesize since;
