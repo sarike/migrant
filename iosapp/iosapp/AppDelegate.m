@@ -13,7 +13,7 @@
 
 @implementation AppDelegate
 
-@dynamic xmppStream;
+@synthesize xmppStream;
 @synthesize chatDelegate;
 @synthesize messageDelegate;
 
@@ -30,7 +30,7 @@
     
     
     self.tabBarController = [[UITabBarController alloc] init];
-    //self.tabBarController.delegate = self;
+    self.tabBarController.delegate = self;
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                              xmppNav,
                                              newsNav,
@@ -91,7 +91,7 @@
 -(BOOL)connect{
     [self setupStream];
     
-    NSString *userId = @"test1";
+    NSString *userId = @"test1@sos360.com";
     NSString *pass = @"111qqq";
     NSString *server = @"sos360.com";
     
@@ -106,16 +106,25 @@
     //设置用户
     [xmppStream setMyJID:[XMPPJID jidWithString:userId]];
     //设置服务器
-    [xmppStream setHostName:server];
+    //[xmppStream setHostName:server];
+    
     //密码
     password = pass;
     
-    //连接服务器
-    NSError *error = nil;
-    if (![xmppStream connect:&error]) {
-        NSLog(@"cant connect %@", server);
-        return NO;
-    }
+	NSError *error = nil;
+	if (![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
+	{
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
+		                                                    message:@"See console for error details."
+		                                                   delegate:nil
+		                                          cancelButtonTitle:@"Ok"
+		                                          otherButtonTitles:nil];
+		[alertView show];
+        
+		NSLog(@"Error connecting: %@", error);
+        
+		return NO;
+	}
     return YES;
 }
 
@@ -136,13 +145,14 @@
 
 //验证通过
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
+    NSLog(@"DidAuthenticate");
     [self goOnline];
 }
 
 //收到消息
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message{
     
-    //    NSLog(@"message = %@", message);
+    NSLog(@"message = %@", message);
     
     NSString *msg = [[message elementForName:@"body"] stringValue];
     NSString *from = [[message attributeForName:@"from"] stringValue];
@@ -161,7 +171,7 @@
 //收到好友状态
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
     
-    //    NSLog(@"presence = %@", presence);
+    NSLog(@"presence = %@", presence);
     
     //取得好友状态
     NSString *presenceType = [presence type]; //online/offline
