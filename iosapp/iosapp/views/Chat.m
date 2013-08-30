@@ -89,8 +89,11 @@
         [mes addAttributeWithName:@"type" stringValue:@"chat"];
         //发送给谁
         [mes addAttributeWithName:@"to" stringValue:username];
+        
+         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
         //由谁发送
-        [mes addAttributeWithName:@"from" stringValue:@"test1@sos360.com"];
+        [mes addAttributeWithName:@"from" stringValue:[defaults objectForKey:USERID]];
         //组合
         [mes addChild:body];
         
@@ -122,6 +125,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [self.messages count];
 }
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     static NSString *identifier = @"msgCell";
@@ -160,7 +164,7 @@
         
         [cell.bgImageView setFrame:CGRectMake(cell.messageContentView.frame.origin.x - padding/2, cell.messageContentView.frame.origin.y - padding/2, size.width + padding, size.height + padding)];
     }else {
-        
+        sender = username;
         bgImage = [[UIImage imageNamed:@"GreenBubble2.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:15];
         
         [cell.messageContentView setFrame:CGRectMake(320-size.width - padding, padding*2, size.width, size.height)];
@@ -195,9 +199,7 @@
 
 #pragma mark KKMessageDelegate
 -(void)newMessageReceived:(NSDictionary *)messageCotent{
-    
     [self.messages addObject:messageCotent];
-    
     [self.table reloadData];
     
 }

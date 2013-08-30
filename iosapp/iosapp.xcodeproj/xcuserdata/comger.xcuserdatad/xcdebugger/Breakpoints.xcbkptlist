@@ -175,11 +175,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399542058.526896"
+         timestampString = "399549653.925918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "159"
-         endingLineNumber = "159"
+         startingLineNumber = "161"
+         endingLineNumber = "161"
          landmarkName = "-xmppStream:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -188,11 +188,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399542058.526896"
+         timestampString = "399549653.925918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "153"
-         endingLineNumber = "153"
+         startingLineNumber = "155"
+         endingLineNumber = "155"
          landmarkName = "-xmppStreamDidAuthenticate:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -201,11 +201,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399542058.526896"
+         timestampString = "399549653.925918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "144"
-         endingLineNumber = "144"
+         startingLineNumber = "146"
+         endingLineNumber = "146"
          landmarkName = "-xmppStreamDidConnect:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -233,6 +233,19 @@
          startingLineNumber = "109"
          endingLineNumber = "109"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iosapp/views/Chat.m"
+         timestampString = "399549653.925918"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "144"
+         endingLineNumber = "144"
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

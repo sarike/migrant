@@ -99,7 +99,9 @@
 -(BOOL)connect{
     
     [self setupStream];
-    
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"test1@sos360.com" forKey:USERID];
+    [defaults setObject:@"111qqq" forKey:PASS];
     
     NSString *userId = @"test1@sos360.com";
     NSString *pass = @"111qqq";
