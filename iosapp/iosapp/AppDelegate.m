@@ -24,12 +24,12 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
-    /**
+    
     NewsBase *newsbase = [[NewsBase alloc] initWithNibName:@"NewsBase" bundle:nil];
     UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsbase];
     
     
-    XMPPBase *xmppbase = [[XMPPBase alloc] initWithNibName:@"XMPPBase" bundle:nil];
+    Friends *xmppbase = [[Friends alloc] initWithNibName:@"Friends" bundle:nil];
     UINavigationController * xmppNav = [[UINavigationController alloc] initWithRootViewController:xmppbase];
     
     
@@ -40,10 +40,6 @@
                                              newsNav,
                                              nil];
      self.window.rootViewController = self.tabBarController;
-    **/
-    
-    KKRosters *rosters = [[KKRosters alloc]initWithNibName:@"KKRosters" bundle:nil];
-    self.window.rootViewController = rosters;
     
     [self.window makeKeyAndVisible];
 	return YES;
