@@ -162,63 +162,63 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399450643.252192"
+         timestampString = "399542058.526896"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "105"
-         endingLineNumber = "105"
+         startingLineNumber = "101"
+         endingLineNumber = "101"
          landmarkName = "-connect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399450954.74258"
+         timestampString = "399549653.925918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "163"
-         endingLineNumber = "163"
+         startingLineNumber = "161"
+         endingLineNumber = "161"
          landmarkName = "-xmppStream:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399450963.31128"
+         timestampString = "399549653.925918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "157"
-         endingLineNumber = "157"
+         startingLineNumber = "155"
+         endingLineNumber = "155"
          landmarkName = "-xmppStreamDidAuthenticate:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399450965.021173"
+         timestampString = "399549653.925918"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "148"
-         endingLineNumber = "148"
+         startingLineNumber = "146"
+         endingLineNumber = "146"
          landmarkName = "-xmppStreamDidConnect:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/AppDelegate.m"
-         timestampString = "399450998.410481"
+         timestampString = "399542058.526896"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "89"
-         endingLineNumber = "89"
+         startingLineNumber = "85"
+         endingLineNumber = "85"
          landmarkName = "-goOnline"
          landmarkType = "5">
       </FileBreakpoint>
@@ -226,6 +226,7 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
+<<<<<<< HEAD
          filePath = "iosapp/views/XMPPBase.m"
          timestampString = "399168236.859464"
          startingColumnNumber = "9223372036854775807"
@@ -233,12 +234,22 @@
          startingLineNumber = "38"
          endingLineNumber = "38"
          landmarkName = "-viewDidLoad"
+=======
+         filePath = "iosapp/views/Friends.m"
+         timestampString = "399547190.776882"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "109"
+         endingLineNumber = "109"
+         landmarkName = "-tableView:didSelectRowAtIndexPath:"
+>>>>>>> 9294b2ac18ef47cdf10d390b8d02dfc2bd6bb11c
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
+<<<<<<< HEAD
          filePath = "iosapp/AppDelegate.m"
          timestampString = "399221222.568744"
          startingColumnNumber = "9223372036854775807"
@@ -259,6 +270,15 @@
          startingLineNumber = "79"
          endingLineNumber = "79"
          landmarkName = "-goOnline"
+=======
+         filePath = "iosapp/views/Chat.m"
+         timestampString = "399549653.925918"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "144"
+         endingLineNumber = "144"
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
+>>>>>>> 9294b2ac18ef47cdf10d390b8d02dfc2bd6bb11c
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -10,8 +10,8 @@
 #import "XMPP.h"
 
 #import "NewsBase.h"
-#import "XMPPBase.h"
-#import "KKRosters.h"
+#import "Friends.h"
+
 
 
 
@@ -24,7 +24,6 @@
 }
 
 
-
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabBarController;
 
@@ -33,6 +32,8 @@
 
 @property(nonatomic, retain)id chatDelegate;
 @property(nonatomic, retain)id messageDelegate;
+
+
 
 //是否连接
 -(BOOL)connect;
