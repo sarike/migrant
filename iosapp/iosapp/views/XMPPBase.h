@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatDelegate.h"
 
-@interface XMPPBase : UIViewController<ChatDelegate>
+
+@interface XMPPBase : UIViewController
 
 @end

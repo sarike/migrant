@@ -11,8 +11,10 @@
 #import "ChatDelegate.h"
 #import "MessageDelegate.h"
 
+
 @implementation AppDelegate
 
+@synthesize window = _window;
 @synthesize xmppStream;
 @synthesize chatDelegate;
 @synthesize messageDelegate;
@@ -22,8 +24,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
+    /**
     NewsBase *newsbase = [[NewsBase alloc] initWithNibName:@"NewsBase" bundle:nil];
     UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsbase];
+    
     
     XMPPBase *xmppbase = [[XMPPBase alloc] initWithNibName:@"XMPPBase" bundle:nil];
     UINavigationController * xmppNav = [[UINavigationController alloc] initWithRootViewController:xmppbase];
@@ -35,31 +39,36 @@
                                              xmppNav,
                                              newsNav,
                                              nil];
+     self.window.rootViewController = self.tabBarController;
+    **/
     
-    self.window.rootViewController = self.tabBarController;
+    KKRosters *rosters = [[KKRosters alloc]initWithNibName:@"KKRosters" bundle:nil];
+    self.window.rootViewController = rosters;
+    
     [self.window makeKeyAndVisible];
 	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-
+    [self disconnect];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self disconnect];
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [self connect];
+    //[self connect];
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -68,6 +77,7 @@
 }
 
 -(void)setupStream{
+    
     //初始化XMPPStream
     xmppStream = [[XMPPStream alloc] init];
     [xmppStream addDelegate:self delegateQueue:dispatch_get_current_queue()];
@@ -75,6 +85,7 @@
 }
 
 -(void)goOnline{
+    
     //发送在线状态
     XMPPPresence *presence = [XMPPPresence presence];
     [[self xmppStream] sendElement:presence];
@@ -82,6 +93,7 @@
 }
 
 -(void)goOffline{
+    
     //发送下线状态
     XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
     [[self xmppStream] sendElement:presence];
@@ -89,6 +101,7 @@
 }
 
 -(BOOL)connect{
+    
     [self setupStream];
     
     NSString *userId = @"test1@sos360.com";
@@ -126,9 +139,11 @@
 		return NO;
 	}
     return YES;
+    
 }
 
 -(void)disconnect{
+    
     [self goOffline];
     [xmppStream disconnect];
     
@@ -136,7 +151,8 @@
 
 //连接服务器
 - (void)xmppStreamDidConnect:(XMPPStream *)sender{
-    isXmppConnected = YES;
+    
+    isOpen = YES;
     NSError *error = nil;
     //验证密码
     [[self xmppStream] authenticateWithPassword:password error:&error];
@@ -146,6 +162,7 @@
 //验证通过
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
     NSLog(@"DidAuthenticate");
+    
     [self goOnline];
 }
 
@@ -154,17 +171,21 @@
     
     NSLog(@"message = %@", message);
     
-    NSString *msg = [[message elementForName:@"body"] stringValue];
-    NSString *from = [[message attributeForName:@"from"] stringValue];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:msg forKey:@"msg"];
-    [dict setObject:from forKey:@"sender"];
     //消息接收到的时间
-    [dict setObject:[Statics getCurrentTime] forKey:@"time"];
+    if([type isEqualToString:@"chat"]){
+        NSString *msg = [[message elementForName:@"body"] stringValue];
+        NSString *from = [[message attributeForName:@"from"] stringValue];
+        
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        [dict setObject:msg forKey:@"msg"];
+        [dict setObject:from forKey:@"sender"];
+        //消息接收到的时间
+        [dict setObject:[Statics getCurrentTime] forKey:@"time"];
+        
+        //消息委托(这个后面讲)
+        [messageDelegate newMessageReceived:dict];
+    }
     
-    //消息委托(这个后面讲)
-    [messageDelegate newMessageReceived:dict];
     
 }
 
@@ -184,18 +205,16 @@
         
         //在线状态
         if ([presenceType isEqualToString:@"available"]) {
-            
             //用户列表委托(后面讲)
-            [chatDelegate newBuddyOnline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, @"nqc1338a"]];
+            [chatDelegate newBuddyOnline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, [xmppStream hostName]]];
             
         }else if ([presenceType isEqualToString:@"unavailable"]) {
             //用户列表委托(后面讲)
-            [chatDelegate buddyWentOffline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, @"nqc1338a"]];
+            [chatDelegate buddyWentOffline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, [xmppStream hostName]]];
         }
         
     }
     
 }
-
 
 @end
