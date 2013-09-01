@@ -26,6 +26,14 @@
 		9218DB1817D085B60000EA56 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218DB0E17D085B60000EA56 /* UIImageView+AFNetworking.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9218DB1C17D089CA0000EA56 /* Friends.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218DB1A17D089CA0000EA56 /* Friends.m */; };
 		9218DB1D17D089CA0000EA56 /* Friends.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9218DB1B17D089CA0000EA56 /* Friends.xib */; };
+		92456C9717D19AB7005CB5D4 /* setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92456C9617D19AB7005CB5D4 /* setting@2x.png */; };
+		92456C9817D19B1B005CB5D4 /* SettingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92456C9517D19949005CB5D4 /* SettingView.xib */; };
+		92456C9917D19B36005CB5D4 /* SettingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92456C9417D19948005CB5D4 /* SettingView.m */; };
+		92456C9C17D19BA3005CB5D4 /* SettingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 92456C9B17D19B93005CB5D4 /* SettingModel.m */; };
+		92456C9D17D19CA7005CB5D4 /* LocalConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 924DEB0B17C7456D008EA392 /* LocalConfig.m */; };
+		92456C9F17D19CE8005CB5D4 /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92456C9E17D19CE8005CB5D4 /* more@2x.png */; };
+		92456CA317D19EE2005CB5D4 /* LoginView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92456CA217D19DD1005CB5D4 /* LoginView.xib */; };
+		92456CA417D19EF5005CB5D4 /* LoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92456CA117D19DD1005CB5D4 /* LoginView.m */; };
 		924DE99A17C737A9008EA392 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924DE99917C737A9008EA392 /* UIKit.framework */; };
 		924DE99C17C737A9008EA392 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924DE99B17C737A9008EA392 /* Foundation.framework */; };
 		924DE99E17C737A9008EA392 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924DE99D17C737A9008EA392 /* CoreGraphics.framework */; };
@@ -179,6 +187,16 @@
 		9218DB1B17D089CA0000EA56 /* Friends.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Friends.xib; sourceTree = "<group>"; };
 		9225A83917C87E150077A844 /* ChatDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDelegate.h; sourceTree = "<group>"; };
 		9225A83E17C89F070077A844 /* MessageDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageDelegate.h; sourceTree = "<group>"; };
+		92456C9317D19948005CB5D4 /* SettingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingView.h; sourceTree = "<group>"; };
+		92456C9417D19948005CB5D4 /* SettingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingView.m; sourceTree = "<group>"; };
+		92456C9517D19949005CB5D4 /* SettingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingView.xib; sourceTree = "<group>"; };
+		92456C9617D19AB7005CB5D4 /* setting@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting@2x.png"; sourceTree = "<group>"; };
+		92456C9A17D19B93005CB5D4 /* SettingModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingModel.h; sourceTree = "<group>"; };
+		92456C9B17D19B93005CB5D4 /* SettingModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingModel.m; sourceTree = "<group>"; };
+		92456C9E17D19CE8005CB5D4 /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
+		92456CA017D19DD1005CB5D4 /* LoginView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginView.h; sourceTree = "<group>"; };
+		92456CA117D19DD1005CB5D4 /* LoginView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginView.m; sourceTree = "<group>"; };
+		92456CA217D19DD1005CB5D4 /* LoginView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginView.xib; sourceTree = "<group>"; };
 		924DE99617C737A9008EA392 /* iosapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		924DE99917C737A9008EA392 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		924DE99B17C737A9008EA392 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -493,6 +511,12 @@
 		924DEA6017C73B65008EA392 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				92456CA017D19DD1005CB5D4 /* LoginView.h */,
+				92456CA117D19DD1005CB5D4 /* LoginView.m */,
+				92456CA217D19DD1005CB5D4 /* LoginView.xib */,
+				92456C9317D19948005CB5D4 /* SettingView.h */,
+				92456C9417D19948005CB5D4 /* SettingView.m */,
+				92456C9517D19949005CB5D4 /* SettingView.xib */,
 				924DEAFB17C74426008EA392 /* NewsBase.h */,
 				924DEAFC17C74426008EA392 /* NewsBase.m */,
 				924DEAFD17C74426008EA392 /* NewsBase.xib */,
@@ -517,6 +541,8 @@
 		924DEA8117C73E59008EA392 /* ress */ = {
 			isa = PBXGroup;
 			children = (
+				92456C9E17D19CE8005CB5D4 /* more@2x.png */,
+				92456C9617D19AB7005CB5D4 /* setting@2x.png */,
 				9214771017D09C2000C0F067 /* BlueBubble2.png */,
 				9214771117D09C2000C0F067 /* GreenBubble2.png */,
 				9214771217D09C2000C0F067 /* aqua.png */,
@@ -534,6 +560,8 @@
 			children = (
 				9214770E17D09BF100C0F067 /* MessageCell.h */,
 				9214770F17D09BF100C0F067 /* MessageCell.m */,
+				92456C9A17D19B93005CB5D4 /* SettingModel.h */,
+				92456C9B17D19B93005CB5D4 /* SettingModel.m */,
 				924DEA8C17C73F9F008EA392 /* NewsCell.h */,
 				924DEA8D17C73F9F008EA392 /* NewsCell.m */,
 				924DEA8E17C73F9F008EA392 /* NewsCell.xib */,
@@ -920,6 +948,10 @@
 				9214771517D09C2000C0F067 /* GreenBubble2.png in Resources */,
 				9214771617D09C2000C0F067 /* aqua.png in Resources */,
 				9214771717D09C2000C0F067 /* orange.png in Resources */,
+				92456C9717D19AB7005CB5D4 /* setting@2x.png in Resources */,
+				92456C9817D19B1B005CB5D4 /* SettingView.xib in Resources */,
+				92456C9F17D19CE8005CB5D4 /* more@2x.png in Resources */,
+				92456CA317D19EE2005CB5D4 /* LoginView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -930,6 +962,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92456CA417D19EF5005CB5D4 /* LoginView.m in Sources */,
+				92456C9D17D19CA7005CB5D4 /* LocalConfig.m in Sources */,
+				92456C9C17D19BA3005CB5D4 /* SettingModel.m in Sources */,
+				92456C9917D19B36005CB5D4 /* SettingView.m in Sources */,
 				9214771817D09EF600C0F067 /* MessageCell.m in Sources */,
 				9256C27D17CF1E8800DE9AD7 /* XMPPAnonymousAuthentication.h in Sources */,
 				9256C27E17CF1E8800DE9AD7 /* XMPPAnonymousAuthentication.m in Sources */,

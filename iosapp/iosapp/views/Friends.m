@@ -60,6 +60,19 @@
     
 }
 
+- (void)queryRoster {
+    NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:roster"];
+    NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
+    XMPPJID *myJID = self.xmppStream.myJID;
+    [iq addAttributeWithName:@"from" stringValue:myJID.description];
+    [iq addAttributeWithName:@"to" stringValue:myJID.domain];
+    [iq addAttributeWithName:@"id" stringValue:@"0101"];
+    [iq addAttributeWithName:@"type" stringValue:@"get"];
+    [iq addChild:query];
+    [[self xmppStream] sendElement:iq];
+
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -77,10 +90,14 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    if ([[self appDelegate] connect]) {
-        NSLog(@"show buddy list");
-        
+    if(![[self xmppStream] isConnected]){
+        if ([[self appDelegate] connect]) {
+            NSLog(@"show buddy list");
+            [self queryRoster];
+            
+        }
     }
+
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
