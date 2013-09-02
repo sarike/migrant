@@ -33,11 +33,15 @@
     UINavigationController * xmppNav = [[UINavigationController alloc] initWithRootViewController:xmppbase];
     
     
+    SettingView *settingview = [[SettingView alloc] initWithNibName:@"SettingView" bundle:nil];
+    UINavigationController * settingNav = [[UINavigationController alloc] initWithRootViewController:settingview];
+    
     self.tabBarController = [[UITabBarController alloc] init];
-    //self.tabBarController.delegate = self;
+    self.tabBarController.delegate = self;
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                              xmppNav,
                                              newsNav,
+                                             settingNav,
                                              nil];
      self.window.rootViewController = self.tabBarController;
     
@@ -73,7 +77,6 @@
 }
 
 -(void)setupStream{
-    
     //初始化XMPPStream
     xmppStream = [[XMPPStream alloc] init];
     [xmppStream addDelegate:self delegateQueue:dispatch_get_current_queue()];
@@ -119,21 +122,29 @@
     [xmppStream setMyJID:[XMPPJID jidWithString:userId]];
     //设置服务器
     [xmppStream setHostName:server];
+    
     //密码
     password = pass;
     
-    //连接服务器
-    NSError *error = nil;
-    if (![xmppStream connect:&error]) {
-        NSLog(@"cant connect %@", server);
-        return NO;
-    }
+	NSError *error = nil;
+	if (![xmppStream connect:&error])
+	{
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
+		                                                    message:@"See console for error details."
+		                                                   delegate:nil
+		                                          cancelButtonTitle:@"Ok"
+		                                          otherButtonTitles:nil];
+		[alertView show];
+        
+		NSLog(@"Error connecting: %@", error);
+        
+		return NO;
+	}
     return YES;
     
 }
 
 -(void)disconnect{
-    
     [self goOffline];
     [xmppStream disconnect];
     
@@ -141,7 +152,6 @@
 
 //连接服务器
 - (void)xmppStreamDidConnect:(XMPPStream *)sender{
-    
     isOpen = YES;
     NSError *error = nil;
     //验证密码
@@ -151,27 +161,24 @@
 
 //验证通过
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
-    
     [self goOnline];
 }
 
 //收到消息
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message{
+    NSLog(@"message = %@", message);
+    //消息接收到的时间
+    NSString *msg = [[message elementForName:@"body"] stringValue];
+    NSString *from = [[message attributeForName:@"from"] stringValue];
     
-    NSString *type = [[message attributeForName:@"type"] stringValue];
-    if([type isEqualToString:@"chat"]){
-        NSString *msg = [[message elementForName:@"body"] stringValue];
-        NSString *from = [[message attributeForName:@"from"] stringValue];
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setObject:msg forKey:@"msg"];
-        [dict setObject:from forKey:@"sender"];
-        //消息接收到的时间
-        [dict setObject:[Statics getCurrentTime] forKey:@"time"];
-        
-        //消息委托(这个后面讲)
-        [messageDelegate newMessageReceived:dict];
-    }
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:msg forKey:@"msg"];
+    [dict setObject:from forKey:@"sender"];
+    //消息接收到的时间
+    [dict setObject:[Statics getCurrentTime] forKey:@"time"];
+    
+    //消息委托(这个后面讲)
+    [messageDelegate newMessageReceived:dict];
     
     
 }
@@ -179,7 +186,7 @@
 //收到好友状态
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
     
-    //    NSLog(@"presence = %@", presence);
+    NSLog(@"presence = %@", presence);
     
     //取得好友状态
     NSString *presenceType = [presence type]; //online/offline
@@ -202,6 +209,23 @@
         
     }
     
+}
+
+/**
+    获取用户名单
+ **/
+- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq {
+    if ([@"result" isEqualToString:iq.type]) {
+        NSXMLElement *query = iq.childElement;
+        if ([@"query" isEqualToString:query.name]) {
+            NSArray *items = [query children];
+            for (NSXMLElement *item in items) {
+                NSString *jid = [item attributeStringValueForName:@"jid"];
+                XMPPJID *xmppJID = [XMPPJID jidWithString:jid];
+                NSLog(@"%@",xmppJID);
+            }
+        }
+    }
 }
 
 @end

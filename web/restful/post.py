@@ -35,12 +35,18 @@ class CreaterHandler(RestfulHandler):
 
 
 @url(r'/m/post/home')
-class HomeHandler(RestfulHandler):
+class HomeHandler(ContextHandler):
     def get(self):
         try:
-            ur,uv = m_info(T_ACCOUNT,self.uid)
-            citys = (uv['city'],uv['tocity'])
-            r,v = home(self.uid,citys,self.get_argument('since',None))
+            uid = self.get_secure_cookie('uid')
+            since = self.get_argument('since',None)
+            cond = {}
+            if uid:
+                ur,uv = m_info(T_ACCOUNT,uid)
+                citys = (uv['city'],uv['tocity'])
+                cond = {'$or':[{'uid':uid},{'city':{'$in':citys}}]}
+            
+            r,v = m_page(T_POST,since,size=10,**cond)
             conv_user(v)
             self.write(dict(status=r,data = v))
         except KeyError as e:

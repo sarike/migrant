@@ -11,7 +11,7 @@
 
 #import "NewsBase.h"
 #import "Friends.h"
-
+#import "SettingView.h"
 
 
 

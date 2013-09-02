@@ -15,12 +15,18 @@ from logic.account import TName as T_ACCOUNT,conv_user
 
 
 @url(r'/m/report/home')
-class HomeHandler(RestfulHandler):
+class HomeHandler(ContextHandler):
     def get(self):
+        uid = self.get_secure_cookie('uid')
+        since = self.get_argument('since',None)
+        cond = {}
         try:
-            ur,uv = m_info(T_ACCOUNT,self.uid)
-            citys = (uv['city'],uv['tocity'])
-            r,v = citys_list(self.get_argument('since',None),uv['city'],uv['tocity'])
+            if uid:
+                ur,uv = m_info(T_ACCOUNT,self.uid)
+                citys = (uv['city'],uv['tocity'])
+                cond = {'city':{'$in':citys}}
+
+            r,v = m_page(T_REPORT,since,10,**cond)
             self.write(dict(status=r,data = v))
         except KeyError as e:
             self.write(dict(status=False,data='用户未设置相关城市',errormsg=e.message))
