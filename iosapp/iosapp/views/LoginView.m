@@ -7,6 +7,8 @@
 //
 
 #import "LoginView.h"
+#import "AFJSONRequestOperation.h"
+#import "LocalConfig.h"
 
 @implementation LoginView
 @synthesize webView;
@@ -14,8 +16,7 @@
 @synthesize txt_Pwd;
 @synthesize switch_Remember;
 @synthesize isPopupByNotice;
-//@synthesize parent;
-//@synthesize parentClassName;
+
 
 
 #pragma mark - View lifecycle
@@ -29,7 +30,7 @@
     
     self.navigationItem.title = @"登录";
     //决定是否显示用户名以及密码
-    NSString *name = @"demo";
+    NSString *name = [[LocalConfig Instance]shareconfig:@"name"];
     NSString *pwd = @"";
     if (name && ![name isEqualToString:@""]) {
         self.txt_Name.text = name;
@@ -42,7 +43,7 @@
     self.navigationItem.rightBarButtonItem = btnLogin;
  
     
-    NSString *html = @"<body style='background-color:#EBEBF3'>1, 您可以在 <a href='http://www.oschina.net'>http://www.oschina.net</a> 上免费注册一个账号用来登陆<p />2, 如果您的账号是使用OpenID的方式注册的，那么建议您在网页上为账号设置密码<p />3, 您可以点击 <a href='http://www.oschina.net/question/12_52232'>这里</a> 了解更多关于手机客户端登录的问题</body>";
+    NSString *html = @"<body style='background-color:#EBEBF3'>1, test web content <a href='http://www.baidu.com'>百度</a></body>";
     [self.webView loadHTMLString:html baseURL:nil];
     self.webView.hidden = NO;
 }
@@ -62,27 +63,47 @@
 }
 - (IBAction)click_Login:(id)sender 
 {    
-    NSString *name = self.txt_Name.text;
-    NSString *pwd = self.txt_Pwd.text;
+    NSString *username = self.txt_Name.text;
+    NSString *password = self.txt_Pwd.text;
     
-    /**
-    request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:api_login_validate]];
-    [request setUseCookiePersistence:YES];
-    [request setPostValue:name forKey:@"username"];
-    [request setPostValue:pwd forKey:@"pwd"];
-    [request setPostValue:@"1" forKey:@"keep_login"];
-    [request setDelegate:self];
-    [request setDidFailSelector:@selector(requestFailed:)];
-    [request setDidFinishSelector:@selector(requestLogin:)];
-    [request startAsynchronous];
+    NSString *url = [NSString stringWithFormat:@"http://112.124.38.112:8888/m/account/login?username=%@&password=%@",username,password ];
+    
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    
+    [req setHTTPMethod:@"POST"];
+
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:req success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        BOOL *status = [[JSON objectForKey:@"status"] boolValue];      
+        if(status){
+            NSDictionary *data = [JSON objectForKey:@"data"];         
+            [[LocalConfig Instance]setconfig:@"uid" :[data valueForKey:@"_id"]];
+            [[LocalConfig Instance]setconfig:@"name" :[data valueForKey:@"name"]];
+            NSLog(@"uid:%@",[[LocalConfig Instance]shareconfig:@"uid"]);
+            [self.navigationController popViewControllerAnimated:YES];
+            //LocalConfig get uid
+           
+        }else{
+            [self alert:@"登录失败"];
+        }
+        
+        
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        [self alert:@"网络请求异常"];
+    }];
     
     
-    request.hud = [[MBProgressHUD alloc] initWithView:self.view];
-    [Tool showHUD:@"正在登录" andView:self.view andHUD:request.hud];
-     **/
+    [operation start];
+    [operation waitUntilFinished];
+    
 }
 
-- (IBAction)textEnd:(id)sender 
+-(void)alert:(NSString *)msg{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登录提示" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    
+    [alert show];
+}
+
+- (IBAction)textEnd:(id)sender
 {
     [sender resignFirstResponder];
 }

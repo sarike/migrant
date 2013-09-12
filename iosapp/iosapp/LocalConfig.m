@@ -10,20 +10,19 @@
 
 @implementation LocalConfig
 
-static NSString * filename;
-static LocalConfig *instance;
+
+static LocalConfig *instance=nil;
 
 -(NSString *)shareconfig:(NSString *)name{
-    NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile:filename];
-    NSLog(@"%@",data);
-    return [data valueForKey:name];
+    NSUserDefaults * setting = [NSUserDefaults standardUserDefaults];
+    [setting objectForKey:name];
 }
 
 -(void)setconfig:(NSString *)key :(NSString *)value{
-    NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile:filename];
-    [data setValue:value forKey:key];
-    [data writeToFile:filename atomically:YES];
-    
+    NSUserDefaults * setting = [NSUserDefaults standardUserDefaults];
+    [setting removeObjectForKey:key];
+    [setting setObject:key forKey:value];
+    [setting synchronize];
 }
 
 +(LocalConfig *)Instance{
@@ -31,11 +30,6 @@ static LocalConfig *instance;
     {
         if(nil == instance)
         {
-            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-            NSString *plistPath1 = [paths objectAtIndex:0];
-            
-            //得到完整的文件名
-            filename=[plistPath1 stringByAppendingPathComponent:@"localconfig.plist"];
             [self new];
 
         }
