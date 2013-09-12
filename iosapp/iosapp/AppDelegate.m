@@ -79,6 +79,17 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Core Data
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSManagedObjectContext *)managedObjectContext_roster
+{
+	return [xmppRosterStorage mainThreadManagedObjectContext];
+}
+
+
+
 -(void)setupStream{
     //初始化XMPPStream
     xmppStream = [[XMPPStream alloc] init];
@@ -86,23 +97,21 @@
     [xmppStream setEnableBackgroundingOnSocket:YES];
     
     
-	//xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    //xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
+	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
+    xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
     
-    xmppRosterMemStorage = [[XMPPRosterMemoryStorage alloc] init];
-    xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterMemStorage
-                                             dispatchQueue:dispatch_get_main_queue()];
+    //xmppRosterMemStorage = [[XMPPRosterMemoryStorage alloc] init];
+    //xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterMemStorage
+    //                                         dispatchQueue:dispatch_get_main_queue()];
 	
     
     [xmppRoster activate:xmppStream];
     [xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
-    xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = false;
-    xmppRoster.autoFetchRoster = true;
-    [xmppRoster fetchRoster];
     
-    NSArray *arr= [xmppRosterMemStorage unsortedUsers];
-    NSLog(@"arr:%@",arr);
+    xmppRoster.autoFetchRoster = YES;
+	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+    
 }
 
 -(void)goOnline{
@@ -126,10 +135,10 @@
     
     [self setupStream];
      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:@"test1@sos360.com" forKey:USERID];
+    [defaults setObject:@"kpages@sos360.com" forKey:USERID];
     [defaults setObject:@"111qqq" forKey:PASS];
     
-    NSString *userId = @"test1@sos360.com";
+    NSString *userId = @"kpages@sos360.com";
     NSString *pass = @"111qqq";
     NSString *server = @"sos360.com";
     

@@ -41,6 +41,7 @@
 @property(nonatomic, retain)id chatDelegate;
 @property(nonatomic, retain)id messageDelegate;
 
+- (NSManagedObjectContext *)managedObjectContext_roster;
 
 
 //是否连接

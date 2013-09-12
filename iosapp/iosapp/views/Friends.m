@@ -38,6 +38,54 @@
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark NSFetchedResultsController
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+	if (fetchedResultsController == nil)
+	{
+		NSManagedObjectContext *moc = [[self appDelegate] managedObjectContext_roster];
+		
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject"
+		                                          inManagedObjectContext:moc];
+		
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"sectionNum" ascending:YES];
+		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
+		
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
+		
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		[fetchRequest setEntity:entity];
+		[fetchRequest setSortDescriptors:sortDescriptors];
+		[fetchRequest setFetchBatchSize:10];
+		
+		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+		                                                               managedObjectContext:moc
+		                                                                 sectionNameKeyPath:@"sectionNum"
+		                                                                          cacheName:nil];
+		[fetchedResultsController setDelegate:self];
+		
+		
+		NSError *error = nil;
+		if (![fetchedResultsController performFetch:&error])
+		{
+			NSLog(@"Error performing fetch: %@", error);
+		}
+        
+	}
+	
+	return fetchedResultsController;
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+	[[self table] reloadData];
+}
+
+
+
 //取得当前的XMPPStream
 -(XMPPStream *)xmppStream{
     return [[self appDelegate] xmppStream];
@@ -64,65 +112,6 @@
     
 }
 
-- (void)queryRoster {
- 
-    NSError *error = [[NSError alloc] init];
-    NSXMLElement *query = [[NSXMLElement alloc] initWithXMLString:@"<query xmlns='http://jabber.org/protocol/disco#items' node='all users'/>"
-                                                            error:&error];
-    XMPPIQ *iq = [XMPPIQ iqWithType:@"get"
-                                 to:[XMPPJID jidWithString:@"sos360.com"]
-                          elementID:[[self xmppStream] generateUUID] child:query];
-    [[self xmppStream] sendElement:iq];
-
-}
-
-- (void)addRoster {
-    NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:roster"];
-    NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
-    XMPPJID *myJID = self.xmppStream.myJID;
-    [iq addAttributeWithName:@"from" stringValue:myJID.description];
-    [iq addAttributeWithName:@"to" stringValue:myJID.domain];
-    [iq addAttributeWithName:@"id" stringValue:@"1234567"];
-    [iq addAttributeWithName:@"type" stringValue:@"get"];
-    [iq addChild:query];
-    [[self xmppStream] sendElement:iq];
-    
-}
-
-- (void)addNewRoster {
-    /**
-     <iq type="set" id="dc946448-2a71-4948-9d9a-b40435f32ea2-2">
-        <query xmlns="jabber:iq:register">
-            <username>test2</username>
-            <password>111qqq</password>
-        </query>
-     </iq>
-     **/
-    
-    NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:register"];
-    
-    
-    NSXMLElement *username =[NSXMLElement elementWithName:@"username"];
-    [username setStringValue:@"test3@sos360.com"];
-
-    NSXMLElement *password =[NSXMLElement elementWithName:@"password"];
-    [password setStringValue:@"111qqq"];
-    
-    NSXMLElement *name =[NSXMLElement elementWithName:@"name"];
-    [name setStringValue:@"test2"];
-    
-    [query addChild:username];
-    [query addChild:password];
-    //[query addChild:name];
-    
-    NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
-    [iq addAttributeWithName:@"id" stringValue:@"dc946448-2a71-4948-9d9a-b40435f32ea2-3"];
-    [iq addAttributeWithName:@"type" stringValue:@"set"];
-    [iq addChild:query];
-    NSLog(@"%@",iq);
-    [[self xmppStream] sendElement:iq];
-    
-}
 
 - (void)viewDidLoad
 {
@@ -143,19 +132,23 @@
 -(void)viewWillAppear:(BOOL)animated{
     if(![[self xmppStream] isConnected]){
         if ([[self appDelegate] connect]) {
-            NSLog(@"show buddy list");
-            //[self addNewRoster];
-            [[self xmppRoster] fetchRoster];
-            [self queryRoster];
-            
+            NSLog(@"show buddy list");            
         }
     }
 
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return [self.datalist count];
+    //return [self.datalist count];
+    NSArray *sections = [[self fetchedResultsController] sections];
+	
+	if (section < [sections count])
+	{
+		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:section];
+		return sectionInfo.numberOfObjects;
+	}
+	
+	return 0;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -165,8 +158,11 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+	
     //文本
-    cell.textLabel.text = [self.datalist objectAtIndex:[indexPath row]];
+    //cell.textLabel.text = [self.datalist objectAtIndex:[indexPath row]];
+    cell.textLabel.text = user.displayName;
     //标记
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     

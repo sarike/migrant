@@ -7,8 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
 
-@interface Friends : UIViewController<UITableViewDataSource,UITableViewDelegate>
+
+@interface Friends : UIViewController<UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate>
+{
+	NSFetchedResultsController *fetchedResultsController;
+}
 
 @property (nonatomic, retain) NSMutableArray *datalist;
 @property (nonatomic, retain) UITableView *table;
