@@ -18,6 +18,9 @@
 @synthesize xmppStream;
 @synthesize chatDelegate;
 @synthesize messageDelegate;
+@synthesize xmppRoster;
+@synthesize xmppRosterStorage;
+@synthesize xmppRosterMemStorage;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -80,7 +83,26 @@
     //初始化XMPPStream
     xmppStream = [[XMPPStream alloc] init];
     [xmppStream addDelegate:self delegateQueue:dispatch_get_current_queue()];
+    [xmppStream setEnableBackgroundingOnSocket:YES];
     
+    
+	//xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
+    //xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
+    
+    xmppRosterMemStorage = [[XMPPRosterMemoryStorage alloc] init];
+    xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterMemStorage
+                                             dispatchQueue:dispatch_get_main_queue()];
+	
+    
+    [xmppRoster activate:xmppStream];
+    [xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
+    xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = false;
+    xmppRoster.autoFetchRoster = true;
+    [xmppRoster fetchRoster];
+    
+    NSArray *arr= [xmppRosterMemStorage unsortedUsers];
+    NSLog(@"arr:%@",arr);
 }
 
 -(void)goOnline{
@@ -88,6 +110,7 @@
     //发送在线状态
     XMPPPresence *presence = [XMPPPresence presence];
     [[self xmppStream] sendElement:presence];
+    
     
 }
 
@@ -127,6 +150,7 @@
     password = pass;
     
 	NSError *error = nil;
+    /**
 	if (![xmppStream connect:&error])
 	{
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
@@ -140,6 +164,21 @@
         
 		return NO;
 	}
+     **/
+    
+    if(![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]){
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
+		                                                    message:@"See console for error details."
+		                                                   delegate:nil
+		                                          cancelButtonTitle:@"Ok"
+		                                          otherButtonTitles:nil];
+		[alertView show];
+        
+		NSLog(@"Error connecting: %@", error);
+        
+		return NO;
+    }
+    
     return YES;
     
 }
@@ -185,9 +224,7 @@
 
 //收到好友状态
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
-    
-    NSLog(@"presence = %@", presence);
-    
+   
     //取得好友状态
     NSString *presenceType = [presence type]; //online/offline
     //当前用户
@@ -215,6 +252,7 @@
     获取用户名单
  **/
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq {
+    NSLog(@"iq:%@",iq);
     if ([@"result" isEqualToString:iq.type]) {
         NSXMLElement *query = iq.childElement;
         if ([@"query" isEqualToString:query.name]) {
@@ -226,6 +264,19 @@
             }
         }
     }
+    return YES;
 }
 
+- (void)xmppRosterDidEndPopulating:(XMPPRoster *)sender  {
+    NSLog(@"xmppRosterDidEndPopulating:%@",sender);
+}
+
+-(void)xmppRosterDidPopulate:(XMPPRosterMemoryStorage *)sender {
+    NSLog(@"users: %@", [sender unsortedUsers]);
+    // My subscribed users do print out
+}
+
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence{
+    NSLog(@"didReceiveBuddyRequest:%@",presence);
+}
 @end

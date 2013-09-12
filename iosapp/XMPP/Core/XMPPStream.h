@@ -37,59 +37,9 @@ enum XMPPStreamErrorCode
 };
 typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
+extern const NSTimeInterval XMPPStreamTimeoutNone;
 
 @interface XMPPStream : NSObject <GCDAsyncSocketDelegate>
-{
-	dispatch_queue_t xmppQueue;
-	dispatch_queue_t parserQueue;
-	
-	GCDMulticastDelegate <XMPPStreamDelegate> *multicastDelegate;
-	
-	int state;
-	
-	GCDAsyncSocket *asyncSocket;
-	NSMutableData *socketBuffer;
-	
-	UInt64 numberOfBytesSent;
-	UInt64 numberOfBytesReceived;
-	
-	XMPPParser *parser;
-	NSError *parserError;
-	
-	Byte flags;
-	Byte config;
-	
-	NSString *hostName;
-	UInt16 hostPort;
-	
-	id <XMPPSASLAuthentication> auth;
-	
-	XMPPJID *myJID_setByClient;
-	XMPPJID *myJID_setByServer;
-	XMPPJID *remoteJID;
-	
-	XMPPPresence *myPresence;
-	NSXMLElement *rootElement;
-	
-	NSTimeInterval keepAliveInterval;
-	dispatch_source_t keepAliveTimer;
-	NSTimeInterval lastSendReceiveTime;
-	NSData *keepAliveData;
-	
-	NSMutableArray *registeredModules;
-	NSMutableDictionary *autoDelegateDict;
-	
-	XMPPSRVResolver *srvResolver;
-	NSArray *srvResults;
-	NSUInteger srvResultsIndex;
-	
-	NSMutableArray *receipts;
-	
-	NSThread *xmppUtilityThread;
-	NSRunLoop *xmppUtilityRunLoop;
-	
-	id userTag;
-}
 
 /**
  * Standard XMPP initialization.
@@ -155,6 +105,15 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 **/
 @property (readwrite, assign) UInt16 hostPort;
 
+
+/**
+ * Start TLS is used if the server supports it, regardless of wether it is required or not.
+ *
+ * The default is NO
+**/
+@property (readwrite, assign) BOOL autoStartTLS;
+
+
 /**
  * The JID of the user.
  * 
@@ -202,12 +161,14 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * The default value is defined in DEFAULT_KEEPALIVE_INTERVAL.
  * The minimum value is defined in MIN_KEEPALIVE_INTERVAL.
  * 
- * To disable keep-alive, set the interval to zero.
+ * To disable keep-alive, set the interval to zero (or any non-positive number).
  * 
  * The keep-alive timer (if enabled) fires every (keepAliveInterval / 4) seconds.
  * Upon firing it checks when data was last sent/received,
  * and sends keep-alive data if the elapsed time has exceeded the keepAliveInterval.
  * Thus the effective resolution of the keepalive timer is based on the interval.
+ * 
+ * @see keepAliveWhitespaceCharacter
 **/
 @property (readwrite, assign) NSTimeInterval keepAliveInterval;
 
@@ -219,6 +180,8 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * Valid whitespace characters are space(' '), tab('\t') and newline('\n').
  * 
  * If you attempt to set the character to any non-whitespace character, the attempt is ignored.
+ * 
+ * @see keepAliveInterval
 **/
 @property (readwrite, assign) char keepAliveWhitespaceCharacter;
 
@@ -282,6 +245,11 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 - (BOOL)isDisconnected;
 
 /**
+ * Returns YES is the connection is currently connecting
+**/
+- (BOOL)isConnecting;
+
+/**
  * Returns YES if the connection is open, and the stream has been properly established.
  * If the stream is neither disconnected, nor connected, then a connection is currently being established.
  * 
@@ -295,9 +263,10 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
 /**
  * Connects to the configured hostName on the configured hostPort.
+ * The timeout is optional. To not time out use XMPPStreamTimeoutNone.
  * If the hostName or myJID are not set, this method will return NO and set the error parameter.
 **/
-- (BOOL)connect:(NSError **)errPtr;
+- (BOOL)connectWithTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr;
 
 /**
  * THIS IS DEPRECATED BY THE XMPP SPECIFICATION.
@@ -305,19 +274,21 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * The xmpp specification outlines the proper use of SSL/TLS by negotiating
  * the startTLS upgrade within the stream negotiation.
  * This method exists for those ancient servers that still require the connection to be secured prematurely.
- * 
+ * The timeout is optional. To not time out use XMPPStreamTimeoutNone.
+ *
  * Note: Such servers generally use port 5223 for this, which you will need to set.
 **/
-- (BOOL)oldSchoolSecureConnect:(NSError **)errPtr;
+- (BOOL)oldSchoolSecureConnectWithTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr;
 
 /**
  * Starts a P2P connection to the given user and given address.
+ * The timeout is optional. To not time out use XMPPStreamTimeoutNone.
  * This method only works with XMPPStream objects created using the initP2P method.
  * 
  * The given address is specified as a sockaddr structure wrapped in a NSData object.
  * For example, a NSData object returned from NSNetservice's addresses method.
 **/
-- (BOOL)connectTo:(XMPPJID *)remoteJID withAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
+- (BOOL)connectTo:(XMPPJID *)remoteJID withAddress:(NSData *)remoteAddr withTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr;
 
 /**
  * Starts a P2P connection with the given accepted socket.
@@ -404,7 +375,7 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * In Band Registration.
  * Creating a user account on the xmpp server within the xmpp protocol.
  * 
- * The registerWithPassword:error: method is asynchronous.
+ * The registerWithElements:error: method is asynchronous.
  * It will return immediately, and the delegate methods are used to determine success.
  * See the xmppStreamDidRegister: and xmppStream:didNotRegister: methods.
  * 
@@ -413,10 +384,13 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * 
  * The errPtr parameter is optional - you may pass nil.
  * 
+ * registerWithPassword:error: is a convience method for creating an account using the given username and password.
+ *
  * Security Note:
  * The password will be sent in the clear unless the stream has been secured.
 **/
 - (BOOL)supportsInBandRegistration;
+- (BOOL)registerWithElements:(NSArray *)elements error:(NSError **)errPtr;
 - (BOOL)registerWithPassword:(NSString *)password error:(NSError **)errPtr;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -491,9 +465,50 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 - (BOOL)authenticateWithPassword:(NSString *)password error:(NSError **)errPtr;
 
 /**
+ * Returns whether or not the xmpp stream is currently authenticating with the XMPP Server.
+**/
+- (BOOL)isAuthenticating;
+
+/**
  * Returns whether or not the xmpp stream has successfully authenticated with the server.
 **/
 - (BOOL)isAuthenticated;
+
+/**
+ * Returns the date when the xmpp stream successfully authenticated with the server.
+ **/
+- (NSDate *)authenticationDate;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Compression
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * Returns the server's list of supported compression methods in accordance to XEP-0138: Stream Compression
+ * Each item in the array will be of type NSString.
+ *
+ * For example, if the server supplied this stanza within it's reported stream:features:
+ *
+ * <compression xmlns='http://jabber.org/features/compress'>
+ *	  <method>zlib</method>
+ *    <method>lzw</method>
+ * </compression>
+ *
+ * Then this method would return [@"zlib", @"lzw"].
+ **/
+- (NSArray *)supportedCompressionMethods;
+
+
+/**
+ * Returns whether or not the given compression method name was specified in the
+ * server's list of supported compression methods.
+ *
+ * Note: The XMPPStream doesn't currently support any compression methods 
+**/
+
+- (BOOL)supportsCompressionMethod:(NSString *)compressionMethod;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Server Info
@@ -629,6 +644,12 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * This may be useful if the stream needs to be queried for modules of a particular type.
 **/
 - (void)enumerateModulesWithBlock:(void (^)(XMPPModule *module, NSUInteger idx, BOOL *stop))block;
+
+/**
+ * Allows for enumeration of the currently registered modules that are a kind of Class.
+ * idx is in relation to all modules not just those of the given class.
+**/
+- (void)enumerateModulesOfClass:(Class)aClass withBlock:(void (^)(XMPPModule *module, NSUInteger idx, BOOL *stop))block;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Utilities
@@ -817,11 +838,41 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 - (NSString *)xmppStream:(XMPPStream *)sender alternativeResourceForConflictingResource:(NSString *)conflictingResource;
 
 /**
+ * These methods are called before their respective XML elements are broadcast as received to the rest of the stack.
+ * These methods can be used to modify elements on the fly.
+ * (E.g. perform custom decryption so the rest of the stack sees readable text.)
+ * 
+ * You may also filter incoming elements by returning nil.
+ * 
+ * When implementing these methods to modify the element, you do not need to copy the given element.
+ * You can simply edit the given element, and return it.
+ * The reason these methods return an element, instead of void, is to allow filtering.
+ * 
+ * Concerning thread-safety, delegates implementing the method are invoked one-at-a-time to
+ * allow thread-safe modification of the given elements.
+ *
+ * You should NOT implement these methods unless you have good reason to do so.
+ * For general processing and notification of received elements, please use xmppStream:didReceiveX: methods.
+ * 
+ * @see xmppStream:didReceiveIQ:
+ * @see xmppStream:didReceiveMessage:
+ * @see xmppStream:didReceivePresence:
+**/
+- (XMPPIQ *)xmppStream:(XMPPStream *)sender willReceiveIQ:(XMPPIQ *)iq;
+- (XMPPMessage *)xmppStream:(XMPPStream *)sender willReceiveMessage:(XMPPMessage *)message;
+- (XMPPPresence *)xmppStream:(XMPPStream *)sender willReceivePresence:(XMPPPresence *)presence;
+
+/**
  * These methods are called after their respective XML elements are received on the stream.
  * 
  * In the case of an IQ, the delegate method should return YES if it has or will respond to the given IQ.
  * If the IQ is of type 'get' or 'set', and no delegates respond to the IQ,
  * then xmpp stream will automatically send an error response.
+ * 
+ * Concerning thread-safety, delegates shouldn't modify the given elements.
+ * As documented in NSXML / KissXML, elements are read-access thread-safe, but write-access thread-unsafe.
+ * If you have need to modify an element for any reason,
+ * you should copy the element first, and then modify and use the copy.
 **/
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq;
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message;
@@ -840,12 +891,28 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
 /**
  * These methods are called before their respective XML elements are sent over the stream.
- * These methods can be used to customize elements on the fly.
+ * These methods can be used to modify outgoing elements on the fly.
  * (E.g. add standard information for custom protocols.)
+ * 
+ * You may also filter outgoing elements by returning nil.
+ * 
+ * When implementing these methods to modify the element, you do not need to copy the given element.
+ * You can simply edit the given element, and return it.
+ * The reason these methods return an element, instead of void, is to allow filtering.
+ * 
+ * Concerning thread-safety, delegates implementing the method are invoked one-at-a-time to
+ * allow thread-safe modification of the given elements.
+ * 
+ * You should NOT implement these methods unless you have good reason to do so.
+ * For general processing and notification of sent elements, please use xmppStream:didSendX: methods.
+ * 
+ * @see xmppStream:didSendIQ:
+ * @see xmppStream:didSendMessage:
+ * @see xmppStream:didSendPresence:
 **/
-- (void)xmppStream:(XMPPStream *)sender willSendIQ:(XMPPIQ *)iq;
-- (void)xmppStream:(XMPPStream *)sender willSendMessage:(XMPPMessage *)message;
-- (void)xmppStream:(XMPPStream *)sender willSendPresence:(XMPPPresence *)presence;
+- (XMPPIQ *)xmppStream:(XMPPStream *)sender willSendIQ:(XMPPIQ *)iq;
+- (XMPPMessage *)xmppStream:(XMPPStream *)sender willSendMessage:(XMPPMessage *)message;
+- (XMPPPresence *)xmppStream:(XMPPStream *)sender willSendPresence:(XMPPPresence *)presence;
 
 /**
  * These methods are called after their respective XML elements are sent over the stream.
@@ -857,10 +924,22 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 - (void)xmppStream:(XMPPStream *)sender didSendPresence:(XMPPPresence *)presence;
 
 /**
+ * These methods are called after failing to send the respective XML elements over the stream.
+**/
+- (void)xmppStream:(XMPPStream *)sender didFailToSendIQ:(XMPPIQ *)iq error:(NSError *)error;
+- (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error;
+- (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error;
+
+/**
  * This method is called if the disconnect method is called.
  * It may be used to determine if a disconnection was purposeful, or due to an error.
 **/
 - (void)xmppStreamWasToldToDisconnect:(XMPPStream *)sender;
+
+/**
+ * This methods is called if the XMPP Stream's connect times out
+**/
+- (void)xmppStreamConnectDidTimeout:(XMPPStream *)sender;
 
 /**
  * This method is called after the stream is closed.

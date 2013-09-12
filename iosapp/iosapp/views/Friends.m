@@ -43,6 +43,10 @@
     return [[self appDelegate] xmppStream];
 }
 
+-(XMPPRoster *)xmppRoster{
+    return [[self appDelegate] xmppRoster];
+}
+
 //在线好友
 -(void)newBuddyOnline:(NSString *)buddyName{
     if (![self.datalist containsObject:buddyName]) {
@@ -61,16 +65,63 @@
 }
 
 - (void)queryRoster {
+ 
+    NSError *error = [[NSError alloc] init];
+    NSXMLElement *query = [[NSXMLElement alloc] initWithXMLString:@"<query xmlns='http://jabber.org/protocol/disco#items' node='all users'/>"
+                                                            error:&error];
+    XMPPIQ *iq = [XMPPIQ iqWithType:@"get"
+                                 to:[XMPPJID jidWithString:@"sos360.com"]
+                          elementID:[[self xmppStream] generateUUID] child:query];
+    [[self xmppStream] sendElement:iq];
+
+}
+
+- (void)addRoster {
     NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:roster"];
     NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
     XMPPJID *myJID = self.xmppStream.myJID;
     [iq addAttributeWithName:@"from" stringValue:myJID.description];
     [iq addAttributeWithName:@"to" stringValue:myJID.domain];
-    [iq addAttributeWithName:@"id" stringValue:@"0101"];
+    [iq addAttributeWithName:@"id" stringValue:@"1234567"];
     [iq addAttributeWithName:@"type" stringValue:@"get"];
     [iq addChild:query];
     [[self xmppStream] sendElement:iq];
+    
+}
 
+- (void)addNewRoster {
+    /**
+     <iq type="set" id="dc946448-2a71-4948-9d9a-b40435f32ea2-2">
+        <query xmlns="jabber:iq:register">
+            <username>test2</username>
+            <password>111qqq</password>
+        </query>
+     </iq>
+     **/
+    
+    NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:register"];
+    
+    
+    NSXMLElement *username =[NSXMLElement elementWithName:@"username"];
+    [username setStringValue:@"test3@sos360.com"];
+
+    NSXMLElement *password =[NSXMLElement elementWithName:@"password"];
+    [password setStringValue:@"111qqq"];
+    
+    NSXMLElement *name =[NSXMLElement elementWithName:@"name"];
+    [name setStringValue:@"test2"];
+    
+    [query addChild:username];
+    [query addChild:password];
+    //[query addChild:name];
+    
+    NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
+    [iq addAttributeWithName:@"id" stringValue:@"dc946448-2a71-4948-9d9a-b40435f32ea2-3"];
+    [iq addAttributeWithName:@"type" stringValue:@"set"];
+    [iq addChild:query];
+    NSLog(@"%@",iq);
+    [[self xmppStream] sendElement:iq];
+    
 }
 
 - (void)viewDidLoad
@@ -93,6 +144,8 @@
     if(![[self xmppStream] isConnected]){
         if ([[self appDelegate] connect]) {
             NSLog(@"show buddy list");
+            //[self addNewRoster];
+            [[self xmppRoster] fetchRoster];
             [self queryRoster];
             
         }

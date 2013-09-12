@@ -79,6 +79,20 @@
 	return self;
 }
 
+- (id)initWithXMLString:(NSString *)string error:(NSError *__autoreleasing *)error
+{
+	if((self = [super initWithXMLString:string error:error])){
+		self = [XMPPPresence presenceFromElement:self];
+	}	
+	return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    NSXMLElement *element = [super copyWithZone:zone];
+    return [XMPPPresence presenceFromElement:element];
+}
+
 - (NSString *)type
 {
 	NSString *type = [self attributeStringValueForName:@"type"];
@@ -123,6 +137,5 @@
 {
 	return [[self type] isEqualToString:@"error"];
 }
-
 
 @end
