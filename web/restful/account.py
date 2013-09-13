@@ -10,6 +10,7 @@ from utility import RestfulHandler
 from logic.utility import *
 from logic.account import add,login,TName as T_ACCOUNT,auth_login
 from logic.city import TName as T_CITY
+from logic.openfireusers import add as openfire_add
 
 @url(r'/m/account/login')
 class LoginHandler(ContextHandler):
@@ -47,7 +48,14 @@ class AuthLoginHandler(ContextHandler):
 @url(r'/m/account/add')
 class AddHandler(RestfulHandler):
     def get(self):
-        r,v = add(self.get_argument('username'),self.get_argument('password'),self.get_argument('city',None))
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+        
+        r,v = add(username,password,self.get_argument('city',None))
+        if '@' in username:
+            username,emailhost = username.split('@')
+
+        openfire_add(username,password,username)
         self.write(dict(status = r, data = v))
 
 
