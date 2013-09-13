@@ -38,16 +38,68 @@
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark NSFetchedResultsController
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+	if (fetchedResultsController == nil)
+	{
+		NSManagedObjectContext *moc = [[self appDelegate] managedObjectContext_roster];
+		
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject"
+		                                          inManagedObjectContext:moc];
+		
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"sectionNum" ascending:YES];
+		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
+		
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
+		
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		[fetchRequest setEntity:entity];
+		[fetchRequest setSortDescriptors:sortDescriptors];
+		[fetchRequest setFetchBatchSize:10];
+		
+		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+		                                                               managedObjectContext:moc
+		                                                                 sectionNameKeyPath:@"sectionNum"
+		                                                                          cacheName:nil];
+		[fetchedResultsController setDelegate:self];
+		
+		
+		NSError *error = nil;
+		if (![fetchedResultsController performFetch:&error])
+		{
+			NSLog(@"Error performing fetch: %@", error);
+		}
+        
+	}
+	
+	return fetchedResultsController;
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+	[[self table] reloadData];
+}
+
+
+
 //取得当前的XMPPStream
 -(XMPPStream *)xmppStream{
     return [[self appDelegate] xmppStream];
+}
+
+-(XMPPRoster *)xmppRoster{
+    return [[self appDelegate] xmppRoster];
 }
 
 //在线好友
 -(void)newBuddyOnline:(NSString *)buddyName{
     if (![self.datalist containsObject:buddyName]) {
         [self.datalist addObject:buddyName];
-        [self.table reloadData];
+        //[self.table reloadData];
     }
     
 }
@@ -56,22 +108,10 @@
 -(void)buddyWentOffline:(NSString *)buddyName{
     
     [self.datalist removeObject:buddyName];
-    [self.table reloadData];
+    //[self.table reloadData];
     
 }
 
-- (void)queryRoster {
-    NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:roster"];
-    NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
-    XMPPJID *myJID = self.xmppStream.myJID;
-    [iq addAttributeWithName:@"from" stringValue:myJID.description];
-    [iq addAttributeWithName:@"to" stringValue:myJID.domain];
-    [iq addAttributeWithName:@"id" stringValue:@"0101"];
-    [iq addAttributeWithName:@"type" stringValue:@"get"];
-    [iq addChild:query];
-    [[self xmppStream] sendElement:iq];
-
-}
 
 - (void)viewDidLoad
 {
@@ -92,17 +132,48 @@
 -(void)viewWillAppear:(BOOL)animated{
     if(![[self xmppStream] isConnected]){
         if ([[self appDelegate] connect]) {
-            NSLog(@"show buddy list");
-            [self queryRoster];
-            
+            NSLog(@"show buddy list");            
         }
     }
 
 }
 
+- (NSString *)tableView:(UITableView *)sender titleForHeaderInSection:(NSInteger)sectionIndex
+{
+	NSArray *sections = [[self fetchedResultsController] sections];
+	
+	if (sectionIndex < [sections count])
+	{
+		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+        
+		int section = [sectionInfo.name intValue];
+		switch (section)
+		{
+			case 0  : return @"在线";
+			case 1  : return @"离开";
+			default : return @"下线";
+		}
+	}
+	
+	return @"";
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return [[[self fetchedResultsController] sections] count];
+}
+
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return [self.datalist count];
+    //return [self.datalist count];
+    NSArray *sections = [[self fetchedResultsController] sections];
+	
+	if (section < [sections count])
+	{
+		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:section];
+		return sectionInfo.numberOfObjects;
+	}
+	
+	return 0;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -112,8 +183,11 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+	
     //文本
-    cell.textLabel.text = [self.datalist objectAtIndex:[indexPath row]];
+    //cell.textLabel.text = [self.datalist objectAtIndex:[indexPath row]];
+    cell.textLabel.text = user.displayName;
     //标记
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
@@ -122,9 +196,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *name = [self.datalist objectAtIndex:indexPath.row];
+    XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     Chat *chatView = [[Chat alloc] init];
-    [chatView setChatUser:name];
+    [chatView setChatUser:[user.jid bare]];
     chatView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatView animated:YES];
 }

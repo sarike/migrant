@@ -206,6 +206,25 @@
 	return count;
 }
 
+- (BOOL)hasDelegateThatRespondsToSelector:(SEL)aSelector
+{
+	for (GCDMulticastDelegateNode *node in delegateNodes)
+	{
+		id nodeDelegate = node.delegate;
+		#if __has_feature(objc_arc_weak) && !TARGET_OS_IPHONE
+		if (nodeDelegate == [NSNull null])
+			nodeDelegate = node.unsafeDelegate;
+		#endif
+		
+		if ([nodeDelegate respondsToSelector:aSelector])
+		{
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
 - (GCDMulticastDelegateEnumerator *)delegateEnumerator
 {
 	return [[GCDMulticastDelegateEnumerator alloc] initFromDelegateNodes:delegateNodes];
@@ -402,12 +421,12 @@
 @implementation GCDMulticastDelegateNode
 
 @synthesize delegate;       // atomic
-#if !TARGET_OS_IPHONE
+#if __has_feature(objc_arc_weak) && !TARGET_OS_IPHONE
 @synthesize unsafeDelegate; // atomic
 #endif
 @synthesize delegateQueue;  // non-atomic
 
-#if !TARGET_OS_IPHONE
+#if __has_feature(objc_arc_weak) && !TARGET_OS_IPHONE
 static BOOL SupportsWeakReferences(id delegate)
 {
 	// From Apple's documentation:
@@ -446,12 +465,7 @@ static BOOL SupportsWeakReferences(id delegate)
 {
 	if ((self = [super init]))
 	{
-		#if TARGET_OS_IPHONE
-		{
-			delegate = inDelegate;
-			delegateQueue = inDelegateQueue;
-		}
-		#else
+		#if __has_feature(objc_arc_weak) && !TARGET_OS_IPHONE
 		{
 			if (SupportsWeakReferences(inDelegate))
 			{
@@ -466,18 +480,27 @@ static BOOL SupportsWeakReferences(id delegate)
 				delegateQueue = inDelegateQueue;
 			}
 		}
+		#else
+		{
+			delegate = inDelegate;
+			delegateQueue = inDelegateQueue;
+		}
 		#endif
 		
+		#if !OS_OBJECT_USE_OBJC
 		if (delegateQueue)
 			dispatch_retain(delegateQueue);
+		#endif
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	#if !OS_OBJECT_USE_OBJC
 	if (delegateQueue)
 		dispatch_release(delegateQueue);
+	#endif
 }
 
 @end

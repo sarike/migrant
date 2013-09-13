@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "XMPP.h"
+#import "XMPPFramework.h"
 
 #import "NewsBase.h"
 #import "Friends.h"
@@ -16,11 +16,16 @@
 
 
 
-@interface AppDelegate :UIResponder <UIApplicationDelegate>{
+@interface AppDelegate :UIResponder <UIApplicationDelegate,XMPPRosterMemoryStorageDelegate>{
     
     XMPPStream *xmppStream;
     NSString *password;  //密码
     BOOL isOpen;  //xmppStream是否开着
+    
+    XMPPRoster *xmppRoster;
+    XMPPRosterCoreDataStorage *xmppRosterStorage;
+    XMPPRosterMemoryStorage *xmppRosterMemStorage;
+    
 }
 
 
@@ -29,10 +34,14 @@
 
 
 @property(nonatomic, readonly)XMPPStream *xmppStream;
+@property(nonatomic, readonly)XMPPRoster *xmppRoster;
+@property(nonatomic, readonly)XMPPRosterCoreDataStorage *xmppRosterStorage;
+@property(nonatomic, readonly)XMPPRosterMemoryStorage *xmppRosterMemStorage;
 
 @property(nonatomic, retain)id chatDelegate;
 @property(nonatomic, retain)id messageDelegate;
 
+- (NSManagedObjectContext *)managedObjectContext_roster;
 
 
 //是否连接

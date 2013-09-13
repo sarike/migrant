@@ -116,11 +116,11 @@
 			result = NO;
 		}
 	}};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
+
+	if (dispatch_get_specific(self.xmppQueueTag))
 		block();
 	else
-		dispatch_sync(xmppQueue, block);
+		dispatch_sync(self.xmppQueue, block);
 	
 	if (errPtr)
 		*errPtr = err;

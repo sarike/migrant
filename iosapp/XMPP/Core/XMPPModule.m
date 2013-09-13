@@ -13,7 +13,6 @@
   static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 #endif
 
-
 @implementation XMPPModule
 
 /**
@@ -34,13 +33,18 @@
 		if (queue)
 		{
 			moduleQueue = queue;
+			#if !OS_OBJECT_USE_OBJC
 			dispatch_retain(moduleQueue);
+			#endif
 		}
 		else
 		{
 			const char *moduleQueueName = [[self moduleName] UTF8String];
 			moduleQueue = dispatch_queue_create(moduleQueueName, NULL);
 		}
+		
+		moduleQueueTag = &moduleQueueTag;
+		dispatch_queue_set_specific(moduleQueue, moduleQueueTag, moduleQueueTag, NULL);
 		
 		multicastDelegate = [[GCDMulticastDelegate alloc] init];
 	}
@@ -49,7 +53,9 @@
 
 - (void)dealloc
 {
+	#if !OS_OBJECT_USE_OBJC
 	dispatch_release(moduleQueue);
+	#endif
 }
 
 /**
@@ -76,7 +82,7 @@
 		}
 	};
 	
-	if (dispatch_get_current_queue() == moduleQueue)
+	if (dispatch_get_specific(moduleQueueTag))
 		block();
 	else
 		dispatch_sync(moduleQueue, block);
@@ -105,7 +111,7 @@
 		}
 	};
 	
-	if (dispatch_get_current_queue() == moduleQueue)
+	if (dispatch_get_specific(moduleQueueTag))
 		block();
 	else
 		dispatch_sync(moduleQueue, block);
@@ -116,9 +122,14 @@
 	return moduleQueue;
 }
 
+- (void *)moduleQueueTag
+{
+	return moduleQueueTag;
+}
+
 - (XMPPStream *)xmppStream
 {
-	if (dispatch_get_current_queue() == moduleQueue)
+	if (dispatch_get_specific(moduleQueueTag))
 	{
 		return xmppStream;
 	}
@@ -142,42 +153,38 @@
 		[multicastDelegate addDelegate:delegate delegateQueue:delegateQueue];
 	};
 	
-	if (dispatch_get_current_queue() == moduleQueue)
+	if (dispatch_get_specific(moduleQueueTag))
 		block();
 	else
 		dispatch_async(moduleQueue, block);
 }
 
-- (void)removeDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue
+- (void)removeDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue synchronously:(BOOL)synchronously
 {
-	// Synchronous operation
-	// 
-	// Delegate removal MUST always be synchronous.
-	
 	dispatch_block_t block = ^{
 		[multicastDelegate removeDelegate:delegate delegateQueue:delegateQueue];
 	};
 	
-	if (dispatch_get_current_queue() == moduleQueue)
+	if (dispatch_get_specific(moduleQueueTag))
 		block();
-	else
+	else if (synchronously)
 		dispatch_sync(moduleQueue, block);
+	else
+		dispatch_async(moduleQueue, block);
+	
+}
+- (void)removeDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue
+{
+	// Synchronous operation (common-case default)
+	
+	[self removeDelegate:delegate delegateQueue:delegateQueue synchronously:YES];
 }
 
 - (void)removeDelegate:(id)delegate
 {
-	// Synchronous operation
-	// 
-	// Delegate remove MUST always be synchronous.
+	// Synchronous operation (common-case default)
 	
-	dispatch_block_t block = ^{
-		[multicastDelegate removeDelegate:delegate];
-	};
-	
-	if (dispatch_get_current_queue() == moduleQueue)
-		block();
-	else
-		dispatch_sync(moduleQueue, block);
+	[self removeDelegate:delegate delegateQueue:NULL synchronously:YES];
 }
 
 - (NSString *)moduleName

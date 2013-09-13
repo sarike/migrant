@@ -115,8 +115,14 @@
         //重新刷新tableView
         [self.table reloadData];
         
+        //NSIndexPath *scrollIndexPath= [NSIndexPath indexPathWithIndex:[self.messages count]-2];
+        [[self table] scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        //[[self table] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
     }
 }
+
+
 
 -(IBAction)closekb:(id)sender{
     [self.tfbody resignFirstResponder];
@@ -201,6 +207,9 @@
 -(void)newMessageReceived:(NSDictionary *)messageCotent{
     [self.messages addObject:messageCotent];
     [self.table reloadData];
-    
+    //  NSIndexPath *scrollIndexPath= [NSIndexPath indexPathWithIndex:[self.messages count]-2];
+    //[[self table] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [[self table] scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
 }
 @end

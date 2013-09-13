@@ -485,7 +485,6 @@
 	if (rollingTimer)
 	{
 		dispatch_source_cancel(rollingTimer);
-		dispatch_release(rollingTimer);
 		rollingTimer = NULL;
 	}
 }
@@ -498,39 +497,36 @@
 
 - (unsigned long long)maximumFileSize
 {
+	__block unsigned long long result;
+	
+	dispatch_block_t block = ^{
+		result = maximumFileSize;
+	};
+	
 	// The design of this method is taken from the DDAbstractLogger implementation.
 	// For extensive documentation please refer to the DDAbstractLogger implementation.
 	
-	// Note: The internal implementation should access the maximumFileSize variable directly,
-	// but if we forget to do this, then this method should at least work properly.
+	// Note: The internal implementation MUST access the maximumFileSize variable directly,
+	// This method is designed explicitly for external access.
+	//
+	// Using "self." syntax to go through this method will cause immediate deadlock.
+	// This is the intended result. Fix it by accessing the ivar directly.
+	// Great strides have been take to ensure this is safe to do. Plus it's MUCH faster.
 	
-	dispatch_queue_t currentQueue = dispatch_get_current_queue();
-	if (currentQueue == loggerQueue)
-	{
-		return maximumFileSize;
-	}
-	else
-	{
-		dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
-		NSAssert(currentQueue != globalLoggingQueue, @"Core architecture requirement failure");
-		
-		__block unsigned long long result;
-		
-		dispatch_sync(globalLoggingQueue, ^{
-			dispatch_sync(loggerQueue, ^{
-				result = maximumFileSize;
-			});
-		});
-		
-		return result;
-	}
+	NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
+	NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
+	
+	dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+	
+	dispatch_sync(globalLoggingQueue, ^{
+		dispatch_sync(loggerQueue, block);
+	});
+	
+	return result;
 }
 
 - (void)setMaximumFileSize:(unsigned long long)newMaximumFileSize
 {
-	// The design of this method is taken from the DDAbstractLogger implementation.
-	// For documentation please refer to the DDAbstractLogger implementation.
-	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		maximumFileSize = newMaximumFileSize;
@@ -538,78 +534,82 @@
 		
 	}};
 	
-	dispatch_queue_t currentQueue = dispatch_get_current_queue();
-	if (currentQueue == loggerQueue)
-	{
-		block();
-	}
-	else
-	{
-		dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
-		NSAssert(currentQueue != globalLoggingQueue, @"Core architecture requirement failure");
-		
-		dispatch_async(globalLoggingQueue, ^{
-			dispatch_async(loggerQueue, block);
-		});
-	}
+	// The design of this method is taken from the DDAbstractLogger implementation.
+	// For extensive documentation please refer to the DDAbstractLogger implementation.
+	
+	// Note: The internal implementation MUST access the maximumFileSize variable directly,
+	// This method is designed explicitly for external access.
+	//
+	// Using "self." syntax to go through this method will cause immediate deadlock.
+	// This is the intended result. Fix it by accessing the ivar directly.
+	// Great strides have been take to ensure this is safe to do. Plus it's MUCH faster.
+	
+	NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
+	NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
+	
+	dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+	
+	dispatch_async(globalLoggingQueue, ^{
+		dispatch_async(loggerQueue, block);
+	});
 }
 
 - (NSTimeInterval)rollingFrequency
 {
+	__block NSTimeInterval result;
+	
+	dispatch_block_t block = ^{
+		result = rollingFrequency;
+	};
+	
 	// The design of this method is taken from the DDAbstractLogger implementation.
-	// For documentation please refer to the DDAbstractLogger implementation.
+	// For extensive documentation please refer to the DDAbstractLogger implementation.
 	
 	// Note: The internal implementation should access the rollingFrequency variable directly,
-	// but if we forget to do this, then this method should at least work properly.
+	// This method is designed explicitly for external access.
+	//
+	// Using "self." syntax to go through this method will cause immediate deadlock.
+	// This is the intended result. Fix it by accessing the ivar directly.
+	// Great strides have been take to ensure this is safe to do. Plus it's MUCH faster.
 	
-	dispatch_queue_t currentQueue = dispatch_get_current_queue();
-	if (currentQueue == loggerQueue)
-	{
-		return rollingFrequency;
-	}
-	else
-	{
-		dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
-		NSAssert(currentQueue != globalLoggingQueue, @"Core architecture requirement failure");
-		
-		__block NSTimeInterval result;
-		
-		dispatch_sync(globalLoggingQueue, ^{
-			dispatch_sync(loggerQueue, ^{
-				result = rollingFrequency;
-			});
-		});
-		
-		return result;
-	}
+	NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
+	NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
+	
+	dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+	
+	dispatch_sync(globalLoggingQueue, ^{
+		dispatch_sync(loggerQueue, block);
+	});
+	
+	return result;
 }
 
 - (void)setRollingFrequency:(NSTimeInterval)newRollingFrequency
 {
-	// The design of this method is taken from the DDAbstractLogger implementation.
-	// For documentation please refer to the DDAbstractLogger implementation.
-		
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		rollingFrequency = newRollingFrequency;
 		[self maybeRollLogFileDueToAge];
-		
 	}};
 	
-	dispatch_queue_t currentQueue = dispatch_get_current_queue();
-	if (currentQueue == loggerQueue)
-	{
-		block();
-	}
-	else
-	{
-		dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
-		NSAssert(currentQueue != globalLoggingQueue, @"Core architecture requirement failure");
-		
-		dispatch_async(globalLoggingQueue, ^{
-			dispatch_async(loggerQueue, block);
-		});
-	}
+	// The design of this method is taken from the DDAbstractLogger implementation.
+	// For extensive documentation please refer to the DDAbstractLogger implementation.
+	
+	// Note: The internal implementation should access the rollingFrequency variable directly,
+	// This method is designed explicitly for external access.
+	//
+	// Using "self." syntax to go through this method will cause immediate deadlock.
+	// This is the intended result. Fix it by accessing the ivar directly.
+	// Great strides have been take to ensure this is safe to do. Plus it's MUCH faster.
+	
+	NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
+	NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
+	
+	dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+	
+	dispatch_async(globalLoggingQueue, ^{
+		dispatch_async(loggerQueue, block);
+	});
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -621,7 +621,6 @@
 	if (rollingTimer)
 	{
 		dispatch_source_cancel(rollingTimer);
-		dispatch_release(rollingTimer);
 		rollingTimer = NULL;
 	}
 	
@@ -650,7 +649,14 @@
 		
 	}});
 	
-	uint64_t delay = [logFileRollingDate timeIntervalSinceNow] * NSEC_PER_SEC;
+	#if !OS_OBJECT_USE_OBJC
+	dispatch_source_t theRollingTimer = rollingTimer;
+	dispatch_source_set_cancel_handler(rollingTimer, ^{
+		dispatch_release(theRollingTimer);
+	});
+	#endif
+	
+	uint64_t delay = (uint64_t)([logFileRollingDate timeIntervalSinceNow] * NSEC_PER_SEC);
 	dispatch_time_t fireTime = dispatch_time(DISPATCH_TIME_NOW, delay);
 	
 	dispatch_source_set_timer(rollingTimer, fireTime, DISPATCH_TIME_FOREVER, 1.0);
@@ -661,24 +667,23 @@
 {
 	// This method is public.
 	// We need to execute the rolling on our logging thread/queue.
-	// 
-	// The design of this method is taken from the DDAbstractLogger implementation.
-	// For documentation please refer to the DDAbstractLogger implementation.
 	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		[self rollLogFileNow];
 	}};
 	
-	dispatch_queue_t currentQueue = dispatch_get_current_queue();
-	if (currentQueue == loggerQueue)
+	// The design of this method is taken from the DDAbstractLogger implementation.
+	// For extensive documentation please refer to the DDAbstractLogger implementation.
+	
+	if ([self isOnInternalLoggerQueue])
 	{
 		block();
 	}
 	else
 	{
 		dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
-		NSAssert(currentQueue != globalLoggingQueue, @"Core architecture requirement failure");
+		NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 		
 		dispatch_async(globalLoggingQueue, ^{
 			dispatch_async(loggerQueue, block);
@@ -709,7 +714,6 @@
 	if (rollingTimer)
 	{
 		dispatch_source_cancel(rollingTimer);
-		dispatch_release(rollingTimer);
 		rollingTimer = NULL;
 	}
 }
@@ -1013,16 +1017,49 @@
 
 - (NSString *)description
 {
-	return [[NSDictionary dictionaryWithObjectsAndKeys:
-		self.filePath, @"filePath",
-		self.fileName, @"fileName",
-		self.fileAttributes, @"fileAttributes",
-		self.creationDate, @"creationDate",
-		self.modificationDate, @"modificationDate",
-		[NSNumber numberWithUnsignedLongLong:self.fileSize], @"fileSize",
-		[NSNumber numberWithDouble:self.age], @"age",
-		[NSNumber numberWithBool:self.isArchived], @"isArchived",
-	nil] description];
+    NSMutableDictionary *description = [NSMutableDictionary dictionary];
+    
+    if(self.filePath)
+    {
+        [description setValue:self.filePath forKey:@"filePath"];
+    }
+    
+    if(self.fileName)
+    {
+        [description setValue:self.fileName forKey:@"fileName"];
+    }
+    
+    if(self.fileAttributes)
+    {
+        [description setValue:self.fileAttributes forKey:@"fileAttributes"];
+    }
+    
+    if(self.creationDate)
+    {
+        [description setValue:self.creationDate forKey:@"creationDate"];
+    }
+    
+    if(self.modificationDate)
+    {
+        [description setValue:self.modificationDate forKey:@"modificationDate"];
+    }
+    
+    if(self.fileSize)
+    {
+        [description setValue:@(self.fileSize) forKey:@"fileSize"];
+    }
+    
+    if(self.age)
+    {
+        [description setValue:@(self.age) forKey:@"age"];
+    }
+    
+    if(self.isArchived)
+    {
+        [description setValue:@(self.isArchived) forKey:@"isArchived"];
+    }
+    
+	return [description description];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
