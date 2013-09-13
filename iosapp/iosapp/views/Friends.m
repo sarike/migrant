@@ -99,7 +99,7 @@
 -(void)newBuddyOnline:(NSString *)buddyName{
     if (![self.datalist containsObject:buddyName]) {
         [self.datalist addObject:buddyName];
-        [self.table reloadData];
+        //[self.table reloadData];
     }
     
 }
@@ -108,7 +108,7 @@
 -(void)buddyWentOffline:(NSString *)buddyName{
     
     [self.datalist removeObject:buddyName];
-    [self.table reloadData];
+    //[self.table reloadData];
     
 }
 
@@ -137,6 +137,31 @@
     }
 
 }
+
+- (NSString *)tableView:(UITableView *)sender titleForHeaderInSection:(NSInteger)sectionIndex
+{
+	NSArray *sections = [[self fetchedResultsController] sections];
+	
+	if (sectionIndex < [sections count])
+	{
+		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+        
+		int section = [sectionInfo.name intValue];
+		switch (section)
+		{
+			case 0  : return @"在线";
+			case 1  : return @"离开";
+			default : return @"下线";
+		}
+	}
+	
+	return @"";
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return [[[self fetchedResultsController] sections] count];
+}
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //return [self.datalist count];
@@ -171,9 +196,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *name = [self.datalist objectAtIndex:indexPath.row];
+    XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     Chat *chatView = [[Chat alloc] init];
-    [chatView setChatUser:name];
+    [chatView setChatUser:[user.jid bare]];
     chatView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatView animated:YES];
 }
