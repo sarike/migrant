@@ -206,10 +206,12 @@
 #pragma mark KKMessageDelegate
 -(void)newMessageReceived:(NSDictionary *)messageCotent{
     [self.messages addObject:messageCotent];
+    
+    NSIndexPath *scrollIndexPath= [NSIndexPath indexPathForRow:[self.messages count] inSection:0];
     [self.table reloadData];
-    //  NSIndexPath *scrollIndexPath= [NSIndexPath indexPathWithIndex:[self.messages count]-2];
-    //[[self table] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [[self table] scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
-
+    
+    [[self table] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+    //[[self table] scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [[self table] setContentOffset:CGPointMake(0, 480) animated:YES];
 }
 @end

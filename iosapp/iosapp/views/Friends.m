@@ -84,8 +84,6 @@
 	[[self table] reloadData];
 }
 
-
-
 //取得当前的XMPPStream
 -(XMPPStream *)xmppStream{
     return [[self appDelegate] xmppStream];
@@ -97,18 +95,13 @@
 
 //在线好友
 -(void)newBuddyOnline:(NSString *)buddyName{
-    if (![self.datalist containsObject:buddyName]) {
-        [self.datalist addObject:buddyName];
-        //[self.table reloadData];
-    }
+
     
 }
 
 //好友下线
 -(void)buddyWentOffline:(NSString *)buddyName{
-    
-    [self.datalist removeObject:buddyName];
-    //[self.table reloadData];
+
     
 }
 
@@ -121,12 +114,21 @@
     _tableView.delegate = self;
     self.table = _tableView;
     
-    self.datalist = [NSMutableArray array];
     AppDelegate *del = [self appDelegate];
     del.chatDelegate = self;
     
-    [self.view addSubview:self.table];
+    //添加好友的按钮
+    UIBarButtonItem *btnSearch = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStyleBordered target:self action:nil];
+    btnSearch.image = [UIImage imageNamed:@"searchWhite"];
+    [btnSearch setAction:@selector(addroster:)];
+    self.navigationItem.rightBarButtonItem = btnSearch;
     
+    [self.view addSubview:self.table];
+}
+
+- (void)addroster:(id)sender{
+     [[self xmppRoster] addUser:[XMPPJID jidWithString:@"comger@sos360.com" ] withNickname:@"comger"];
+     
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -154,9 +156,9 @@
 			default : return @"下线";
 		}
 	}
-	
 	return @"";
 }
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return [[[self fetchedResultsController] sections] count];
@@ -164,7 +166,6 @@
 
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    //return [self.datalist count];
     NSArray *sections = [[self fetchedResultsController] sections];
 	
 	if (section < [sections count])
@@ -186,7 +187,6 @@
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
 	
     //文本
-    //cell.textLabel.text = [self.datalist objectAtIndex:[indexPath row]];
     cell.textLabel.text = user.displayName;
     //标记
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -202,6 +202,8 @@
     chatView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatView animated:YES];
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {

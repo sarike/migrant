@@ -15,7 +15,7 @@
 	NSFetchedResultsController *fetchedResultsController;
 }
 
-@property (nonatomic, retain) NSMutableArray *datalist;
+
 @property (nonatomic, retain) UITableView *table;
 
 @end
