@@ -153,7 +153,7 @@
 		{
 			case 0  : return @"在线";
 			case 1  : return @"离开";
-			default : return @"下线";
+			default : return @"离线";
 		}
 	}
 	return @"";
