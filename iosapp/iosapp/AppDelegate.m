@@ -20,7 +20,9 @@
 @synthesize messageDelegate;
 @synthesize xmppRoster;
 @synthesize xmppRosterStorage;
-@synthesize xmppRosterMemStorage;
+@synthesize xmppMessageArchiving;
+@synthesize xmppMessageArchivingStorage;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -96,21 +98,24 @@
     [xmppStream addDelegate:self delegateQueue:dispatch_get_current_queue()];
     [xmppStream setEnableBackgroundingOnSocket:YES];
     
-    
+    //好友处理
 	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
     xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
-    
-    //xmppRosterMemStorage = [[XMPPRosterMemoryStorage alloc] init];
-    //xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterMemStorage
-    //                                         dispatchQueue:dispatch_get_main_queue()];
-	
-    
+
     [xmppRoster activate:xmppStream];
     [xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
-    
     xmppRoster.autoFetchRoster = YES;
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+    
+    //消息处理
+    xmppMessageArchivingStorage = [XMPPMessageArchivingCoreDataStorage sharedInstance];
+    xmppMessageArchiving = [[XMPPMessageArchiving alloc] initWithMessageArchivingStorage:xmppMessageArchivingStorage];
+    [xmppMessageArchiving setClientSideMessageArchivingOnly:YES];
+    
+    [xmppMessageArchiving activate:xmppStream];
+    [xmppMessageArchiving addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
     
 }
 

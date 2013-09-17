@@ -7,14 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
 #import "MessageDelegate.h"
 
-@interface Chat : UIViewController<UITableViewDelegate, UITableViewDataSource,MessageDelegate>{
+
+@interface Chat : UIViewController<UITableViewDelegate, UITableViewDataSource,NSFetchedResultsControllerDelegate>{
+    NSFetchedResultsController *fetchedResultsController;
     NSString *username;
 }
 @property (weak, nonatomic) IBOutlet UITextField *tfbody;
 @property (weak, nonatomic) IBOutlet UITableView *table;
-@property (nonatomic, retain) NSMutableArray *messages;
+
 
 - (IBAction)send:(id)sender;
 -(IBAction)closekb:(id)sender;

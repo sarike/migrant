@@ -41,3 +41,7 @@
 
 #import "XMPPMUC.h"
 #import "XMPPRoomCoreDataStorage.h"
+
+// 消息扩展接口
+#import "XMPPMessageArchiving.h"
+#import "XMPPMessageArchivingCoreDataStorage.h"

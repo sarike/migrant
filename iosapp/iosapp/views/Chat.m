@@ -51,11 +51,8 @@
     self.table.dataSource = self;
     self.table.delegate = self;
     
-    self.messages = [NSMutableArray array];
     [self.tfbody becomeFirstResponder];
-    AppDelegate *del = [self appDelegate];
-    del.messageDelegate = self;
-    
+    //AppDelegate *del = [self appDelegate];
     
 }
 
@@ -98,27 +95,7 @@
         [mes addChild:body];
         
         //发送消息
-        [[self xmppStream] sendElement:mes];
-        
-        self.tfbody.text = @"";
-        [self.tfbody resignFirstResponder];
-        
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        
-        [dictionary setObject:message forKey:@"msg"];
-        [dictionary setObject:@"you" forKey:@"sender"];
-        //加入发送时间
-        [dictionary setObject:[Statics getCurrentTime] forKey:@"time"];
-        
-        [self.messages addObject:dictionary];
-        
-        //重新刷新tableView
-        [self.table reloadData];
-        
-        //NSIndexPath *scrollIndexPath= [NSIndexPath indexPathWithIndex:[self.messages count]-2];
-        [[self table] scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        //[[self table] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        
+        [[self xmppStream] sendElement:mes];        
     }
 }
 
@@ -129,7 +106,14 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self.messages count];
+    NSArray *sections = [[self fetchedResultsController] sections];
+	if (section < [sections count])
+	{
+		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:section];
+		return sectionInfo.numberOfObjects;
+	}
+	
+	return 0;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -142,14 +126,15 @@
         cell = [[MessageCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
     }
     
-    NSMutableDictionary *dict = [self.messages objectAtIndex:indexPath.row];
+  	XMPPMessageArchiving_Message_CoreDataObject *obj = nil;
+    obj=[[self fetchedResultsController] objectAtIndexPath:indexPath];
     
-    //发送者
-    NSString *sender = [dict objectForKey:@"sender"];
-    //消息
-    NSString *message = [dict objectForKey:@"msg"];
-    //时间
-    NSString *time = [dict objectForKey:@"time"];
+    NSString *sender = [obj.message.from bare];
+    NSString *message = obj.message.body;
+
+    NSString *time =  [Statics parseTime:obj.timestamp];
+    
+    
     
     CGSize textSize = {260.0 ,10000.0};
     CGSize size = [message sizeWithFont:[UIFont boldSystemFontOfSize:13] constrainedToSize:textSize lineBreakMode:UILineBreakModeWordWrap];
@@ -163,7 +148,7 @@
     UIImage *bgImage = nil;
     
     //发送消息
-    if ([sender isEqualToString:@"you"]) {
+    if (![sender isEqualToString:username]) {
         //背景图
         bgImage = [[UIImage imageNamed:@"BlueBubble2.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:15];
         [cell.messageContentView setFrame:CGRectMake(padding, padding*2, size.width, size.height)];
@@ -186,9 +171,9 @@
 
 //每一行的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    NSMutableDictionary *dict  = [self.messages objectAtIndex:indexPath.row];
-    NSString *msg = [dict objectForKey:@"msg"];
+    XMPPMessageArchiving_Message_CoreDataObject *obj = nil;
+    obj=[[self fetchedResultsController] objectAtIndexPath:indexPath];
+    NSString *msg = obj.message.body;
     
     CGSize textSize = {260.0 , 10000.0};
     CGSize size = [msg sizeWithFont:[UIFont boldSystemFontOfSize:13] constrainedToSize:textSize lineBreakMode:UILineBreakModeWordWrap];
@@ -201,17 +186,51 @@
     
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark NSFetchedResultsController
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (NSFetchedResultsController *)fetchedResultsController
+{
+	if (fetchedResultsController == nil)
+	{
+        XMPPMessageArchivingCoreDataStorage *storage = [XMPPMessageArchivingCoreDataStorage sharedInstance];
+        //[storage setContactEntityName:username];
+        [storage setMessageEntityName:username];
+        NSManagedObjectContext *moc = [storage mainThreadManagedObjectContext];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"XMPPMessageArchiving_Message_CoreDataObject"
+                                                             inManagedObjectContext:moc];
+        
+        //按时间排序
+        NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
+        NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1,nil];
+        NSFetchRequest *request = [[NSFetchRequest alloc]init];
+        [request setEntity:entityDescription];
+		[request setSortDescriptors:sortDescriptors];
+		[request setFetchBatchSize:10];
+        
 
-#pragma mark KKMessageDelegate
--(void)newMessageReceived:(NSDictionary *)messageCotent{
-    [self.messages addObject:messageCotent];
-    
-    NSIndexPath *scrollIndexPath= [NSIndexPath indexPathForRow:[self.messages count] inSection:0];
-    [self.table reloadData];
-    
-    [[self table] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-    //[[self table] scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    [[self table] setContentOffset:CGPointMake(0, 480) animated:YES];
+		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+		                                                               managedObjectContext:moc
+		                                                                 sectionNameKeyPath:nil
+                                                                            cacheName:@"Messages"];
+		[fetchedResultsController setDelegate:self];
+		
+		
+		NSError *error = nil;
+        //NSArray *messages = [moc executeFetchRequest:request error:&error];
+		if (![fetchedResultsController performFetch:&error])
+		{
+			NSLog(@"Error performing fetch: %@", error);
+		}
+        
+	}
+	
+	return fetchedResultsController;
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+	[[self table] reloadData];
 }
 @end

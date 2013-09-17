@@ -24,7 +24,10 @@
     
     XMPPRoster *xmppRoster;
     XMPPRosterCoreDataStorage *xmppRosterStorage;
-    XMPPRosterMemoryStorage *xmppRosterMemStorage;
+
+    XMPPMessageArchivingCoreDataStorage *xmppMessageArchivingStorage;
+    XMPPMessageArchiving *xmppMessageArchiving;
+    
     
 }
 
@@ -36,7 +39,10 @@
 @property(nonatomic, readonly)XMPPStream *xmppStream;
 @property(nonatomic, readonly)XMPPRoster *xmppRoster;
 @property(nonatomic, readonly)XMPPRosterCoreDataStorage *xmppRosterStorage;
-@property(nonatomic, readonly)XMPPRosterMemoryStorage *xmppRosterMemStorage;
+
+@property(nonatomic, readonly)XMPPMessageArchiving *xmppMessageArchiving;
+@property(nonatomic, readonly)XMPPMessageArchivingCoreDataStorage *xmppMessageArchivingStorage;
+
 
 @property(nonatomic, retain)id chatDelegate;
 @property(nonatomic, retain)id messageDelegate;
