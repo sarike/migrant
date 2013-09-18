@@ -53,6 +53,7 @@
     
     [self.tfbody becomeFirstResponder];
     //AppDelegate *del = [self appDelegate];
+    [NSFetchedResultsController deleteCacheWithName:nil];
     
 }
 
@@ -95,7 +96,10 @@
         [mes addChild:body];
         
         //发送消息
-        [[self xmppStream] sendElement:mes];        
+        [[self xmppStream] sendElement:mes];
+        
+        self.tfbody.text=@"";
+        [self.tfbody resignFirstResponder];
     }
 }
 
@@ -131,6 +135,7 @@
     
     NSString *sender = [obj.message.from bare];
     NSString *message = obj.message.body;
+    
 
     NSString *time =  [Statics parseTime:obj.timestamp];
     
@@ -172,6 +177,7 @@
 //每一行的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     XMPPMessageArchiving_Message_CoreDataObject *obj = nil;
+    
     obj=[[self fetchedResultsController] objectAtIndexPath:indexPath];
     NSString *msg = obj.message.body;
     
@@ -192,11 +198,10 @@
 
 - (NSFetchedResultsController *)fetchedResultsController
 {
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (fetchedResultsController == nil)
 	{
         XMPPMessageArchivingCoreDataStorage *storage = [XMPPMessageArchivingCoreDataStorage sharedInstance];
-        //[storage setContactEntityName:username];
-        [storage setMessageEntityName:username];
         NSManagedObjectContext *moc = [storage mainThreadManagedObjectContext];
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"XMPPMessageArchiving_Message_CoreDataObject"
                                                              inManagedObjectContext:moc];
@@ -204,8 +209,14 @@
         //按时间排序
         NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
         NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1,nil];
+        
+       
+        //添加过滤条件
+        NSPredicate *predicate=[NSPredicate predicateWithFormat:@"bareJidStr == %@ AND streamBareJidStr == %@",username,[defaults objectForKey:USERID]];
+        
         NSFetchRequest *request = [[NSFetchRequest alloc]init];
         [request setEntity:entityDescription];
+        [request setPredicate:predicate];
 		[request setSortDescriptors:sortDescriptors];
 		[request setFetchBatchSize:10];
         
@@ -218,7 +229,6 @@
 		
 		
 		NSError *error = nil;
-        //NSArray *messages = [moc executeFetchRequest:request error:&error];
 		if (![fetchedResultsController performFetch:&error])
 		{
 			NSLog(@"Error performing fetch: %@", error);
@@ -232,5 +242,19 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
 	[[self table] reloadData];
+    CGRect frame = self.table.frame;
+    frame.size.height = self.view.bounds.size.height;
+    
+    //[UIView beginAnimations:nil context:NULL];
+    //[UIView setAnimationBeginsFromCurrentState:YES];
+    //[UIView setAnimationDuration:0.250000];
+    self.table.frame = frame;
+    
+    
+    int row = [[[[self fetchedResultsController] sections] objectAtIndex:0] numberOfObjects];
+    
+    NSIndexPath *localIndexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [self.table scrollToRowAtIndexPath:localIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [UIView commitAnimations];
 }
 @end
