@@ -1,0 +1,3 @@
+[submodule "iosapp/Vendor/SSToolkit"]
+	path = iosapp/Vendor/SSToolkit
+	url = https://github.com/soffes/sstoolkit.git

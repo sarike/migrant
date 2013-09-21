@@ -9,6 +9,7 @@
 #import "Friends.h"
 #import "AppDelegate.h"
 #import "Chat.h"
+#import "Message.h"
 
 @interface Friends ()
 
@@ -197,7 +198,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    Chat *chatView = [[Chat alloc] init];
+    Message  *chatView = [[Message alloc] init];
+    //Chat *chatView = [[Chat alloc] init];
     [chatView setChatUser:[user.jid bare]];
     chatView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatView animated:YES];

@@ -50,7 +50,6 @@
     [super viewDidLoad];
     self.table.dataSource = self;
     self.table.delegate = self;
-    
     [self.tfbody becomeFirstResponder];
     //AppDelegate *del = [self appDelegate];
     [NSFetchedResultsController deleteCacheWithName:nil];
@@ -242,19 +241,11 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
 	[[self table] reloadData];
-    CGRect frame = self.table.frame;
-    frame.size.height = self.view.bounds.size.height;
-    
-    //[UIView beginAnimations:nil context:NULL];
-    //[UIView setAnimationBeginsFromCurrentState:YES];
-    //[UIView setAnimationDuration:0.250000];
-    self.table.frame = frame;
-    
-    
-    int row = [[[[self fetchedResultsController] sections] objectAtIndex:0] numberOfObjects];
-    
-    NSIndexPath *localIndexPath = [NSIndexPath indexPathForRow:row inSection:0];
-    [self.table scrollToRowAtIndexPath:localIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    [UIView commitAnimations];
+    int n = [self.table numberOfRowsInSection:0]-1;
+
+    NSIndexPath *localIndexPath = [NSIndexPath indexPathForRow:n inSection:0];
+    [self.table scrollToRowAtIndexPath:localIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+   
 }
+
 @end
