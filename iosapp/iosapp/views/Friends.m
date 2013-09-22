@@ -108,8 +108,8 @@
     
 }
 
--(void)newMessageReceived:(NSDictionary *)messageContent{
-    
+-(void)newMessageReceived:(XMPPMessage *)messageContent{
+    NSLog(@"%@",messageContent);
 }
 
 - (void)viewDidLoad

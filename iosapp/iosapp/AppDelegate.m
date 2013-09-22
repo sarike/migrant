@@ -219,27 +219,7 @@
 
 //收到消息
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message{
-    NSLog(@"message = %@", message);
-    @try{
-        //消息接收到的时间
-        NSString *msg = [[message elementForName:@"body"] stringValue];
-        NSString *from = [[message attributeForName:@"from"] stringValue];
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setObject:msg forKey:@"msg"];
-        [dict setObject:from forKey:@"sender"];
-        //消息接收到的时间
-        [dict setObject:[Statics getCurrentTime] forKey:@"time"];
-        
-        //消息委托(这个后面讲)
-        [messageDelegate newMessageReceived:dict];
-    }
-    @catch ( NSException *e ){
-        NSLog(@"messageerror:%@",e);
-    }
-
-    
-    
+    [messageDelegate newMessageReceived:message];
 }
 
 //收到好友状态
