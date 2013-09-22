@@ -41,7 +41,7 @@
 	[super viewDidLoad];
 	self.title = username;
     [NSFetchedResultsController deleteCacheWithName:nil];
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
@@ -191,6 +191,9 @@
 //滑动到最底部
 -(void)scrollToBottom{
     int n = [self.tableView numberOfRowsInSection:0]-1;
+    if (n < 0) {
+        return;
+    }
     NSIndexPath *row = [NSIndexPath indexPathForRow:n inSection:0];
     [self.tableView scrollToRowAtIndexPath:row atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 

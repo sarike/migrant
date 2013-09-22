@@ -15,7 +15,7 @@
 {
     NSArray * settings;
     NSMutableDictionary * settingsInSection;
-    BOOL *isLogin;
+    BOOL isLogin;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView *tableSettings;

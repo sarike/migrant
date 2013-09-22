@@ -40,7 +40,8 @@
     }
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.url]];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        if([JSON objectForKey:@"status"]){
+        BOOL status = [[JSON objectForKey:@"status"] boolValue];
+        if(status){
             NSArray *array = [JSON valueForKey:@"data"] ;
             for (NSDictionary *item in array) {
                 [self.datalist addObject:item];
@@ -55,6 +56,7 @@
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
         
         [SVProgressHUD dismissWithError:[error localizedDescription]];
+        
     }];
     [operation start];
 }
@@ -134,6 +136,8 @@
             return cell;
         }
     }
+    
+    return nil;
 }
 
 
@@ -142,6 +146,7 @@
 #pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     NSLog(@"selected cell at section #%d and row #%d", indexPath.section, indexPath.row);
     if(indexPath.row<self.datalist.count){
     

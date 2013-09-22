@@ -215,7 +215,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    Message  *chatView = [[Message alloc] init];
+    Message *chatView = [[Message alloc] init];
     [chatView setChatUser:[user.jid bare]];
     chatView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatView animated:YES];

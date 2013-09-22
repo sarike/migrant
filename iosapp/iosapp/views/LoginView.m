@@ -73,7 +73,7 @@
     [req setHTTPMethod:@"POST"];
 
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:req success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        BOOL *status = [[JSON objectForKey:@"status"] boolValue];      
+        BOOL status = [[JSON objectForKey:@"status"] boolValue];      
         if(status){
             NSDictionary *data = [JSON objectForKey:@"data"];         
             [[LocalConfig Instance]setconfig:@"uid" :[data valueForKey:@"_id"]];
