@@ -2,7 +2,7 @@
 *.css~
 *.html~
 *.js~
-*..DS_Store
+.DS_Store
 
 # C extensions
 *.so
@@ -42,3 +42,11 @@ nosetests.xml
 
 *.class
 android_app/bin/*
+
+iosapp/iosapp.xcodeproj/xcuserdata/comger.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
+iosapp/iosapp.xcodeproj/project.xcworkspace/xcuserdata/comger.xcuserdatad/UserInterfaceState.xcuserstate
+/iosapp/iosapp.xcodeproj/project.xcworkspace/xcuserdata/comger.xcuserdatad/UserInterfaceState.xcuserstate
+
+build/
+xcuserstate
+.xcuserstate

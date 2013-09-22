@@ -11,55 +11,69 @@
 #import "ChatDelegate.h"
 #import "MessageDelegate.h"
 
+
 @implementation AppDelegate
 
-@dynamic xmppStream;
+@synthesize window = _window;
+@synthesize xmppStream;
 @synthesize chatDelegate;
 @synthesize messageDelegate;
+@synthesize xmppRoster;
+@synthesize xmppRosterStorage;
+@synthesize xmppMessageArchiving;
+@synthesize xmppMessageArchivingStorage;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
+    
     NewsBase *newsbase = [[NewsBase alloc] initWithNibName:@"NewsBase" bundle:nil];
     UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsbase];
     
-    XMPPBase *xmppbase = [[XMPPBase alloc] initWithNibName:@"XMPPBase" bundle:nil];
+    
+    Friends *xmppbase = [[Friends alloc] initWithNibName:@"Friends" bundle:nil];
     UINavigationController * xmppNav = [[UINavigationController alloc] initWithRootViewController:xmppbase];
     
     
+    SettingView *settingview = [[SettingView alloc] initWithNibName:@"SettingView" bundle:nil];
+    UINavigationController * settingNav = [[UINavigationController alloc] initWithRootViewController:settingview];
+    
     self.tabBarController = [[UITabBarController alloc] init];
-    //self.tabBarController.delegate = self;
+    self.tabBarController.delegate = self;
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:
                                              xmppNav,
                                              newsNav,
+                                             settingNav,
                                              nil];
+     self.window.rootViewController = self.tabBarController;
     
-    self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
 	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-
+    [self disconnect];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self disconnect];
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [self connect];
+    //[self connect];
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -67,21 +81,55 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Core Data
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSManagedObjectContext *)managedObjectContext_roster
+{
+	return [xmppRosterStorage mainThreadManagedObjectContext];
+}
+
+
+
 -(void)setupStream{
     //初始化XMPPStream
     xmppStream = [[XMPPStream alloc] init];
     [xmppStream addDelegate:self delegateQueue:dispatch_get_current_queue()];
+    [xmppStream setEnableBackgroundingOnSocket:YES];
+    
+    //好友处理
+	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
+    xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
+
+    [xmppRoster activate:xmppStream];
+    [xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
+    xmppRoster.autoFetchRoster = YES;
+	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+    
+    //消息处理
+    xmppMessageArchivingStorage = [XMPPMessageArchivingCoreDataStorage sharedInstance];
+    xmppMessageArchiving = [[XMPPMessageArchiving alloc] initWithMessageArchivingStorage:xmppMessageArchivingStorage];
+    [xmppMessageArchiving setClientSideMessageArchivingOnly:YES];
+    
+    [xmppMessageArchiving activate:xmppStream];
+    [xmppMessageArchiving addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
     
 }
 
 -(void)goOnline{
+    
     //发送在线状态
     XMPPPresence *presence = [XMPPPresence presence];
     [[self xmppStream] sendElement:presence];
     
+    
 }
 
 -(void)goOffline{
+    
     //发送下线状态
     XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
     [[self xmppStream] sendElement:presence];
@@ -89,9 +137,13 @@
 }
 
 -(BOOL)connect{
-    [self setupStream];
     
-    NSString *userId = @"test1";
+    [self setupStream];
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"kpages@sos360.com" forKey:USERID];
+    [defaults setObject:@"111qqq" forKey:PASS];
+    
+    NSString *userId = @"kpages@sos360.com";
     NSString *pass = @"111qqq";
     NSString *server = @"sos360.com";
     
@@ -107,16 +159,42 @@
     [xmppStream setMyJID:[XMPPJID jidWithString:userId]];
     //设置服务器
     [xmppStream setHostName:server];
+    
     //密码
     password = pass;
     
-    //连接服务器
-    NSError *error = nil;
-    if (![xmppStream connect:&error]) {
-        NSLog(@"cant connect %@", server);
-        return NO;
+	NSError *error = nil;
+    /**
+	if (![xmppStream connect:&error])
+	{
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
+		                                                    message:@"See console for error details."
+		                                                   delegate:nil
+		                                          cancelButtonTitle:@"Ok"
+		                                          otherButtonTitles:nil];
+		[alertView show];
+        
+		NSLog(@"Error connecting: %@", error);
+        
+		return NO;
+	}
+     **/
+    
+    if(![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]){
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
+		                                                    message:@"See console for error details."
+		                                                   delegate:nil
+		                                          cancelButtonTitle:@"Ok"
+		                                          otherButtonTitles:nil];
+		[alertView show];
+        
+		NSLog(@"Error connecting: %@", error);
+        
+		return NO;
     }
+    
     return YES;
+    
 }
 
 -(void)disconnect{
@@ -127,7 +205,7 @@
 
 //连接服务器
 - (void)xmppStreamDidConnect:(XMPPStream *)sender{
-    isXmppConnected = YES;
+    isOpen = YES;
     NSError *error = nil;
     //验证密码
     [[self xmppStream] authenticateWithPassword:password error:&error];
@@ -141,28 +219,32 @@
 
 //收到消息
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message{
+    NSLog(@"message = %@", message);
+    @try{
+        //消息接收到的时间
+        NSString *msg = [[message elementForName:@"body"] stringValue];
+        NSString *from = [[message attributeForName:@"from"] stringValue];
+        
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        [dict setObject:msg forKey:@"msg"];
+        [dict setObject:from forKey:@"sender"];
+        //消息接收到的时间
+        [dict setObject:[Statics getCurrentTime] forKey:@"time"];
+        
+        //消息委托(这个后面讲)
+        [messageDelegate newMessageReceived:dict];
+    }
+    @catch ( NSException *e ){
+        NSLog(@"messageerror:%@",e);
+    }
+
     
-    //    NSLog(@"message = %@", message);
-    
-    NSString *msg = [[message elementForName:@"body"] stringValue];
-    NSString *from = [[message attributeForName:@"from"] stringValue];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:msg forKey:@"msg"];
-    [dict setObject:from forKey:@"sender"];
-    //消息接收到的时间
-    [dict setObject:[Statics getCurrentTime] forKey:@"time"];
-    
-    //消息委托(这个后面讲)
-    [messageDelegate newMessageReceived:dict];
     
 }
 
 //收到好友状态
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
-    
-    //    NSLog(@"presence = %@", presence);
-    
+   
     //取得好友状态
     NSString *presenceType = [presence type]; //online/offline
     //当前用户
@@ -174,18 +256,47 @@
         
         //在线状态
         if ([presenceType isEqualToString:@"available"]) {
-            
             //用户列表委托(后面讲)
-            [chatDelegate newBuddyOnline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, @"nqc1338a"]];
+            [chatDelegate newBuddyOnline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, [xmppStream hostName]]];
             
         }else if ([presenceType isEqualToString:@"unavailable"]) {
             //用户列表委托(后面讲)
-            [chatDelegate buddyWentOffline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, @"nqc1338a"]];
+            [chatDelegate buddyWentOffline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, [xmppStream hostName]]];
         }
         
     }
     
 }
 
+/**
+    获取用户名单
+ **/
+- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq {
+    NSLog(@"iq:%@",iq);
+    if ([@"result" isEqualToString:iq.type]) {
+        NSXMLElement *query = iq.childElement;
+        if ([@"query" isEqualToString:query.name]) {
+            NSArray *items = [query children];
+            for (NSXMLElement *item in items) {
+                NSString *jid = [item attributeStringValueForName:@"jid"];
+                XMPPJID *xmppJID = [XMPPJID jidWithString:jid];
+                NSLog(@"%@",xmppJID);
+            }
+        }
+    }
+    return YES;
+}
 
+- (void)xmppRosterDidEndPopulating:(XMPPRoster *)sender  {
+    NSLog(@"xmppRosterDidEndPopulating:%@",sender);
+}
+
+-(void)xmppRosterDidPopulate:(XMPPRosterMemoryStorage *)sender {
+    NSLog(@"users: %@", [sender unsortedUsers]);
+    // My subscribed users do print out
+}
+
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence{
+    NSLog(@"didReceiveBuddyRequest:%@",presence);
+}
 @end

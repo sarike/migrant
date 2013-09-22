@@ -20,7 +20,15 @@
     [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     
     return [dateFormatter stringFromDate:nowUTC];
+}
+
++(NSString *)parseTime:(NSDate *)time{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     
+    return [dateFormatter stringFromDate:time];
 }
 
 @end

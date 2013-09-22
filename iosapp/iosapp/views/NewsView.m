@@ -14,6 +14,7 @@
 @end
 
 @implementation NewsView
+
 @synthesize datalist;
 @synthesize catalog;
 @synthesize since;
@@ -24,7 +25,7 @@
     self.catalog = ncatalog;
     self.datalist = [[NSMutableArray alloc]init];
     if(ncatalog==1){
-        self.url = @"http://112.124.38.112:8888/m/report/city/51d28b24931e334378000ad3";
+        self.url = @"http://112.124.38.112:8888/m/report/home";
     }else if(ncatalog==2){
         self.url = @"http://112.124.38.112:8888/m/report/city/51d28b25931e334378000b11";
     }
@@ -60,7 +61,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    self.url = @"http://112.124.38.112:8888/m/report/city/51d28b24931e334378000ad3";
+    self.url = @"http://112.124.38.112:8888/m/report/home";
     [self loadData];
 }
 
@@ -126,7 +127,7 @@
             static NSString *CellIdentifier = @"Cell";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
             if (cell == nil) {
-                cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
             }
             
             cell.textLabel.text = @"加载更多";

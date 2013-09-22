@@ -15,5 +15,6 @@ static NSString *SERVER = @"server";
 @interface Statics : NSObject
 
 +(NSString *)getCurrentTime;
++(NSString *)parseTime:(NSDate *)time;
 
 @end
