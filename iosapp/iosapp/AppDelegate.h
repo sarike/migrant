@@ -64,7 +64,7 @@
 //下线
 -(void)goOffline;
 
-- (NSInteger)getUnReadNum;
+- (NSInteger)getUnReadNum:(NSString *)user;
 
 - (void)readUserMsg:(NSString *)oneUser;
 

@@ -245,11 +245,11 @@
         
         //在线状态
         if ([presenceType isEqualToString:@"available"]) {
-            //用户列表委托(后面讲)
+            //用户列表委托
             [chatDelegate newBuddyOnline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, [xmppStream hostName]]];
             
         }else if ([presenceType isEqualToString:@"unavailable"]) {
-            //用户列表委托(后面讲)
+            //用户列表委托
             [chatDelegate buddyWentOffline:[NSString stringWithFormat:@"%@@%@", presenceFromUser, [xmppStream hostName]]];
         }
         
@@ -259,7 +259,7 @@
 
 /**
     获取用户名单
- **/
+
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq {
     NSLog(@"iq:%@",iq);
     if ([@"result" isEqualToString:iq.type]) {
@@ -275,6 +275,7 @@
     }
     return YES;
 }
+ **/
 
 - (void)xmppRosterDidEndPopulating:(XMPPRoster *)sender  {
     NSLog(@"xmppRosterDidEndPopulating:%@",sender);
@@ -289,16 +290,19 @@
     NSLog(@"didReceiveBuddyRequest:%@",presence);
 }
 
-
-- (NSInteger)getUnReadNum
-{
-    NSInteger total = 0;
-    for(NSNumber *i in [self.unReadMsg allValues])
-    {
-        total = total + [i intValue];
+//获取用户的未读消息数，如果user 为空，则返回未读总数
+- (NSInteger)getUnReadNum:(NSString *)user{
+    if(user==nil){
+        NSInteger total = 0;
+        for(NSNumber *i in [self.unReadMsg allValues])
+        {
+            total = total + [i intValue];
+        }
+        
+        return total;
+    }else{
+        return [[self.unReadMsg objectForKey:user] intValue];
     }
-
-    return total;
 }
 
 
@@ -306,7 +310,7 @@
 {
     [self.unReadMsg removeObjectForKey:oneUser];
     
-    NSString *unReadNum = [NSString stringWithFormat:@"%d", [self getUnReadNum]];
+    NSString *unReadNum = [NSString stringWithFormat:@"%d", [self getUnReadNum:nil]];
     if([unReadNum intValue] == 0) unReadNum = nil;
     [[[self.tabBarController.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue:unReadNum];
 }

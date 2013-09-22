@@ -110,11 +110,12 @@
 
 
 -(void)newMessageReceived:(XMPPMessage *)messageContent{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSInteger total = [app getUnReadNum];
+    AppDelegate *app = [self appDelegate];
+    NSInteger total = [app getUnReadNum:nil];
     NSString *unReadNum = [NSString stringWithFormat:@"%d", total];
     if([unReadNum intValue] == 0) unReadNum = nil;
     [[[app.tabBarController.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue:unReadNum];
+    [self.table reloadData];
 
 }
 
@@ -153,7 +154,7 @@
             NSLog(@"show buddy list");            
         }
     }
-
+    [self.table reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)sender titleForHeaderInSection:(NSInteger)sectionIndex
@@ -196,13 +197,6 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     static NSString *identifier = @"cell";
-    /**
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    }
-    **/
-    
     SSBadgeTableViewCell *cell = (SSBadgeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
     
 	if (cell == nil) {
@@ -210,14 +204,17 @@
 	}
     
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-	
-    cell.badgeView.textLabel.text= @"2";
-    //cell.badgeView.badgeColor = [SSBadgeView defaultBadgeColor];
+    
+    NSInteger count = [[self appDelegate] getUnReadNum:[user jidStr]];
+	if(count>0){
+        cell.badgeView.textLabel.text= [NSString stringWithFormat:@"%d",count];
+        cell.badgeView.badgeColor = [UIColor colorWithRed:0.969f green:0.082f blue:0.078f alpha:1.0f];
+    }else{
+        cell.badgeView.textLabel.text=nil;
+    }
+    
     //文本
     cell.textLabel.text = user.displayName;
-    //标记
-   // cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
     return cell;
     
 }
