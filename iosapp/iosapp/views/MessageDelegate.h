@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "XMPP.h"
 
 @protocol MessageDelegate <NSObject>
-    -(void)newMessageReceived:(NSDictionary *)messageContent;
+    -(void)newMessageReceived:(XMPPMessage *)messageContent;
 @end

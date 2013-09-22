@@ -108,12 +108,14 @@
     
 }
 
--(void)newMessageReceived:(NSDictionary *)messageContent{
+
+-(void)newMessageReceived:(XMPPMessage *)messageContent{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSInteger total = [app getUnReadNum];
     NSString *unReadNum = [NSString stringWithFormat:@"%d", total];
     if([unReadNum intValue] == 0) unReadNum = nil;
     [[[app.tabBarController.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue:unReadNum];
+
 }
 
 - (void)viewDidLoad
