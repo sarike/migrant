@@ -177,11 +177,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iosapp/views/Message.m"
-         timestampString = "401501853.914675"
+         timestampString = "401508338.608729"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "117"
-         endingLineNumber = "117"
+         startingLineNumber = "71"
+         endingLineNumber = "71"
          landmarkName = "-send:"
          landmarkType = "5">
       </FileBreakpoint>

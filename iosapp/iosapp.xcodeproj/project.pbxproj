@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9214771417D09C2000C0F067 /* BlueBubble2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771017D09C2000C0F067 /* BlueBubble2.png */; };
-		9214771517D09C2000C0F067 /* GreenBubble2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771117D09C2000C0F067 /* GreenBubble2.png */; };
 		9214771617D09C2000C0F067 /* aqua.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771217D09C2000C0F067 /* aqua.png */; };
 		9214771717D09C2000C0F067 /* orange.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771317D09C2000C0F067 /* orange.png */; };
 		9218DB0F17D085B60000EA56 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218DAFB17D085B60000EA56 /* AFHTTPClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -245,8 +243,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9214771017D09C2000C0F067 /* BlueBubble2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueBubble2.png; sourceTree = "<group>"; };
-		9214771117D09C2000C0F067 /* GreenBubble2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GreenBubble2.png; sourceTree = "<group>"; };
 		9214771217D09C2000C0F067 /* aqua.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aqua.png; sourceTree = "<group>"; };
 		9214771317D09C2000C0F067 /* orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orange.png; sourceTree = "<group>"; };
 		9218DAFA17D085B60000EA56 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
@@ -1556,8 +1552,6 @@
 			children = (
 				92456C9E17D19CE8005CB5D4 /* more@2x.png */,
 				92456C9617D19AB7005CB5D4 /* setting@2x.png */,
-				9214771017D09C2000C0F067 /* BlueBubble2.png */,
-				9214771117D09C2000C0F067 /* GreenBubble2.png */,
 				9214771217D09C2000C0F067 /* aqua.png */,
 				9214771317D09C2000C0F067 /* orange.png */,
 				924DEB3A17C76060008EA392 /* tweet@2x.png */,
@@ -1809,8 +1803,6 @@
 				924DEB3917C76023008EA392 /* XMPPBase.xib in Resources */,
 				924DEB3B17C76060008EA392 /* tweet@2x.png in Resources */,
 				9218DB1D17D089CA0000EA56 /* Friends.xib in Resources */,
-				9214771417D09C2000C0F067 /* BlueBubble2.png in Resources */,
-				9214771517D09C2000C0F067 /* GreenBubble2.png in Resources */,
 				9214771617D09C2000C0F067 /* aqua.png in Resources */,
 				9214771717D09C2000C0F067 /* orange.png in Resources */,
 				92456C9717D19AB7005CB5D4 /* setting@2x.png in Resources */,
