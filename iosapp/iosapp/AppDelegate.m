@@ -22,6 +22,7 @@
 @synthesize xmppRosterStorage;
 @synthesize xmppMessageArchiving;
 @synthesize xmppMessageArchivingStorage;
+@synthesize unReadMsg;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -29,6 +30,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
+    unReadMsg = [[NSMutableDictionary alloc] initWithCapacity:0];
     
     NewsBase *newsbase = [[NewsBase alloc] initWithNibName:@"NewsBase" bundle:nil];
     UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsbase];
@@ -231,15 +233,15 @@
         //消息接收到的时间
         [dict setObject:[Statics getCurrentTime] forKey:@"time"];
         
+        int unReadNum = [[unReadMsg objectForKey:from] intValue];
+        [unReadMsg setObject:[NSNumber numberWithInt:unReadNum + 1] forKey:from];
+        
         //消息委托(这个后面讲)
         [messageDelegate newMessageReceived:dict];
     }
     @catch ( NSException *e ){
         NSLog(@"messageerror:%@",e);
     }
-
-    
-    
 }
 
 //收到好友状态
@@ -299,4 +301,27 @@
 - (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence{
     NSLog(@"didReceiveBuddyRequest:%@",presence);
 }
+
+
+- (NSInteger)getUnReadNum
+{
+    NSInteger total = 0;
+    for(NSNumber *i in [self.unReadMsg allValues])
+    {
+        total = total + [i intValue];
+    }
+
+    return total;
+}
+
+
+- (void)readUserMsg:(NSString *)oneUser
+{
+    [self.unReadMsg removeObjectForKey:oneUser];
+    
+    NSString *unReadNum = [NSString stringWithFormat:@"%d", [self getUnReadNum]];
+    if([unReadNum intValue] == 0) unReadNum = nil;
+    [[[self.tabBarController.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue:unReadNum];
+}
+
 @end

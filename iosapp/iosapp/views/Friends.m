@@ -109,12 +109,19 @@
 }
 
 -(void)newMessageReceived:(NSDictionary *)messageContent{
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSInteger total = [app getUnReadNum];
+    NSString *unReadNum = [NSString stringWithFormat:@"%d", total];
+    if([unReadNum intValue] == 0) unReadNum = nil;
+    [[[app.tabBarController.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue:unReadNum];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //[self newMessageReceived:nil];
+    
     UITableView *_tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
     _tableView.dataSource = self;
     _tableView.delegate = self;
@@ -215,6 +222,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app readUserMsg:[NSString stringWithFormat:@"%@", user.jid]];
     Message *chatView = [[Message alloc] init];
     [chatView setChatUser:[user.jid bare]];
     chatView.hidesBottomBarWhenPushed = YES;

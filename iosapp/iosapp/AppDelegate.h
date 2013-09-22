@@ -16,7 +16,7 @@
 
 
 
-@interface AppDelegate :UIResponder <UIApplicationDelegate,XMPPRosterMemoryStorageDelegate>{
+@interface AppDelegate :UIResponder <UIApplicationDelegate,XMPPRosterMemoryStorageDelegate, UITabBarControllerDelegate>{
     
     XMPPStream *xmppStream;
     NSString *password;  //密码
@@ -47,6 +47,8 @@
 @property(nonatomic, retain)id chatDelegate;
 @property(nonatomic, retain)id messageDelegate;
 
+@property (retain, nonatomic) NSMutableDictionary *unReadMsg;
+
 - (NSManagedObjectContext *)managedObjectContext_roster;
 
 
@@ -61,5 +63,9 @@
 -(void)goOnline;
 //下线
 -(void)goOffline;
+
+- (NSInteger)getUnReadNum;
+
+- (void)readUserMsg:(NSString *)oneUser;
 
 @end
