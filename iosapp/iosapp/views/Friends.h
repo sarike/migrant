@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "MessageDelegate.h"
 
 
-@interface Friends : UIViewController<UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate>
+@interface Friends : UIViewController<UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,MessageDelegate>
 {
 	NSFetchedResultsController *fetchedResultsController;
 }

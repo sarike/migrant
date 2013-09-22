@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9214770C17D0965800C0F067 /* Chat.m in Sources */ = {isa = PBXBuildFile; fileRef = 9214770A17D0965800C0F067 /* Chat.m */; };
-		9214770D17D0965800C0F067 /* Chat.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9214770B17D0965800C0F067 /* Chat.xib */; };
 		9214771417D09C2000C0F067 /* BlueBubble2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771017D09C2000C0F067 /* BlueBubble2.png */; };
 		9214771517D09C2000C0F067 /* GreenBubble2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771117D09C2000C0F067 /* GreenBubble2.png */; };
 		9214771617D09C2000C0F067 /* aqua.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771217D09C2000C0F067 /* aqua.png */; };
 		9214771717D09C2000C0F067 /* orange.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214771317D09C2000C0F067 /* orange.png */; };
-		9214771817D09EF600C0F067 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9214770F17D09BF100C0F067 /* MessageCell.m */; };
 		9218DB0F17D085B60000EA56 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218DAFB17D085B60000EA56 /* AFHTTPClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9218DB1017D085B60000EA56 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218DAFD17D085B60000EA56 /* AFHTTPRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9218DB1117D085B60000EA56 /* AFImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218DAFF17D085B60000EA56 /* AFImageCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -248,11 +245,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9214770917D0965800C0F067 /* Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chat.h; sourceTree = "<group>"; };
-		9214770A17D0965800C0F067 /* Chat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chat.m; sourceTree = "<group>"; };
-		9214770B17D0965800C0F067 /* Chat.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Chat.xib; sourceTree = "<group>"; };
-		9214770E17D09BF100C0F067 /* MessageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
-		9214770F17D09BF100C0F067 /* MessageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		9214771017D09C2000C0F067 /* BlueBubble2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueBubble2.png; sourceTree = "<group>"; };
 		9214771117D09C2000C0F067 /* GreenBubble2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GreenBubble2.png; sourceTree = "<group>"; };
 		9214771217D09C2000C0F067 /* aqua.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aqua.png; sourceTree = "<group>"; };
@@ -1553,9 +1545,6 @@
 				9218DB1917D089CA0000EA56 /* Friends.h */,
 				9218DB1A17D089CA0000EA56 /* Friends.m */,
 				9218DB1B17D089CA0000EA56 /* Friends.xib */,
-				9214770917D0965800C0F067 /* Chat.h */,
-				9214770A17D0965800C0F067 /* Chat.m */,
-				9214770B17D0965800C0F067 /* Chat.xib */,
 				92F2560A17EDE73E00F992BC /* Message.h */,
 				92F2560B17EDE73E00F992BC /* Message.m */,
 			);
@@ -1582,8 +1571,6 @@
 		924DEA8617C73F78008EA392 /* ui */ = {
 			isa = PBXGroup;
 			children = (
-				9214770E17D09BF100C0F067 /* MessageCell.h */,
-				9214770F17D09BF100C0F067 /* MessageCell.m */,
 				92456C9A17D19B93005CB5D4 /* SettingModel.h */,
 				92456C9B17D19B93005CB5D4 /* SettingModel.m */,
 				924DEA8C17C73F9F008EA392 /* NewsCell.h */,
@@ -1822,7 +1809,6 @@
 				924DEB3917C76023008EA392 /* XMPPBase.xib in Resources */,
 				924DEB3B17C76060008EA392 /* tweet@2x.png in Resources */,
 				9218DB1D17D089CA0000EA56 /* Friends.xib in Resources */,
-				9214770D17D0965800C0F067 /* Chat.xib in Resources */,
 				9214771417D09C2000C0F067 /* BlueBubble2.png in Resources */,
 				9214771517D09C2000C0F067 /* GreenBubble2.png in Resources */,
 				9214771617D09C2000C0F067 /* aqua.png in Resources */,
@@ -1858,7 +1844,6 @@
 				92456C9D17D19CA7005CB5D4 /* LocalConfig.m in Sources */,
 				92456C9C17D19BA3005CB5D4 /* SettingModel.m in Sources */,
 				92456C9917D19B36005CB5D4 /* SettingView.m in Sources */,
-				9214771817D09EF600C0F067 /* MessageCell.m in Sources */,
 				9256C1F017CF1A1B00DE9AD7 /* Statics.m in Sources */,
 				924DEB3117C7526D008EA392 /* NewsCell.m in Sources */,
 				924DEB3017C75011008EA392 /* JSONKit.m in Sources */,
@@ -1881,7 +1866,6 @@
 				9218DB1717D085B60000EA56 /* AFXMLRequestOperation.m in Sources */,
 				9218DB1817D085B60000EA56 /* UIImageView+AFNetworking.m in Sources */,
 				9218DB1C17D089CA0000EA56 /* Friends.m in Sources */,
-				9214770C17D0965800C0F067 /* Chat.m in Sources */,
 				923483B117DC0EB500ADC341 /* XMPPAnonymousAuthentication.m in Sources */,
 				923483B217DC0EB500ADC341 /* XMPPDeprecatedDigestAuthentication.m in Sources */,
 				923483B317DC0EB500ADC341 /* XMPPDeprecatedPlainAuthentication.m in Sources */,

@@ -76,7 +76,7 @@ CGFloat kInputHeight = 40.0f;
 	_sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
 	_sendButton.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f);
 	[_sendButton setBackgroundImage:[[UIImage imageNamed:@"SSMessagesViewControllerSendButtonBackground.png"] stretchableImageWithLeftCapWidth:12 topCapHeight:0] forState:UIControlStateNormal];
-	[_sendButton setTitle:@"Send" forState:UIControlStateNormal];
+	[_sendButton setTitle:@"确定" forState:UIControlStateNormal];
 	[_sendButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:0.4f] forState:UIControlStateNormal];
 	[_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1.0f] forState:UIControlStateNormal];
     [_sendButton addTarget:self action:@selector(sendText:) forControlEvents:UIControlEventTouchUpInside];

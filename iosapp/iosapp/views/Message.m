@@ -10,12 +10,15 @@
 #import "AppDelegate.h"
 #import "SSMessageTableViewCell.h"
 #import "Statics.h"
+#import <SSToolkit/SSTextField.h>
 
 @interface Message ()
 
 @end
 
 @implementation Message
+
+int lastIndex = 0;
 
 //取得当前程序的委托
 -(AppDelegate *)appDelegate{
@@ -37,10 +40,78 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.title = @"Messages";
+	self.title = username;
     [NSFetchedResultsController deleteCacheWithName:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)viewDidUnload{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [self scrollToBottom];
+}
+
+
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    
+    /*
+     Reduce the size of the text view so that it's not obscured by the keyboard.
+     Animate the resize so that it's in sync with the appearance of the keyboard.
+     */
+    NSDictionary *userInfo = [notification userInfo];
+    
+    // Get the origin of the keyboard when it's displayed.
+    NSValue* aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    // Get the top of the keyboard as the y coordinate of its origin in self's view's coordinate system. The bottom of the text view's frame should align with the top of the keyboard's final position.
+    CGRect keyboardRect = [aValue CGRectValue];
+    keyboardRect = [self.view convertRect:keyboardRect fromView:nil];
+    
+    CGFloat keyboardTop = keyboardRect.origin.y;
+    CGRect newTextViewFrame = self.view.bounds;
+    newTextViewFrame.size.height = keyboardTop - self.view.bounds.origin.y;
+    
+    // Get the duration of the animation.
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    
+    // Animate the resize of the text view's frame in sync with the keyboard's appearance.
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //textView.frame = newTextViewFrame;
+    self.tableView.frame = newTextViewFrame;
+    
+    NSIndexPath *row = [NSIndexPath indexPathForRow:lastIndex inSection:0];
+    [self.tableView scrollToRowAtIndexPath:row atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
+    [UIView commitAnimations];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    
+    NSDictionary* userInfo = [notification userInfo];
+    
+    /*
+     Restore the size of the text view (fill self's view).
+     Animate the resize so that it's in sync with the disappearance of the keyboard.
+     */
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //textView.frame = self.view.bounds;
+    self.tableView.frame = self.view.bounds;
+    [UIView commitAnimations];
+}
 - (void)send:(id)sender {
     //本地输入框中的信息    
     NSString *message = [self getInputText];
@@ -161,6 +232,16 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView reloadData];
+    [self scrollToBottom];
+}
+
+//滑动到最底部
+-(void)scrollToBottom{
+    int n = [self.tableView numberOfRowsInSection:0]-1;
+    lastIndex = n;
+    NSIndexPath *row = [NSIndexPath indexPathForRow:n inSection:0];
+    [self.tableView scrollToRowAtIndexPath:row atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
 }
 
 @end

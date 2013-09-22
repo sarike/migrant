@@ -8,8 +8,10 @@
 
 #import "Friends.h"
 #import "AppDelegate.h"
-#import "Chat.h"
 #import "Message.h"
+#import <SSToolkit/SSBadgeTableViewCell.h>
+#import <SSToolkit/SSBadgeView.h>
+#import <SSToolkit/SSLabel.h>
 
 @interface Friends ()
 
@@ -106,6 +108,9 @@
     
 }
 
+-(void)newMessageReceived:(NSDictionary *)messageContent{
+    
+}
 
 - (void)viewDidLoad
 {
@@ -117,6 +122,7 @@
     
     AppDelegate *del = [self appDelegate];
     del.chatDelegate = self;
+    del.messageDelegate = self;
     
     //添加好友的按钮
     UIBarButtonItem *btnSearch = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStyleBordered target:self action:nil];
@@ -180,17 +186,28 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString *identifier = @"userCell";
+    static NSString *identifier = @"cell";
+    /**
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    **/
+    
+    SSBadgeTableViewCell *cell = (SSBadgeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+    
+	if (cell == nil) {
+		cell = [[SSBadgeTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+	}
+    
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
 	
+    cell.badgeView.textLabel.text= @"2";
+    //cell.badgeView.badgeColor = [SSBadgeView defaultBadgeColor];
     //文本
     cell.textLabel.text = user.displayName;
     //标记
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+   // cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
     
@@ -199,7 +216,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     Message  *chatView = [[Message alloc] init];
-    //Chat *chatView = [[Chat alloc] init];
     [chatView setChatUser:[user.jid bare]];
     chatView.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatView animated:YES];
