@@ -25,8 +25,9 @@ def add(username, password, name, email=None, group=None, callback=None):
     ''' 添加一个用户到openfire '''
     not_empty(username, password, name)
     val = dict(type='add', username=username,
-               password=password, name=name, email=email, group=group)
+               password=password, name=name, email=email, groups=group)
     url = _make_url(val)
+    print url
     return client.fetch(url, callback=callback)
 
 
@@ -34,7 +35,7 @@ def update(username, password=None, name=None, email=None, group=None, callback=
     ''' 修改用户息 '''
     not_empty(username)
     val = dict(type='update', username=username,
-               password=password, name=name, email=email, group=group)
+               password=password, name=name, email=email, groups=group)
     url = _make_url(val)
     print url
     return client.fetch(url, callback=callback)

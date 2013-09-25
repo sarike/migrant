@@ -70,7 +70,7 @@ def m_page(table,since=None,size=10,**kwargs):
             cond.pop('addon')
         
         print cond
-        lst = list(Tb(table).find(cond,{'status':0,'password':0}).limit(size).sort('_id',-1))
+        lst = list(Tb(table).find(cond,{'status':0}).limit(size).sort('_id',-1))
         for item in lst:
             if 'addon' not in item:item['addon'] = item['_id'].generation_time.strftime('%Y:%m:%d %H:%M:%S')
         
@@ -87,7 +87,7 @@ def m_info(table,_id):
     try:
         cond = dict(_id=ObjectId(_id))
         cond.update(StatusCond)
-        return True,mongo_conv(Tb(table).find_one(cond,{'status':0,'password':0}))
+        return True,mongo_conv(Tb(table).find_one(cond,{'status':0}))
     except InvalidId as e:
         return False,"查询参数格式错误"
     except Exception as e:
