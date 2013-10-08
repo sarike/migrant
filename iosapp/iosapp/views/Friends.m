@@ -58,9 +58,10 @@
 		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
 		
 		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
-		
+        
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		[fetchRequest setEntity:entity];
+        //[fetchRequest setPredicate:predicate];
 		[fetchRequest setSortDescriptors:sortDescriptors];
 		[fetchRequest setFetchBatchSize:10];
 		
@@ -203,6 +204,7 @@
 	}
     
     XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    NSLog(@"%@",user);
     
     NSInteger count = [[self appDelegate] getUnReadNum:[user jidStr]];
 	if(count>0){

@@ -24,7 +24,7 @@
 @synthesize xmppMessageArchivingStorage;
 @synthesize unReadMsg;
 
-
+//在应用程序启动后，要执行的委托调用。
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -56,22 +56,27 @@
 	return YES;
 }
 
+//在应用程序将要由活动状态切换到非活动状态时候，要执行的委托调用，如 按下 home 按钮，返回主屏幕，或全屏之间切换应用程序等。
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [self disconnect];
+    //[self disconnect];
 }
 
+//在应用程序已进入后台程序时，要执行的委托调用。
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
 }
 
+//在应用程序将要进入前台时(被激活)，要执行的委托调用，刚好与 applicationWillResignActive 方法相对应。
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
+//在应用程序已被激活后，要执行的委托调用，刚好与  applicationDidEnterBackground 方法相对应。
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     //[self connect];
@@ -221,7 +226,7 @@
 
 //收到消息
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message{
-
+    NSLog(@"receiver msg:%@",message);
     XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                              xmppStream:xmppStream
                                                    managedObjectContext:[self managedObjectContext_roster]];
@@ -229,6 +234,20 @@
     int unReadNum = [[unReadMsg objectForKey:from] intValue];
     [unReadMsg setObject:[NSNumber numberWithInt:unReadNum + 1] forKey:from];
     [messageDelegate newMessageReceived:message];
+    //程序运行在前台，消息正常显示
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+    {
+       
+        
+    }else{//如果程序在后台运行，收到消息以通知类型来显示
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        localNotification.alertAction = @"Ok";
+        localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",@"test",message.body];//通知主体
+        localNotification.soundName = @"crunch.wav";//通知声音
+        localNotification.applicationIconBadgeNumber = 1;//标记数
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];//发送通知
+    }
+    
 }
 
 //收到好友状态
