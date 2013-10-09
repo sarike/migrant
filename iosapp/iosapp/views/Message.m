@@ -9,7 +9,6 @@
 #import "Message.h"
 #import "AppDelegate.h"
 #import "SSMessageTableViewCell.h"
-#import "Statics.h"
 #import <SSToolkit/SSTextField.h>
 
 @interface Message ()
