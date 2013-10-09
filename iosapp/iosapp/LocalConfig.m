@@ -15,7 +15,9 @@ static LocalConfig *instance=nil;
 
 -(NSString *)shareconfig:(NSString *)name{
     NSUserDefaults * setting = [NSUserDefaults standardUserDefaults];
-    [setting objectForKey:name];
+    NSLog(@"userdefault:%@",setting);
+    //return [setting objectForKey:name];
+    return [setting stringForKey:name];
 }
 
 -(void)setconfig:(NSString *)key :(NSString *)value{
@@ -31,7 +33,6 @@ static LocalConfig *instance=nil;
         if(nil == instance)
         {
             [self new];
-
         }
     }
     return instance;

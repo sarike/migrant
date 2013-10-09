@@ -29,6 +29,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
+    [self setupStream];
     
     unReadMsg = [[NSMutableDictionary alloc] initWithCapacity:0];
     
@@ -144,15 +145,16 @@
 }
 
 -(BOOL)connect{
+    // NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //[defaults setObject:@"kpages@sos360.com" forKey:USERID];
+    //[defaults setObject:@"111qqq" forKey:PASS];
     
-    [self setupStream];
-     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:@"kpages@sos360.com" forKey:USERID];
-    [defaults setObject:@"111qqq" forKey:PASS];
-    
-    NSString *userId = @"kpages@sos360.com";
-    NSString *pass = @"111qqq";
+    //NSString *userId = @"kpages@sos360.com";
+    //NSString *pass = @"111qqq";
     NSString *server = @"sos360.com";
+    
+    NSString *userId = [[LocalConfig Instance]shareconfig:USERID];
+    NSString *pass = [[LocalConfig Instance]shareconfig:PASS];
     
     if (![xmppStream isDisconnected]) {
         return YES;
@@ -171,21 +173,6 @@
     password = pass;
     
 	NSError *error = nil;
-    /**
-	if (![xmppStream connect:&error])
-	{
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
-		                                                    message:@"See console for error details."
-		                                                   delegate:nil
-		                                          cancelButtonTitle:@"Ok"
-		                                          otherButtonTitles:nil];
-		[alertView show];
-        
-		NSLog(@"Error connecting: %@", error);
-        
-		return NO;
-	}
-     **/
     
     if(![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]){
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
@@ -276,25 +263,6 @@
     
 }
 
-/**
-    获取用户名单
-
-- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq {
-    NSLog(@"iq:%@",iq);
-    if ([@"result" isEqualToString:iq.type]) {
-        NSXMLElement *query = iq.childElement;
-        if ([@"query" isEqualToString:query.name]) {
-            NSArray *items = [query children];
-            for (NSXMLElement *item in items) {
-                NSString *jid = [item attributeStringValueForName:@"jid"];
-                XMPPJID *xmppJID = [XMPPJID jidWithString:jid];
-                NSLog(@"%@",xmppJID);
-            }
-        }
-    }
-    return YES;
-}
- **/
 
 - (void)xmppRosterDidEndPopulating:(XMPPRoster *)sender  {
     NSLog(@"xmppRosterDidEndPopulating:%@",sender);
