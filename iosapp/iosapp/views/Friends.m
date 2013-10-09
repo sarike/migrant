@@ -124,7 +124,6 @@
     [super viewDidLoad];
     
     //[self newMessageReceived:nil];
-    
     UITableView *_tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
     _tableView.dataSource = self;
     _tableView.delegate = self;
@@ -152,6 +151,10 @@
     if(![[self xmppStream] isConnected]){
         if ([[self appDelegate] connect]) {
             NSLog(@"show buddy list");            
+        }else{
+            LoginView *loginview = [[LoginView alloc] initWithNibName:@"LoginView" bundle:nil];
+            //[self.navigationController pushViewController:loginview animated:YES];
+            [self.navigationController presentViewController:loginview animated:YES completion:NULL];
         }
     }
     [self.table reloadData];

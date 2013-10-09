@@ -9,6 +9,7 @@
 #import "LoginView.h"
 #import "AFJSONRequestOperation.h"
 #import "LocalConfig.h"
+#import "Statics.h"
 
 @implementation LoginView
 @synthesize webView;
@@ -38,10 +39,10 @@
     if (pwd && ![pwd isEqualToString:@""]) {
         self.txt_Pwd.text = pwd;
     }
-    
+    /**
     UIBarButtonItem *btnLogin = [[UIBarButtonItem alloc] initWithTitle:@"登录" style:UIBarButtonItemStyleBordered target:self action:@selector(click_Login:)];
     self.navigationItem.rightBarButtonItem = btnLogin;
- 
+     **/
     
     NSString *html = @"<body style='background-color:#EBEBF3'>1, test web content <a href='http://www.baidu.com'>百度</a></body>";
     [self.webView loadHTMLString:html baseURL:nil];
@@ -75,11 +76,16 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:req success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         BOOL status = [[JSON objectForKey:@"status"] boolValue];      
         if(status){
-            NSDictionary *data = [JSON objectForKey:@"data"];         
+            NSDictionary *data = [JSON objectForKey:@"data"];
+            NSLog(@"data:%@",data);
             [[LocalConfig Instance]setconfig:@"uid" :[data valueForKey:@"_id"]];
-            [[LocalConfig Instance]setconfig:@"name" :[data valueForKey:@"name"]];
+            [[LocalConfig Instance]setconfig:USERID:[data valueForKey:@"username"]];
+            [[LocalConfig Instance]setconfig:PASS :password];
+            
+            
             NSLog(@"uid:%@",[[LocalConfig Instance]shareconfig:@"uid"]);
-            [self.navigationController popViewControllerAnimated:YES];
+            //[self.navigationController popViewControllerAnimated:YES];
+            [self dismissViewControllerAnimated:YES completion:NULL];
             //LocalConfig get uid
            
         }else{
