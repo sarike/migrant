@@ -5,7 +5,7 @@
     author comger@gmail.com
 """
 import json
-from kpages import url,ContextHandler
+from kpages import url
 from utility import RestfulHandler
 
 from logic.comment import add,list_by_user,list_by_post

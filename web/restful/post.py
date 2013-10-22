@@ -6,8 +6,8 @@
 import base64
 import json
 from exceptions import ValueError,KeyError
-from kpages import url,ContextHandler
-from utility import RestfulHandler
+from kpages import url
+from utility import RestfulHandler,BaseHandler
 
 from logic.utility import *
 from logic.post import add,TName as T_POST,home
@@ -35,7 +35,7 @@ class CreaterHandler(RestfulHandler):
 
 
 @url(r'/m/post/home')
-class HomeHandler(ContextHandler):
+class HomeHandler(BaseHandler):
     def get(self):
         try:
             uid = self.get_secure_cookie('uid')
@@ -68,7 +68,7 @@ class MyHandler(RestfulHandler):
 
 @url(r'/m/post/city')
 @url(r'/m/post/city/(.*)')
-class CityHandler(ContextHandler):
+class CityHandler(BaseHandler):
     def get(self,_id=None):
         r,v = m_page(T_POST,self.get_argument('since',None),city=_id)
         conv_user(v)

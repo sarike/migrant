@@ -4,8 +4,8 @@
     author comger@gmail.com
 """
 import json
-from kpages import url,ContextHandler
-from utility import RestfulHandler
+from kpages import url
+from utility import RestfulHandler,BaseHandler
 
 from logic.utility import *
 from logic.account import add,login,TName as T_ACCOUNT,auth_login
@@ -13,7 +13,7 @@ from logic.city import TName as T_CITY
 from logic.openfireusers import add as openfire_add
 
 @url(r'/m/account/login')
-class LoginHandler(ContextHandler):
+class LoginHandler(BaseHandler):
     def post(self):
         r,v = login(self.get_argument('username'),self.get_argument('password'))
         print r,v
@@ -34,7 +34,7 @@ class LoginHandler(ContextHandler):
 
 
 @url(r'/m/auth/login')
-class AuthLoginHandler(ContextHandler):
+class AuthLoginHandler(BaseHandler):
     def post(self):
         r,v = auth_login(self.get_argument('site'),self.get_argument('otherid'),self.get_argument('name'))
         if r:

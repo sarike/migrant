@@ -3,20 +3,24 @@
     author comger@gmail.com
     BaseHandler for reqest
 """
+from tornado.web import RequestHandler
 from kpages import ContextHandler,url
 from logic.utility import m_update,m_del,m_page,m_info
 from logic import city
 
-class RestfulHandler(ContextHandler):
-    uid = property(lambda self:self.get_secure_cookie('uid'))
+class BaseHandler(ContextHandler,RequestHandler):
+    pass
 
+class RestfulHandler(ContextHandler,RequestHandler):
+    uid = property(lambda self:self.get_secure_cookie('uid'))
+    
     def prepare(self):
-        if not self.uid:
+        if not self.uid and self.request.uri not in ["/m/account/login", ]:
             self.write(dict(status = False,errormsg = 'not login'))
             self.finish()
 
 @url(r'/m/city/info')
-class InfoHandler(ContextHandler):
+class InfoHandler(BaseHandler):
     def get(self):
         r,v= m_info(city.TName,self.get_argument('id'))
         self.write(dict(status = r, data = v))
@@ -40,7 +44,7 @@ class PageHandler(RestfulHandler):
 
 @url(r'/m/city/list')
 @url(r'/m/city/list/(.*)')
-class CityHandler(ContextHandler):
+class CityHandler(BaseHandler):
     def get(self,parent = None):
         if not parent:parent = None
         lst = city.getList(parent)
