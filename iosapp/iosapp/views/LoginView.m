@@ -9,7 +9,6 @@
 #import "LoginView.h"
 #import "AFJSONRequestOperation.h"
 #import "LocalConfig.h"
-#import "Statics.h"
 
 @implementation LoginView
 @synthesize webView;

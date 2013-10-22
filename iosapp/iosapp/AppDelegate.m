@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "Statics.h"
 #import "ChatDelegate.h"
 #import "MessageDelegate.h"
 
@@ -145,6 +144,8 @@
 }
 
 -(BOOL)connect{
+//    [[LocalConfig Instance] setconfig:USERID :@"kpages@sos360.com"];
+//    [[LocalConfig Instance] setconfig:PASS :@"111qqq"];
     // NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     //[defaults setObject:@"kpages@sos360.com" forKey:USERID];
     //[defaults setObject:@"111qqq" forKey:PASS];

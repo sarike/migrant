@@ -117,7 +117,6 @@
     if([unReadNum intValue] == 0) unReadNum = nil;
     [[[app.tabBarController.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue:unReadNum];
     [self.table reloadData];
-
 }
 
 - (void)viewDidLoad
