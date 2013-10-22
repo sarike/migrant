@@ -3,9 +3,10 @@
 """
     base handler for cas
 """
+from tornado.web import RequestHandler
 from kpages import ContextHandler
 
-class ActionHandler(ContextHandler):
+class ActionHandler(ContextHandler,RequestHandler):
     
     uid = property(lambda self: self.get_secure_cookie(self._Admin_user_id))
     username = property(lambda self: self.get_secure_cookie("admin_user_name"))
