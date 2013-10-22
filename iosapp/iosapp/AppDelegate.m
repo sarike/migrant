@@ -150,8 +150,8 @@
     //[defaults setObject:@"kpages@sos360.com" forKey:USERID];
     //[defaults setObject:@"111qqq" forKey:PASS];
     
-    //NSString *userId = @"kpages@sos360.com";
-    //NSString *pass = @"111qqq";
+    //NSString *userId = @"comger@sos360.com";
+    //NSString *pass = @"comgerpwd";
     NSString *server = @"sos360.com";
     
     NSString *userId = [[LocalConfig Instance]shareconfig:USERID];

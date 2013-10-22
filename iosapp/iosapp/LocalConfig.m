@@ -15,14 +15,12 @@ static LocalConfig *instance=nil;
 
 -(NSString *)shareconfig:(NSString *)name{
     NSUserDefaults * setting = [NSUserDefaults standardUserDefaults];
-    NSLog(@"userdefault:%@",setting);
-    //return [setting objectForKey:name];
     return [setting objectForKey:name];
 }
 
 -(void)setconfig:(NSString *)key :(NSString *)value{
     NSUserDefaults * setting = [NSUserDefaults standardUserDefaults];
-//    [setting removeObjectForKey:key];
+    [setting removeObjectForKey:key];
     [setting setObject:value forKey:key];
     [setting synchronize];
 }

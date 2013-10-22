@@ -76,12 +76,12 @@
         BOOL status = [[JSON objectForKey:@"status"] boolValue];      
         if(status){
             NSDictionary *data = [JSON objectForKey:@"data"];
-            NSLog(@"data:%@",data);
+            NSLog(@"data:%@",[data valueForKey:@"username"]);
+
             [[LocalConfig Instance]setconfig:@"uid" :[data valueForKey:@"_id"]];
-            [[LocalConfig Instance]setconfig:USERID:[data valueForKey:@"username"]];
+            [[LocalConfig Instance]setconfig:USERID:username];
             [[LocalConfig Instance]setconfig:PASS :password];
-            
-            
+
             NSLog(@"uid:%@",[[LocalConfig Instance]shareconfig:@"uid"]);
             //[self.navigationController popViewControllerAnimated:YES];
             [self dismissViewControllerAnimated:YES completion:NULL];
