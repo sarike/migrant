@@ -1,0 +1,17 @@
+<!-- 子页顶部样式 -->
+.logotitle { 
+  margin-top: 3px;
+}
+.logotitle a{ 
+  color: #010101;
+  text-decoration: none;
+}
+
+.logotitle a:hover{
+  color: #428BCA;
+}
+
+.header { 
+  margin-top: 15px; 
+  margin-bottom: 10px;
+}
