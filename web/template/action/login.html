@@ -6,22 +6,6 @@
     {% include ress.html %}
 
     <style type="text/css">
-    .logotitle { 
-      margin-top: 3px;
-    }
-    .logotitle a{ 
-      color: #010101;
-      text-decoration: none;
-    }
-
-    .logotitle a:hover{
-      color: #428BCA;
-    }
-
-    .header { 
-      margin-top: 15px; 
-      margin-bottom: 10px;
-    }
 
     .loginform {
       margin: 0 auto 20px;
@@ -42,13 +26,9 @@
 
     <div class="container header" >
         <ul class="nav nav-pills pull-right">
-          <li><a href="news">资讯</a></li>
-          <li><a href="project">项目</a></li>
-          <li><a href="jobs">就业</a></li>
-          <li><a href="life">生活</a></li>
-          <li class='active'><a href="login">登录</a></li>
-          <li><a href="help">帮助</a></li>
+          {% include menu.html %}
         </ul>
+
         <h2 class='logotitle'><a href="/">回归线</a></h2>
     </div>
 

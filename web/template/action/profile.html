@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <title>回归线 个人信息</title>
+    <meta name="description" content="">
+    {% include ress.html %}
+    <style type="text/css">
+    .bs-docs-sidenav {
+        width: 258px;
+    }
+    .bs-docs-sidenav {
+        background-color: #FFFFFF;
+        border-radius: 6px 6px 6px 6px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+        padding: 0;
+        width: 228px;
+    }
+
+    .bs-docs-sidenav > li:first-child > a {
+        border-radius: 6px 6px 0 0;
+    }
+    .bs-docs-sidenav > li > a {
+    }
+    .bs-docs-sidenav > li > a {
+        border: 1px solid #E5E5E5;
+        display: block;
+        margin: 0 0 -1px;
+        padding: 8px 14px;
+    }
+
+    .bs-docs-sidenav .glyphicon { 
+      float: right;
+    }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="container header" >
+        <ul class="nav nav-pills pull-right">
+          {% include menu.html %}
+        </ul>
+
+        <h2 class='logotitle'><a href="/">回归线</a></h2>
+    </div>
+
+    <hr>
+    <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav">
+            <li><a href="#global"><i class="glyphicon glyphicon-chevron-right"></i> 基本信息</a></li>
+            <li><a href="#gridSystem"><i class="glyphicon glyphicon-chevron-right"></i> 职业信息</a></li>
+            <li><a href="#fluidGridSystem"><i class="glyphicon glyphicon-chevron-right"></i> 技能信息</a></li>
+            <li><a href="#layouts"><i class="glyphicon glyphicon-chevron-right"></i> 个人标签</a></li>
+            <li><a href="#responsive"><i class="glyphicon glyphicon-chevron-right"></i> 账号安全</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="col-md-9">
+        <form class="form-horizontal loginform" role="form" action='/m/account/login' method='post'>
+          <h3>个人信息  <small>--{{ nickname }}</small></h3>
+          <hr>
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">呢称</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control" placeholder="呢称" name='nickname' >
+            </div>
+            <label  class="col-sm-6 "></label>
+          </div>
+
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">手机</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control" placeholder="手机" name='mobile' >
+            </div>
+            <label  class="col-sm-6 "></label>
+          </div>
+
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">城市</label>
+            <div class="col-sm-4">
+              <select class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <select class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <label  class="col-sm-3 "></label>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-11">
+              <a href='#' class="btn btn-primary" id='loginbtn'>修改</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% include footer.html %}
+    </div> <!-- /container -->
+    <script type="text/javascript">
+      $(function(){
+
+      })
+    </script>
+  </body>
+</html>
+
+       

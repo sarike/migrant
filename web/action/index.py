@@ -15,3 +15,9 @@ class Index(BaseHandler):
 class Login(BaseHandler):
     def get(self):
         self.render('action/login.html')
+
+
+@url(r'/profile?')
+class Profile(BaseHandler):
+    def get(self):
+        self.render('action/profile.html')
