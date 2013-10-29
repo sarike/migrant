@@ -84,25 +84,24 @@
           <div class="form-group">
             <label for="inputEmail3" class="col-sm-1 control-label">城市</label>
             <div class="col-sm-4">
-              <select class="form-control">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+              <select class="form-control" id='sl_cityparent'>
               </select>
             </div>
             <div class="col-sm-4">
-              <select class="form-control">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+              <select class="form-control" id='sl_city'>
+
               </select>
             </div>
             <label  class="col-sm-3 "></label>
           </div>
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">简介</label>
+            <div class="col-sm-5">
+              <textarea class="form-control" placeholder="简介" name='intro'></textarea>
+            </div>
+            <label  class="col-sm-6 "></label>
+          </div>
+
           <div class="form-group">
             <div class="col-sm-offset-1 col-sm-11">
               <a href='#' class="btn btn-primary" id='loginbtn'>修改</a>
@@ -116,8 +115,36 @@
     </div> <!-- /container -->
     <script type="text/javascript">
       $(function(){
+          function loadselect(sel,parent){
+            var url = '/m/city/list';
+            if(parent){
+                url = url +"/"+parent;
+            }
 
-      })
+            sel.find('option').remove();
+            $.get(url,function(rs){
+                if(rs.status){
+                    $(rs.data).each(function(i,item){
+                        var opt = $('<option>').attr('value',item._id).html(item.name);
+                        sel.append(opt);
+                    })
+
+                    if(!parent){
+                      loadselect($('#sl_city'),rs.data[0]._id);
+                    }
+                }
+            })
+
+
+          }
+
+          loadselect($('#sl_cityparent'));
+          $('#sl_cityparent').change(function(){
+              loadselect($('#sl_city'),$(this).val());
+          })
+
+      });
+
     </script>
   </body>
 </html>
