@@ -9,8 +9,10 @@ from kpages import url,mongo_conv
 from utility import ActionHandler
 from logic.utility import *
 from logic.city import TName as T_CITY
-
-from spiders import spiderloader
+try:
+    from spiders import spiderloader
+except:
+    spiders = None
 
 @url(r"/admin/resource")
 class ResourceListHandler(ActionHandler):
