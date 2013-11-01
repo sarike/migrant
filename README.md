@@ -14,10 +14,11 @@ python、mongodb、redis、bootstrap, android ,ios, kpages, jquery, html5；
 =======
 
 
-#### use help for migrant
+#### 项目依赖
 
 ```
-   项目依赖：python, kpages( easy_install kpages)
+   python, mongodb, redis 
+   kpages( easy_install kpages)
    
 ```
 
