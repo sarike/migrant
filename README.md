@@ -14,5 +14,33 @@ python、mongodb、redis、bootstrap, android ,ios, kpages, jquery, html5；
 =======
 
 
+#### use help for migrant
+
+```
+   项目依赖：python, kpages( easy_install kpages)
+   
+```
+
+### web 服务启动方式
+```
+python apprun.py  或 ./apprun.py
+可配置参数
+     config=CONFIG  set config for server
+     port=PORT      set http port for server
+     debug          Debug mode.
+     ndebug         No Debug mode.
+```
+
+
+
+### 执行测试案例
+```
+    python tool.py --test test_city.DemoCase.testprint :test testprint method
+    python tool.py --test test_city.DemoCase           :test methods in DemoCase class
+    python tool.py --test test_city                    :test methods in test_city.py
+    python tool.py --test all                          :test methods in app's __conf__.UTEST_DIR
+```
+
+
 
 
