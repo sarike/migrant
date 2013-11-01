@@ -14,18 +14,5 @@ python、mongodb、redis、bootstrap, android ,ios, kpages, jquery, html5；
 =======
 
 
-#### use help for iosapp
 
-```
-    edit .git/config, append submodule
-    [submodule "iosapp/Vendor/SSToolkit"]
-        url = https://github.com/soffes/sstoolkit.git
-
-    
-    then update submodule:
-    
-    git submodule init
-    git submodule update
-
-```
 
