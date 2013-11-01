@@ -17,8 +17,8 @@ python、mongodb、redis、bootstrap, android ,ios, kpages, jquery, html5；
 #### 项目依赖
 
 ```
-   python, mongodb, redis 
-   kpages( easy_install kpages)
+   软件：python, mongodb, redis ；
+   python 包：kpages( easy_install kpages)
    
 ```
 
