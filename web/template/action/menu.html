@@ -3,8 +3,8 @@
           <li><a href="jobs">就业</a></li>
           <li><a href="life">生活</a></li>
           <li><a href="help">帮助</a></li>
-          {% if uid %}
-          <li><a href="/profile">{{ nickname }}</a></li>
+          {% if handler.uid %}
+          <li><a href="/profile">{{ handler.nickname }}</a></li>
           {% else %}
           <li class='active'><a href="login">登录</a></li>
           {% end %}

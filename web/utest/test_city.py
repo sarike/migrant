@@ -3,7 +3,6 @@
     author comger@gmail.com
 """
 import json
-from pyquery import PyQuery as pyq
 from kpages import LogicContext,reflesh_config
 from logic.city import add
 from logic.utility import m_page
@@ -46,6 +45,7 @@ class DemoCase(TestCase):
 
 
 if __name__ == '__main__':
+    from pyquery import PyQuery as pyq
     case = CityCate()
     reflesh_config('setting.py')
     with LogicContext():
